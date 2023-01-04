@@ -1,10 +1,13 @@
 package com.foro.forordokotoro.Controlleurs;
 
-import com.foro.forordokotoro.Models.Utilisateurs;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.ERole;
 import com.foro.forordokotoro.Models.Role;
-import com.foro.forordokotoro.Repository.UtilisateursRepository;
+import com.foro.forordokotoro.Models.Utilisateurs;
 import com.foro.forordokotoro.Repository.RoleRepository;
+import com.foro.forordokotoro.Repository.UtilisateursRepository;
+import com.foro.forordokotoro.payload.Autres.ConfigImages;
 import com.foro.forordokotoro.payload.request.LoginRequest;
 import com.foro.forordokotoro.payload.request.SignupRequest;
 import com.foro.forordokotoro.payload.response.JwtResponse;
@@ -15,19 +18,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -124,7 +125,24 @@ public class AuthController {
 
   //@PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/signup")//@valid s'assure que les données soit validées
-  public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+  public ResponseEntity<?> registerUser(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
+                                        @Valid  @RequestParam(value = "donneesuser") String donneesuser) throws IOException {
+
+    //chemin de stockage des images
+    String url = "C:/Users/mkkeita/Desktop/projects/medias/images";
+
+    //recupere le nom de l'image
+    String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
+    System.out.println(nomfile);
+
+    //envoie le nom, url et le fichier à la classe ConfigImages qui se chargera de sauvegarder l'image
+    ConfigImages.saveimg(url, nomfile, file);
+
+    //converssion du string reçu en classe SignupRequest
+    SignupRequest signUpRequest = new JsonMapper().readValue(donneesuser, SignupRequest.class);
+
+    signUpRequest.setPhoto(nomfile);
+
     if (utilisateursRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity
           .badRequest()

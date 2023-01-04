@@ -11,6 +11,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -126,8 +127,8 @@ public class WebSecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.cors().and().csrf().disable()
-        //.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-        //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+        .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .authorizeRequests()
             .antMatchers("/api/auth/**").permitAll()
         .antMatchers("/api/bienvenue/**").permitAll()
@@ -136,7 +137,7 @@ public class WebSecurityConfig {
         .anyRequest().authenticated();
            // .and()
             //.oauth2Login();
-    http.formLogin();
+   // http.formLogin();
 
     
     http.authenticationProvider(authenticationProvider());

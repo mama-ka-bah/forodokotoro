@@ -49,12 +49,6 @@ public class Utilisateurs {
   @Size(max = 120)
   private String adresse;
 
-  @NotBlank
-  @Size(max = 120)
-  private String numerotelephone;
-
-
-
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(  name = "user_roles", 
         joinColumns = @JoinColumn(name = "user_id"), 
