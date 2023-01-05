@@ -31,9 +31,12 @@ public class SignupRequest {
   private String adresse;
 
   @NotBlank
-  @Size(min = 8, max = 8)
-  private String numerotelephone;
+  @Size(min = 3, max = 120)
+  private String photopermis;
 
+  @NotBlank
+  @Size(min = 3, max = 120)
+  private String numeroplaque;
 
   private Set<String> role;
 

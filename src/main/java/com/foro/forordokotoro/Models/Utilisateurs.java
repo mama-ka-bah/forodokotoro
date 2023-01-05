@@ -19,6 +19,8 @@ import java.util.Set;
       @UniqueConstraint(columnNames = "email") 
     })
 @Data
+@Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(name="profession")
 public class Utilisateurs {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

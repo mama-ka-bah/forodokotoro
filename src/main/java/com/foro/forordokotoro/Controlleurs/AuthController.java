@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.ERole;
 import com.foro.forordokotoro.Models.Role;
+import com.foro.forordokotoro.Models.Transporteurs;
 import com.foro.forordokotoro.Models.Utilisateurs;
 import com.foro.forordokotoro.Repository.RoleRepository;
+import com.foro.forordokotoro.Repository.TransporteurRepository;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
 import com.foro.forordokotoro.payload.Autres.ConfigImages;
 import com.foro.forordokotoro.payload.request.LoginRequest;
@@ -46,6 +48,9 @@ public class AuthController {
 
   @Autowired
   UtilisateursRepository utilisateursRepository;
+
+  @Autowired
+  TransporteurRepository transporteurRepository;
 
   @Autowired
   RoleRepository roleRepository;
@@ -197,4 +202,89 @@ public class AuthController {
 
     return ResponseEntity.ok(new MessageResponse("Collaborateur enregistré avec succès!"));
   }
+
+
+
+
+
+  //@PreAuthorize("hasRole('ADMIN')")
+  @PostMapping("/signupT")//@valid s'assure que les données soit validées
+  public ResponseEntity<?> registertransporteur(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
+                                        @Valid  @RequestParam(value = "donneesuser") String donneesuser) throws IOException {
+
+    //chemin de stockage des images
+    String url = "C:/Users/mkkeita/Desktop/projects/medias/images";
+
+    //recupere le nom de l'image
+    String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
+    System.out.println(nomfile);
+
+    //envoie le nom, url et le fichier à la classe ConfigImages qui se chargera de sauvegarder l'image
+    ConfigImages.saveimg(url, nomfile, file);
+
+    //converssion du string reçu en classe SignupRequest
+    SignupRequest signUpRequest = new JsonMapper().readValue(donneesuser, SignupRequest.class);
+
+    signUpRequest.setPhoto(nomfile);
+
+    if (utilisateursRepository.existsByUsername(signUpRequest.getUsername())) {
+      return ResponseEntity
+              .badRequest()
+              .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
+    }
+
+    if (utilisateursRepository.existsByEmail(signUpRequest.getEmail())) {
+
+      //confectionne l'objet de retour à partir de ResponseEntity(une classe de spring boot) et MessageResponse
+      return ResponseEntity
+              .badRequest()
+              .body(new MessageResponse("Erreur: Cet email est déjà utilisé!"));
+    }
+
+    // Create new user's account
+    Transporteurs utilisateurs = new Transporteurs(signUpRequest.getUsername(),
+            signUpRequest.getEmail(),
+            encoder.encode(signUpRequest.getPassword()), signUpRequest.getAdresse(),
+            signUpRequest.getNomcomplet(), signUpRequest.getPhoto(),false,
+            signUpRequest.getPhotopermis(),signUpRequest.getNumeroplaque()
+    );
+
+    //on recupere le role de l'user dans un tableau ordonné de type string
+    Set<String> strRoles = signUpRequest.getRole();
+    Set<Role> roles = new HashSet<>();
+
+    if (strRoles == null) {
+      System.out.println("####################################" + signUpRequest.getRole() + "###########################################");
+
+      //on recupere le role de l'utilisateur
+      Role userRole = roleRepository.findByName(ERole.ROLE_USER);
+      roles.add(userRole);//on ajoute le role de l'user à roles
+    } else {
+      strRoles.forEach(role -> {//on parcours le role
+        switch (role) {
+          case "admin"://si le role est à égale à admin
+            Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN);
+            roles.add(adminRole);
+
+            break;
+          default://dans le cas écheant
+
+            //on recupere le role de l'utilisateur
+            Role userRole = roleRepository.findByName(ERole.ROLE_USER);
+            roles.add(userRole);
+        }
+      });
+    }
+
+    //on ajoute le role au collaborateur
+    utilisateurs.setRoles(roles);
+
+    transporteurRepository.save(utilisateurs);
+
+    return ResponseEntity.ok(new MessageResponse("Collaborateur enregistré avec succès!"));
+  }
+
+
+
+
 }
