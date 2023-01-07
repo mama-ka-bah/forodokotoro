@@ -200,13 +200,12 @@ public class AuthController {
     utilisateurs.setRoles(roles);
     utilisateursRepository.save(utilisateurs);
 
-    return ResponseEntity.ok(new MessageResponse("Collaborateur enregistré avec succès!"));
+    return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succès!"));
   }
 
 
 
-
-
+/*
   //@PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/signupT")//@valid s'assure que les données soit validées
   public ResponseEntity<?> registertransporteur(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
@@ -281,10 +280,8 @@ public class AuthController {
 
     transporteurRepository.save(utilisateurs);
 
-    return ResponseEntity.ok(new MessageResponse("Collaborateur enregistré avec succès!"));
+    return ResponseEntity.ok(new MessageResponse("Utlisateur enregistré avec succès!"));
   }
-
-
-
+ */
 
 }

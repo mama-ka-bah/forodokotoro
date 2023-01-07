@@ -31,6 +31,14 @@ public class SignupRequest {
   private String adresse;
 
   @NotBlank
+  @Size(min = 6, max = 40)
+  private String password;
+
+  private Set<String> role;
+
+
+  /*
+  @NotBlank
   @Size(min = 3, max = 120)
   private String photopermis;
 
@@ -38,11 +46,9 @@ public class SignupRequest {
   @Size(min = 3, max = 120)
   private String numeroplaque;
 
-  private Set<String> role;
+*/
 
-  @NotBlank
-  @Size(min = 6, max = 40)
-  private String password;
+
 
   public String getUsername() {
     return username;

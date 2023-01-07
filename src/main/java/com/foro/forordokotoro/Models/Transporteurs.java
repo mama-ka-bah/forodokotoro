@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Entity
@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 public class Transporteurs extends Utilisateurs{
 
     private Boolean disponibilite;
+
     private String photopermis;
 
     private String numeroplaque;

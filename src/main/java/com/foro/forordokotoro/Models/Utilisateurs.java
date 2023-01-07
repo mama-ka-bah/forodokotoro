@@ -20,7 +20,7 @@ import java.util.Set;
     })
 @Data
 @Inheritance(strategy=InheritanceType.JOINED)
-@DiscriminatorColumn(name="profession")
+@DiscriminatorColumn(name="profession", discriminatorType = DiscriminatorType.STRING)
 public class Utilisateurs {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
