@@ -1,12 +1,10 @@
 package com.foro.forordokotoro.Controlleurs;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.Agriculteurs;
 import com.foro.forordokotoro.Models.EstatusDemande;
 import com.foro.forordokotoro.Models.TransporteurAttente;
 import com.foro.forordokotoro.Models.Transporteurs;
-import com.foro.forordokotoro.payload.Autres.ConfigImages;
 import com.foro.forordokotoro.payload.Autres.DemandeTransporteur;
 import com.foro.forordokotoro.services.TransporteursService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,18 +37,19 @@ public class TransporteursControlleur {
         System.out.println(nomfile);
 
         //envoie le nom, url et le fichier à la classe ConfigImages qui se chargera de sauvegarder l'image
-        ConfigImages.saveimg(url, nomfile, file);
+        //ConfigImages.saveimg(url, nomfile, file);
 
         //converssion du string reçu en classe Transporteur
         DemandeTransporteur demandeurProfil1 = new JsonMapper().readValue(donneesTransporteur, DemandeTransporteur.class);
         TransporteurAttente demandeurProfil = new TransporteurAttente();
 
         demandeurProfil.setNumeroplaque(demandeurProfil1.getNumeroplaque());
+        demandeurProfil.setDisponibilite(demandeurProfil1.getDisponibilite());
         demandeurProfil.setPhotopermis(nomfile);
         demandeurProfil.setDatedemande(new Date());
         demandeurProfil.setStatusdemande(EstatusDemande.ENCOURS);
 
-        return transporteursService.devenirAgriculteur(id, demandeurProfil);
+        return transporteursService.devenirTransporteur(id, demandeurProfil, url, nomfile, file);
     }
 
     @PostMapping("/accepteratransporteur/{username}")
@@ -59,19 +58,17 @@ public class TransporteursControlleur {
         return transporteursService.accepterTransporteur(username);
     }
 
-    /*
-    @GetMapping("/transporteurnomaccepter")
-    public List<Transporteurs> transporteurNomAccepter(){
-
-        return transporteursService.recupererTransporteurNonAccepter();
-    }
-
-     */
-
     @PostMapping("/rejetertransporteur/{username}")
     public ResponseEntity<?> rejeterTransporetur(@PathVariable String username){
 
         return transporteursService.rejeterTransporteur(username);
+    }
+
+
+    @PatchMapping("/modifiertransporteur/{id}")
+    public ResponseEntity<?> updateTransporteur(@PathVariable Long id, @RequestBody Transporteurs transporteurs) {
+
+        return transporteursService.modifierTransporteur(id, transporteurs);
     }
 
 }

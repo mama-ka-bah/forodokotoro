@@ -5,11 +5,15 @@ import com.foro.forordokotoro.Repository.AgriculteurEnAttenteRepository;
 import com.foro.forordokotoro.Repository.AgriculteursRepository;
 import com.foro.forordokotoro.Repository.NotificationRepository;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
+import com.foro.forordokotoro.payload.Autres.ConfigImages;
 import com.foro.forordokotoro.payload.Autres.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 
 @Service
@@ -35,7 +39,10 @@ public class AgriculteurServiceImpl implements AgriculteurService{
         );
     }
 
-    public void demandeAgricuteur(Long id, AgricuteurAttente agriculteur){
+    public void demandeAgricuteur(Long id, AgricuteurAttente agriculteur, String url, String nomfile, MultipartFile file) throws IOException {
+
+        ConfigImages.saveimg(url, nomfile, file);
+
         Utilisateurs userExistant = utilisateursRepository.findById(id).get();
         agriculteur.setUserid(userExistant);
         agriculteurEnAttenteRepository.save(agriculteur);
@@ -52,14 +59,14 @@ public class AgriculteurServiceImpl implements AgriculteurService{
     }
 
     @Override
-    public ResponseEntity<?> DevenirAgriculteur(Long id, AgricuteurAttente agriculteur) {
+    public ResponseEntity<?> DevenirAgriculteur(Long id, AgricuteurAttente agriculteur, String url, String nomfile, MultipartFile file) throws IOException {
 
         Utilisateurs userExistant = utilisateursRepository.findById(id).get();
         Notifications notifications = new Notifications();
 
         if(utilisateursRepository.existsById(id)){
             if(agriculteurEnAttenteRepository.findByUserid(userExistant) == null){
-                demandeAgricuteur(id, agriculteur);
+                demandeAgricuteur(id, agriculteur, url, nomfile, file);
 
                 String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
 
@@ -78,7 +85,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                 if (days_difference < 10){
                     return ResponseEntity.ok(new Reponse("Veuilez attendre 10 jours pour faire une nouvelle demande", 1));
                 }else{
-                    demandeAgricuteur(id, agriculteur);
+                    demandeAgricuteur(id, agriculteur, url, nomfile, file);
 
                     String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
 
@@ -159,5 +166,21 @@ public class AgriculteurServiceImpl implements AgriculteurService{
         }
 
        }
+
+    @Override
+    public ResponseEntity<?> modifierAgriculteur(Long id, Agriculteurs agriculteurs) {
+        return agriculteursRepository.findById(agriculteurs.getId())
+                .map(a-> {
+                    a.setPassword(agriculteurs.getPassword());
+                    a.setAdresse(agriculteurs.getEmail());
+                    a.setNomcomplet(agriculteurs.getNomcomplet());
+                    a.setUsername(agriculteurs.getUsername());
+                    a.setEtat(agriculteurs.getEtat());
+                    agriculteursRepository.save(a);
+
+                    return new ResponseEntity<>("", HttpStatus.OK);
+
+                }).orElseThrow(() -> new RuntimeException("Agriculteur non trouvé ! "));
+    }
 
 }

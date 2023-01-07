@@ -6,6 +6,8 @@ import com.foro.forordokotoro.Models.Utilisateurs;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
 import com.foro.forordokotoro.Repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,13 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 /*
 
-UserDetailsServiceest décrit comme une interface principale qui charge des données spécifiques à
+UserDetailsService est décrit comme une interface principale qui charge des données spécifiques à
 l'utilisateur dans la documentation Spring.
 
  */
 
 @Service
-public class UtilisateursDetailsServiceImpl implements UserDetailsService {
+public class UtilisateursDetailsServiceImpl implements UserDetailsService, UtilisateurService {
 
     @Autowired
     UtilisateursRepository utilisateursRepository;
@@ -34,12 +36,40 @@ public class UtilisateursDetailsServiceImpl implements UserDetailsService {
   @Transactional
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Utilisateurs user = utilisateursRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException("collaborateur non trouvé: " + username));
+        .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé: " + username));
 
     return UtilisateursDetails.build(user);
   }
 
 
+  @Override
+  public ResponseEntity<?> modifierUtilisateur(Long id, Utilisateurs utilisateurs) {
+    return utilisateursRepository.findById(utilisateurs.getId())
+            .map(u-> {
+              u.setPassword(utilisateurs.getPassword());
+              u.setAdresse(utilisateurs.getEmail());
+              u.setNomcomplet(utilisateurs.getNomcomplet());
+              u.setUsername(utilisateurs.getUsername());
+              u.setEtat(utilisateurs.getEtat());
+              utilisateursRepository.save(u);
 
+              return new ResponseEntity<>("Modification reçue", HttpStatus.OK);
+
+            }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé ! "));
+           }
+
+
+    @Override
+    public ResponseEntity<?> modifierProfil(Long id, String nomfile) {
+        return utilisateursRepository.findById(id)
+                .map(u-> {
+                    u.setPhoto(nomfile);
+                    utilisateursRepository.save(u);
+                    return new ResponseEntity<>("Modification reçue", HttpStatus.OK);
+                }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé ! "));
+    }
 
 }
+
+
+

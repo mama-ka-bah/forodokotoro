@@ -2,10 +2,7 @@ package com.foro.forordokotoro.Controlleurs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.foro.forordokotoro.Models.ERole;
-import com.foro.forordokotoro.Models.Role;
-import com.foro.forordokotoro.Models.Transporteurs;
-import com.foro.forordokotoro.Models.Utilisateurs;
+import com.foro.forordokotoro.Models.*;
 import com.foro.forordokotoro.Repository.RoleRepository;
 import com.foro.forordokotoro.Repository.TransporteurRepository;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
@@ -15,6 +12,7 @@ import com.foro.forordokotoro.payload.request.SignupRequest;
 import com.foro.forordokotoro.payload.response.JwtResponse;
 import com.foro.forordokotoro.payload.response.MessageResponse;
 import com.foro.forordokotoro.security.jwt.JwtUtils;
+import com.foro.forordokotoro.security.services.UtilisateurService;
 import com.foro.forordokotoro.security.services.UtilisateursDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +59,9 @@ public class AuthController {
 
   @Autowired
   JwtUtils jwtUtils;
+
+  @Autowired
+  UtilisateurService utilisateurService;
 
   //@Valid assure la validation de l'ensemble de l'objet
   @PostMapping("/signin")
@@ -121,7 +122,8 @@ public class AuthController {
     return ResponseEntity.ok(new JwtResponse(jwt,
                          utilisateursDetails.getId(),
                          utilisateursDetails.getUsername(),
-                         utilisateursDetails.getEmail(), roles,
+                         utilisateursDetails.getEmail(),
+                         roles,
                          utilisateursDetails.getAdresse(),
                          utilisateursDetails.getNomcomplet(),
                          utilisateursDetails.getPhoto()
@@ -162,6 +164,8 @@ public class AuthController {
           .body(new MessageResponse("Erreur: Cet email est déjà utilisé!"));
     }
 
+    System.out.println(signUpRequest.getNomcomplet());
+
     // Create new user's account
     Utilisateurs utilisateurs = new Utilisateurs(signUpRequest.getUsername(),
                signUpRequest.getEmail(),
@@ -198,10 +202,35 @@ public class AuthController {
 
     //on ajoute le role au collaborateur
     utilisateurs.setRoles(roles);
+    utilisateurs.setEtat(true);
     utilisateursRepository.save(utilisateurs);
 
     return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succès!"));
   }
+
+  @PatchMapping("/modifieragriculteur/{id}")
+  public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody Utilisateurs utilisateurs) {
+
+    return utilisateurService.modifierUtilisateur(id, utilisateurs);
+  }
+
+  @PatchMapping("/modifierprofil/{id}")
+  public ResponseEntity<?> updateUser(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
+          @PathVariable Long id) throws IOException {
+
+    //chemin de stockage des images
+    String url = "C:/Users/mkkeita/Desktop/projects/medias/images";
+
+    //recupere le nom de l'image
+    String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
+    System.out.println(nomfile);
+
+    //envoie le nom, url et le fichier à la classe ConfigImages qui se chargera de sauvegarder l'image
+    ConfigImages.saveimg(url, nomfile, file);
+
+    return utilisateurService.modifierProfil(id, nomfile);
+  }
+
 
 
 

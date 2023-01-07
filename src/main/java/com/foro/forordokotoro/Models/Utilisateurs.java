@@ -51,6 +51,8 @@ public class Utilisateurs {
   @Size(max = 120)
   private String adresse;
 
+  private Boolean etat;
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(  name = "user_roles", 
         joinColumns = @JoinColumn(name = "user_id"), 
@@ -69,6 +71,17 @@ public class Utilisateurs {
     this.adresse = adresse;
     this.nomcomplet = nomcomplet;
     this.photo = photo;
+  }
+
+  public Utilisateurs(String username, String email, String password, String adresse,
+                      String nomcomplet, Boolean etat)
+  {
+    this.username = username;
+    this.email = email;
+    this.password = password;
+    this.adresse = adresse;
+    this.nomcomplet = nomcomplet;
+    this.etat = etat;
   }
 
   public Long getId() {

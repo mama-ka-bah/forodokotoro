@@ -7,6 +7,7 @@ import com.foro.forordokotoro.Models.EstatusDemande;
 import com.foro.forordokotoro.payload.Autres.ConfigImages;
 import com.foro.forordokotoro.services.AgriculteurService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class AgriculteurControlleur {
         System.out.println(nomfile);
 
         //envoie le nom, url et le fichier à la classe ConfigImages qui se chargera de sauvegarder l'image
-        ConfigImages.saveimg(url, nomfile, file);
+        //ConfigImages.saveimg(url, nomfile, file);
 
         //converssion du string reçu en classe SignupRequest
         //Agriculteurs demandeurProfil = new JsonMapper().readValue(agriculteurs, Agriculteurs.class);
@@ -55,7 +56,7 @@ public class AgriculteurControlleur {
         demandeurProfil.setDatedemande(new Date());
         demandeurProfil.setDateacceptation(new Date(0));
 
-        return agriculteurService.DevenirAgriculteur(id, demandeurProfil);
+        return agriculteurService.DevenirAgriculteur(id, demandeurProfil, url, nomfile, file);
     }
 
 
@@ -78,6 +79,13 @@ public class AgriculteurControlleur {
     public ResponseEntity<?> rejeterAgriculteur(@PathVariable String username){
 
         return agriculteurService.rejeterAgriculteur(username);
+    }
+
+
+    @PatchMapping("/modifieragriculteur/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody Agriculteurs agriculteurs) {
+
+        return agriculteurService.modifierAgriculteur(id, agriculteurs);
     }
 
 

@@ -5,11 +5,12 @@ import com.foro.forordokotoro.Models.Agriculteurs;
 import com.foro.forordokotoro.Models.TransporteurAttente;
 import com.foro.forordokotoro.Models.Transporteurs;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface TransporteursService {
-    ResponseEntity<?> devenirAgriculteur(Long id, TransporteurAttente transporteurs);
+    ResponseEntity<?> devenirTransporteur(Long id, TransporteurAttente transporteurs, String url, String nomfile, MultipartFile file);
 
     //List<Transporteurs> recupererTransporteurNonAccepter();
 
@@ -17,4 +18,7 @@ public interface TransporteursService {
 
     ResponseEntity<?> rejeterTransporteur(String username);
 
+    //ResponseEntity<?> modifierAgriculteur(Long id, Transporteurs transporteurs);
+
+    ResponseEntity<?> modifierTransporteur(Long id, Transporteurs transporteurs);
 }
