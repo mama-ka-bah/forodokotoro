@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class AgriculteurControlleur {
         //@Valid  @RequestParam(value = "donneesuser") String donneesuser
 
         //chemin de stockage des images
-        String url = "C:/Users/mkkeita/Desktop/projects/medias/images";
+        String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
 
         //recupere le nom de l'image
         String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
@@ -53,8 +54,8 @@ public class AgriculteurControlleur {
         AgricuteurAttente demandeurProfil = new AgricuteurAttente();
         demandeurProfil.setPhotocarteidentite(nomfile);
         demandeurProfil.setStatusdemande(EstatusDemande.ENCOURS);
-        demandeurProfil.setDatedemande(new Date());
-        demandeurProfil.setDateacceptation(new Date(0));
+        demandeurProfil.setDatedemande(LocalDate.now());
+        demandeurProfil.setDateacceptation(LocalDate.now());
 
         return agriculteurService.DevenirAgriculteur(id, demandeurProfil, url, nomfile, file);
     }

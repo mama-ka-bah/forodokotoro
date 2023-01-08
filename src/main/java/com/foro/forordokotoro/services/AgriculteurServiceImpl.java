@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Service
@@ -30,6 +33,9 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
     @Autowired
     NotificationRepository notificationRepository;
+
+    @Autowired
+    EmailSenderService emailSenderService;
 
     @Override
     public ResponseEntity<?> AjouterAgriculteur(Agriculteurs agriculteurs) {
@@ -55,6 +61,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
         notifications.setUserid(userExistant);
         notifications.setDateNotification(new Date());
         notifications.setTitre("Demande de profil");
+        notifications.setLu(false);
         notificationRepository.save(notifications);
     }
 
@@ -70,6 +77,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
                 String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
 
+                emailSenderService.sendSimpleEmail(userExistant.getEmail(), "Demande de profil agriculteur", message);
                 return ResponseEntity.ok(new Reponse(message, 1));
             }else if(agriculteurEnAttenteRepository.findByUserid(userExistant).getStatusdemande().equals(EstatusDemande.ENCOURS)){
 
@@ -77,17 +85,18 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
                 return ResponseEntity.ok(new Reponse(messae, 1));
             }else if(agriculteurEnAttenteRepository.findByUserid(userExistant).getStatusdemande().equals(EstatusDemande.REJETER)){
-                //SimpleDateFormat obj =  new SimpleDateFormat( "MM-jj-aaaa HH:mm:ss" );
-                Date datejour = new Date();
-                Date datedemande = agriculteurEnAttenteRepository.findByUserid(userExistant).getDatedemande();
-                long time_difference = datejour.getTime() - datedemande.getTime();
-                long days_difference = (time_difference / (1000*60*60*24)) % 365;
+                LocalDate datejour = LocalDate.now();
+                LocalDate datedemande = agriculteurEnAttenteRepository.findByUserid(userExistant).getDatedemande();
+                long days_difference = ChronoUnit.DAYS.between(datedemande, datejour);
+                System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm: "+ days_difference);
                 if (days_difference < 10){
                     return ResponseEntity.ok(new Reponse("Veuilez attendre 10 jours pour faire une nouvelle demande", 1));
                 }else{
                     demandeAgricuteur(id, agriculteur, url, nomfile, file);
 
                     String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
+
+                    emailSenderService.sendSimpleEmail(userExistant.getEmail(), "Demande de profil agriculteur", message);
 
                     return ResponseEntity.ok(new Reponse(message, 1));
                 }
@@ -115,7 +124,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                 return agriculteurEnAttenteRepository.findById(agricuteurAttente.getId())
                         .map(ae-> {
                             ae.setStatusdemande(EstatusDemande.ACCEPTER);
-                            ae.setDateacceptation(new Date());
+                            ae.setDateacceptation(LocalDate.now());
                             agriculteurEnAttenteRepository.save(ae);
 
                             utilisateursRepository.DEVENIRAGRICULTEURDEPROFESSION(user.getId());
@@ -125,6 +134,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                             notifications.setContenu(message);
                             notifications.setUserid(user);
                             notifications.setDateNotification(new Date());
+                            notifications.setLu(false);
                             notificationRepository.save(notifications);
                             return ResponseEntity.ok(new Reponse(message, 1));
                         }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
@@ -157,6 +167,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                         notifications.setContenu(message);
                         notifications.setUserid(user);
                         notifications.setDateNotification(new Date());
+                        notifications.setLu(false);
                         notificationRepository.save(notifications);
                         return ResponseEntity.ok(new Reponse(message, 1));
 
@@ -176,9 +187,10 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                     a.setNomcomplet(agriculteurs.getNomcomplet());
                     a.setUsername(agriculteurs.getUsername());
                     a.setEtat(agriculteurs.getEtat());
+                    a.setEnligne(!agriculteurs.getEnligne());
                     agriculteursRepository.save(a);
 
-                    return new ResponseEntity<>("", HttpStatus.OK);
+                    return new ResponseEntity<>("Modification reçu", HttpStatus.OK);
 
                 }).orElseThrow(() -> new RuntimeException("Agriculteur non trouvé ! "));
     }

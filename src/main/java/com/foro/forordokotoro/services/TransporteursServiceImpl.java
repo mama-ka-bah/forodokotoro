@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Service
@@ -46,6 +49,7 @@ public class TransporteursServiceImpl implements TransporteursService{
         notifications.setUserid(userExistant);
         notifications.setDateNotification(new Date());
         notifications.setTitre("Demande de profil");
+        notifications.setLu(false);
         notificationRepository.save(notifications);
 
         emailSenderService.sendSimpleEmail(userExistant.getEmail(), notifications.getTitre(), notifications.getContenu());
@@ -76,11 +80,9 @@ public class TransporteursServiceImpl implements TransporteursService{
 
                 return ResponseEntity.ok(new Reponse(messae, 1));
             }else if(transporteurEnAttenteRepository.findByUserid(userExistant).getStatusdemande().equals(EstatusDemande.REJETER)){
-                //SimpleDateFormat obj =  new SimpleDateFormat( "MM-jj-aaaa HH:mm:ss" );
-                Date datejour = new Date();
-                Date datedemande = transporteurEnAttenteRepository.findByUserid(userExistant).getDatedemande();
-                long time_difference = datejour.getTime() - datedemande.getTime();
-                long days_difference = (time_difference / (1000*60*60*24)) % 365;
+                LocalDate datejour = LocalDate.now();
+                LocalDate datedemande = transporteurEnAttenteRepository.findByUserid(userExistant).getDatedemande();
+                long days_difference = ChronoUnit.DAYS.between(datedemande, datejour);
                 if (days_difference < 10){
                     return ResponseEntity.ok(new Reponse("Veuilez attendre 10 jours pour faire une nouvelle demande", 1));
                 }else{
@@ -116,7 +118,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                 return transporteurEnAttenteRepository.findById(transporteurAttente.getId())
                         .map(te-> {
                             te.setStatusdemande(EstatusDemande.ACCEPTER);
-                            te.setDateacceptation(new Date());
+                            te.setDateacceptation(LocalDate.now());
                             transporteurEnAttenteRepository.save(te);
 
                             utilisateursRepository.DEVENIRTRANSPORTEURDEPROFESSION(user.getId());
@@ -126,6 +128,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                             notifications.setContenu(message);
                             notifications.setUserid(user);
                             notifications.setDateNotification(new Date());
+                            notifications.setLu(false);
                             notificationRepository.save(notifications);
                             if(user.getEmail() != null){
                                 emailSenderService.sendSimpleEmail(user.getEmail(),"Acceptation de demande",message);
@@ -161,6 +164,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                             notifications.setUserid(user);
                             notifications.setTitre("Rejet de demande");
                             notifications.setDateNotification(new Date());
+                            notifications.setLu(false);
                             notificationRepository.save(notifications);
                             if(user.getEmail() != null){
                                 emailSenderService.sendSimpleEmail(user.getEmail(), notifications.getTitre(), notifications.getContenu());
@@ -186,6 +190,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                     t.setNomcomplet(transporteurs.getNomcomplet());
                     t.setUsername(transporteurs.getUsername());
                     t.setEtat(transporteurs.getEtat());
+                    t.setEnligne(!transporteurs.getEnligne());
                     transporteurRepository.save(t);
 
                     return new ResponseEntity<>("Modification reçu", HttpStatus.OK);

@@ -3,6 +3,7 @@ package com.foro.forordokotoro.Models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -18,9 +19,9 @@ public class TransporteurAttente {
 
     private String numeroplaque;
 
-    private Date datedemande;
+    private LocalDate datedemande;
 
-    private Date dateacceptation;
+    private LocalDate dateacceptation;
 
 
     @Enumerated(EnumType.STRING)

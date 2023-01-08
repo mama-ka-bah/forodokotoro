@@ -49,10 +49,11 @@ public class UtilisateursDetailsServiceImpl implements UserDetailsService, Utili
     return utilisateursRepository.findById(utilisateurs.getId())
             .map(u-> {
               u.setPassword(utilisateurs.getPassword());
-              u.setAdresse(utilisateurs.getEmail());
+              u.setAdresse(utilisateurs.getAdresse());
               u.setNomcomplet(utilisateurs.getNomcomplet());
               u.setUsername(utilisateurs.getUsername());
               u.setEtat(utilisateurs.getEtat());
+              u.setEmail(utilisateurs.getEmail());
               utilisateursRepository.save(u);
 
               return new ResponseEntity<>("Modification reçue", HttpStatus.OK);

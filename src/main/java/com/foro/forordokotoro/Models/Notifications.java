@@ -11,12 +11,10 @@ public class Notifications {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String contenu;
-
     private String titre;
-
     private Date dateNotification;
+    private Boolean lu;
 
 
     @ManyToOne

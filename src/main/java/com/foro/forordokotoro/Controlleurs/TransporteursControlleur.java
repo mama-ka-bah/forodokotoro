@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -46,7 +47,7 @@ public class TransporteursControlleur {
         demandeurProfil.setNumeroplaque(demandeurProfil1.getNumeroplaque());
         demandeurProfil.setDisponibilite(demandeurProfil1.getDisponibilite());
         demandeurProfil.setPhotopermis(nomfile);
-        demandeurProfil.setDatedemande(new Date());
+        demandeurProfil.setDatedemande(LocalDate.now());
         demandeurProfil.setStatusdemande(EstatusDemande.ENCOURS);
 
         return transporteursService.devenirTransporteur(id, demandeurProfil, url, nomfile, file);

@@ -6,27 +6,23 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
-@Entity
 @Data
-public class ProduitAgricole {
+@Entity
+public class Varietes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nom;
+    private Long cycle;
+    private Long taillefinal;
     private String photo;
     private  String description;
     private Boolean etat;
-    private Boolean statusSubvention;
-
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(  name = "produitagricole_varietes",
-            joinColumns = @JoinColumn(name = "produit_id"),
-            inverseJoinColumns = @JoinColumn(name = "varietes_id"))
-    private List<Varietes> roles = new ArrayList<>();
-
-
-
+    @JoinTable(  name = "varietes_previsions",
+            joinColumns = @JoinColumn(name = "varietes_id"),
+            inverseJoinColumns = @JoinColumn(name = "previsions_id"))
+    private List<Previsions> roles = new ArrayList<>();
 }

@@ -136,7 +136,7 @@ public class AuthController {
                                         @Valid  @RequestParam(value = "donneesuser") String donneesuser) throws IOException {
 
     //chemin de stockage des images
-    String url = "C:/Users/mkkeita/Desktop/projects/medias/images";
+    String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
 
     //recupere le nom de l'image
     String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
