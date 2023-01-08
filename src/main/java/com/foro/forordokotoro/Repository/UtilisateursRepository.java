@@ -1,5 +1,6 @@
 package com.foro.forordokotoro.Repository;
 
+import com.foro.forordokotoro.Models.Agriculteurs;
 import com.foro.forordokotoro.Models.Utilisateurs;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,6 +21,8 @@ public interface UtilisateursRepository extends JpaRepository<Utilisateurs, Long
   boolean existsById(Long id);
 
   Boolean existsByEmail(String email);
+
+  List<Utilisateurs> findByEtat(Boolean etat);
 
 
   @Modifying

@@ -28,6 +28,7 @@ public class JwtResponse {
     this.nomcomplet = nomcomplet;
   }
 
+  /*
   public String getAccessToken() {
     return token;
   }
@@ -43,6 +44,8 @@ public class JwtResponse {
   public void setTokenType(String tokenType) {
     this.type = tokenType;
   }
+
+   */
 
   public Long getId() {
     return id;

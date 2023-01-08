@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 /*
 
@@ -67,6 +69,11 @@ public class UtilisateursDetailsServiceImpl implements UserDetailsService, Utili
                     utilisateursRepository.save(u);
                     return new ResponseEntity<>("Modification reçue", HttpStatus.OK);
                 }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé ! "));
+    }
+
+    @Override
+    public List<Utilisateurs> recupererUtilisateurActive() {
+        return utilisateursRepository.findByEtat(true);
     }
 
 }

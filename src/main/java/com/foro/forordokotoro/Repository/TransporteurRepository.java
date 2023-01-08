@@ -27,4 +27,5 @@ public interface TransporteurRepository extends JpaRepository<Transporteurs, Lon
     int DEVENIRTRANSPORTEUR(@Param("id") Long id, @Param("disponibilite") Boolean disponibilite, @Param("photopermis") String photopermis, @Param("numeroplaque") String numeroplaque);
 
 
+    List<Transporteurs> findByEtat(Boolean etat);
 }

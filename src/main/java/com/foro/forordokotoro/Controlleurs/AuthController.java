@@ -125,8 +125,8 @@ public class AuthController {
                          utilisateursDetails.getEmail(),
                          roles,
                          utilisateursDetails.getAdresse(),
-                         utilisateursDetails.getNomcomplet(),
-                         utilisateursDetails.getPhoto()
+                          utilisateursDetails.getPhoto(),
+                         utilisateursDetails.getNomcomplet()
                          ));
   }
 
@@ -229,6 +229,11 @@ public class AuthController {
     ConfigImages.saveimg(url, nomfile, file);
 
     return utilisateurService.modifierProfil(id, nomfile);
+  }
+
+  @GetMapping("/utilisatuersactive")
+  public List<Utilisateurs> recupererUtilisateurActives(){
+    return utilisateurService.recupererUtilisateurActive();
   }
 
 

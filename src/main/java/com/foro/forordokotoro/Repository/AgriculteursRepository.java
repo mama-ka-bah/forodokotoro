@@ -28,5 +28,6 @@ public interface AgriculteursRepository extends JpaRepository<Agriculteurs, Long
     int DEVENIRAGRICULTEUR(@Param("id") Long id, @Param("photocarteidentite") String photocarteidentite);
 
 
+    List<Agriculteurs> findByEtat(Boolean etat);
 
 }
