@@ -17,16 +17,10 @@ public class EmailSenderService {
                                 String body
     ) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("coulibalyadamabekaye03@gmail.com");
+        message.setFrom("kmahamadou858@gmail.com");
         message.setTo(toEmail);
         message.setText(body);
         message.setSubject(subject);
-
-/*
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-
- */
 
         mailSender.send(message);
         System.out.println("Mail envoyer avec succès...");

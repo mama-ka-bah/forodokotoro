@@ -1,10 +1,12 @@
 package com.foro.forordokotoro.Models;
 
+import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Data
@@ -15,8 +17,12 @@ public class TransporteurAttente {
 
     private Boolean disponibilite;
 
+    @NotBlank
+    @Size(max = 25)
     private String photopermis;
 
+    @NotBlank
+    @Size(max = 20)
     private String numeroplaque;
 
     private LocalDate datedemande;

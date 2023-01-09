@@ -1,4 +1,4 @@
-package com.foro.forordokotoro.payload.Autres;
+package com.foro.forordokotoro.payload.request;
 
 import lombok.Data;
 

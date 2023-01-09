@@ -1,21 +1,17 @@
 package com.foro.forordokotoro;
 
-import com.foro.forordokotoro.Models.ERole;
+import com.foro.forordokotoro.Models.Enumerations.ERole;
 import com.foro.forordokotoro.Models.Role;
 import com.foro.forordokotoro.Models.Utilisateurs;
 import com.foro.forordokotoro.Repository.RoleRepository;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
-import com.foro.forordokotoro.payload.Autres.ConfigImages;
 import com.foro.forordokotoro.services.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.mail.MessagingException;
 import java.util.HashSet;
 import java.util.Set;
 

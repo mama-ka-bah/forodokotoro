@@ -1,4 +1,4 @@
-package com.foro.forordokotoro.Models;
+package com.foro.forordokotoro.Models.Enumerations;
 
 import lombok.Data;
 
@@ -6,17 +6,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Entity
 @Data
-public class Regions {
+public class CategoriesProblemesConseil {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(max = 60)
-    private String nom;
+    private String libelle;
+    private String description;
+
+    private Boolean etat;
 }

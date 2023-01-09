@@ -1,11 +1,10 @@
 package com.foro.forordokotoro.Controlleurs;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.foro.forordokotoro.Models.Agriculteurs;
-import com.foro.forordokotoro.Models.EstatusDemande;
+import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
 import com.foro.forordokotoro.Models.TransporteurAttente;
 import com.foro.forordokotoro.Models.Transporteurs;
-import com.foro.forordokotoro.payload.Autres.DemandeTransporteur;
+import com.foro.forordokotoro.payload.request.DemandeTransporteur;
 import com.foro.forordokotoro.services.TransporteursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Date;
 
 
 @RestController

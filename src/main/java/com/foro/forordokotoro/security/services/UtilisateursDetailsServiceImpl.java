@@ -48,11 +48,16 @@ public class UtilisateursDetailsServiceImpl implements UserDetailsService, Utili
   public ResponseEntity<?> modifierUtilisateur(Long id, Utilisateurs utilisateurs) {
     return utilisateursRepository.findById(utilisateurs.getId())
             .map(u-> {
+                if(utilisateurs.getPassword() != null)
               u.setPassword(utilisateurs.getPassword());
+                if(utilisateurs.getAdresse() != null)
               u.setAdresse(utilisateurs.getAdresse());
               u.setNomcomplet(utilisateurs.getNomcomplet());
+                if(utilisateurs.getUsername() != null)
               u.setUsername(utilisateurs.getUsername());
+                if(utilisateurs.getEtat() != null)
               u.setEtat(utilisateurs.getEtat());
+                if(utilisateurs.getEmail() != null)
               u.setEmail(utilisateurs.getEmail());
               utilisateursRepository.save(u);
 

@@ -1,7 +1,5 @@
 package com.foro.forordokotoro.Repository;
 
-import com.foro.forordokotoro.Models.Agriculteurs;
-import com.foro.forordokotoro.Models.EstatusDemande;
 import com.foro.forordokotoro.Models.Transporteurs;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.util.Date;
 import java.util.List;
 
 

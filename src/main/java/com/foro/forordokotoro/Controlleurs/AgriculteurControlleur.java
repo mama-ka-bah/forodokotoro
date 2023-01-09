@@ -3,11 +3,9 @@ package com.foro.forordokotoro.Controlleurs;
 
 import com.foro.forordokotoro.Models.Agriculteurs;
 import com.foro.forordokotoro.Models.AgricuteurAttente;
-import com.foro.forordokotoro.Models.EstatusDemande;
-import com.foro.forordokotoro.payload.Autres.ConfigImages;
+import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
 import com.foro.forordokotoro.services.AgriculteurService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping("/agriculteur")

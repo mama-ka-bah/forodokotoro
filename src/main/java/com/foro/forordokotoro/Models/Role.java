@@ -1,5 +1,6 @@
 package com.foro.forordokotoro.Models;
 
+import com.foro.forordokotoro.Models.Enumerations.ERole;
 import lombok.AllArgsConstructor;
 
 import javax.persistence.*;

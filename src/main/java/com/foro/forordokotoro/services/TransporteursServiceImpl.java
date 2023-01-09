@@ -1,10 +1,12 @@
 package com.foro.forordokotoro.services;
 
 import com.foro.forordokotoro.Models.*;
+import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
 import com.foro.forordokotoro.Repository.NotificationRepository;
 import com.foro.forordokotoro.Repository.TransporteurEnAttenteRepository;
 import com.foro.forordokotoro.Repository.TransporteurRepository;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
+import com.foro.forordokotoro.payload.Autres.ConfigImages;
 import com.foro.forordokotoro.payload.Autres.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -36,7 +38,10 @@ public class TransporteursServiceImpl implements TransporteursService{
     EmailSenderService emailSenderService;
 
 
-    public void demandeTransporteur(Long id, TransporteurAttente transporteurAttente, String url, String nomfile, MultipartFile file){
+    public void demandeTransporteur(Long id, TransporteurAttente transporteurAttente, String url, String nomfile, MultipartFile file) throws IOException {
+
+        ConfigImages.saveimg(url, nomfile, file);
+
         Utilisateurs userExistant = utilisateursRepository.findById(id).get();
         transporteurAttente.setUserid(userExistant);
         transporteurEnAttenteRepository.save(transporteurAttente);
@@ -57,7 +62,7 @@ public class TransporteursServiceImpl implements TransporteursService{
 
 
     @Override
-    public ResponseEntity<?> devenirTransporteur(Long id, TransporteurAttente transporteurs, String url, String nomfile, MultipartFile file) {
+    public ResponseEntity<?> devenirTransporteur(Long id, TransporteurAttente transporteurs, String url, String nomfile, MultipartFile file) throws IOException {
 
         if(utilisateursRepository.existsById(id)){
             Utilisateurs userExistant = utilisateursRepository.findById(id).get();
@@ -185,12 +190,16 @@ public class TransporteursServiceImpl implements TransporteursService{
     public ResponseEntity<?> modifierTransporteur(Long id, Transporteurs transporteurs) {
         return transporteurRepository.findById(transporteurs.getId())
                 .map(t-> {
+                    if(transporteurs.getPassword() != null)
                     t.setPassword(transporteurs.getPassword());
+                    if(transporteurs.getEmail() != null)
                     t.setAdresse(transporteurs.getEmail());
+                    if(transporteurs.getNomcomplet() != null)
                     t.setNomcomplet(transporteurs.getNomcomplet());
+                    if(transporteurs.getUsername() != null)
                     t.setUsername(transporteurs.getUsername());
+                    if(transporteurs.getEtat() != null)
                     t.setEtat(transporteurs.getEtat());
-                    t.setEnligne(!transporteurs.getEnligne());
                     transporteurRepository.save(t);
 
                     return new ResponseEntity<>("Modification reçu", HttpStatus.OK);

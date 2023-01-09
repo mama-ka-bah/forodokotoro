@@ -1,8 +1,8 @@
 package com.foro.forordokotoro.Controlleurs;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.*;
+import com.foro.forordokotoro.Models.Enumerations.ERole;
 import com.foro.forordokotoro.Repository.RoleRepository;
 import com.foro.forordokotoro.Repository.TransporteurRepository;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;

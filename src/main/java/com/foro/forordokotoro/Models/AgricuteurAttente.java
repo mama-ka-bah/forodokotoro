@@ -1,10 +1,12 @@
 package com.foro.forordokotoro.Models;
 
+import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Data
@@ -14,6 +16,8 @@ public class AgricuteurAttente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(max = 60)
     private String photocarteidentite;
 
     @Enumerated(EnumType.STRING)

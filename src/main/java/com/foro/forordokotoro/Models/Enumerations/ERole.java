@@ -1,4 +1,4 @@
-package com.foro.forordokotoro.Models;
+package com.foro.forordokotoro.Models.Enumerations;
 
 public enum ERole {
   ROLE_USER,

@@ -1,6 +1,7 @@
 package com.foro.forordokotoro.services;
 
 import com.foro.forordokotoro.Models.*;
+import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
 import com.foro.forordokotoro.Repository.AgriculteurEnAttenteRepository;
 import com.foro.forordokotoro.Repository.AgriculteursRepository;
 import com.foro.forordokotoro.Repository.NotificationRepository;
@@ -15,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -182,12 +182,16 @@ public class AgriculteurServiceImpl implements AgriculteurService{
     public ResponseEntity<?> modifierAgriculteur(Long id, Agriculteurs agriculteurs) {
         return agriculteursRepository.findById(agriculteurs.getId())
                 .map(a-> {
+                    if(agriculteurs.getPassword() != null)
                     a.setPassword(agriculteurs.getPassword());
+                    if(agriculteurs.getEmail() != null)
                     a.setAdresse(agriculteurs.getEmail());
+                    if(agriculteurs.getNomcomplet() != null)
                     a.setNomcomplet(agriculteurs.getNomcomplet());
+                    if(agriculteurs.getUsername() != null)
                     a.setUsername(agriculteurs.getUsername());
+                    if(agriculteurs.getEtat() != null)
                     a.setEtat(agriculteurs.getEtat());
-                    a.setEnligne(!agriculteurs.getEnligne());
                     agriculteursRepository.save(a);
 
                     return new ResponseEntity<>("Modification reçu", HttpStatus.OK);

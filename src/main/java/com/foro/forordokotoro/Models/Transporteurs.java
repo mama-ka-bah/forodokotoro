@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Data
@@ -16,8 +18,12 @@ public class Transporteurs extends Utilisateurs{
 
     private Boolean disponibilite;
 
+    @NotBlank
+    @Size(max = 25)
     private String photopermis;
 
+    @NotBlank
+    @Size(max = 25)
     private String numeroplaque;
 
 
