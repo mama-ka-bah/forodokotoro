@@ -56,4 +56,9 @@ public class VarietesControlleur {
 
         return varietesServices.modifiervarietes(idvariete, varietes);
     }
+
+    @GetMapping("/detailVarietes/{id}")
+    public Varietes recupererDetailVariete(@PathVariable Long id){
+        return  varietesServices.recupererVarieteParId(id);
+    }
 }

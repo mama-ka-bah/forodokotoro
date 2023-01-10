@@ -22,4 +22,6 @@ public interface TransporteursService {
     //ResponseEntity<?> modifierAgriculteur(Long id, Transporteurs transporteurs);
 
     ResponseEntity<?> modifierTransporteur(Long id, Transporteurs transporteurs);
+
+    Transporteurs recupererTransporteurParId(Long id);
 }

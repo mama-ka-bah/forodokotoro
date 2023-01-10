@@ -4,6 +4,7 @@ package com.foro.forordokotoro.Controlleurs;
 import com.foro.forordokotoro.Models.Agriculteurs;
 import com.foro.forordokotoro.Models.AgricuteurAttente;
 import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
+import com.foro.forordokotoro.Models.Stocks;
 import com.foro.forordokotoro.services.AgriculteurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -83,6 +84,11 @@ public class AgriculteurControlleur {
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody Agriculteurs agriculteurs) {
 
         return agriculteurService.modifierAgriculteur(id, agriculteurs);
+    }
+
+    @GetMapping("/detailagriculteur/{id}")
+    public Agriculteurs recupereragriculteurdetail(@PathVariable Long id){
+        return  agriculteurService.recupererAgriculteurPArId(id);
     }
 
 

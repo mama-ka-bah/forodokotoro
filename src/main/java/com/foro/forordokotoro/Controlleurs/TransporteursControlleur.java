@@ -70,4 +70,9 @@ public class TransporteursControlleur {
         return transporteursService.modifierTransporteur(id, transporteurs);
     }
 
+    @GetMapping("/detailChamp/{id}")
+    public Transporteurs recupererTransporteurDetail(@PathVariable Long id){
+        return  transporteursService.recupererTransporteurParId(id);
+    }
+
 }

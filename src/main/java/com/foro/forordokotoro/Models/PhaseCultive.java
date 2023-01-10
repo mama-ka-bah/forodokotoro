@@ -22,6 +22,8 @@ public class PhaseCultive {
     private LocalDate datefin;
     private Long nbrepluies;
 
+    @Size(max = 120)
+    private String photo;
     private Boolean etat;
 
     @NotBlank

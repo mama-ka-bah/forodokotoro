@@ -3,12 +3,15 @@ package com.foro.forordokotoro.services;
 import com.foro.forordokotoro.Models.Cultive;
 import com.foro.forordokotoro.Repository.ChampsRepository;
 import com.foro.forordokotoro.Repository.CultiveRepository;
+import com.foro.forordokotoro.payload.Autres.ConfigImages;
 import com.foro.forordokotoro.payload.Autres.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package com.foro.forordokotoro.Controlleurs;
 
+import com.foro.forordokotoro.Models.Champ;
 import com.foro.forordokotoro.Models.Cultive;
 import com.foro.forordokotoro.services.ChampServices;
 import com.foro.forordokotoro.services.CultivesService;
@@ -54,6 +55,11 @@ public class CultivesControlleur {
     @GetMapping("/cultiveparReference/{reference}")
     Cultive recupererCultiveParReference(@PathVariable String reference){
         return cultivesService.recupererCultiveParReference(reference);
+    }
+
+    @GetMapping("/detailCultive/{id}")
+    public Cultive recupererCultiveDetail(@PathVariable Long id){
+        return  cultivesService.recupererParId(id);
     }
 
 }

@@ -45,4 +45,9 @@ public class ProduitAgricolesControlleur {
     public List<ProduitAgricole> produitAgricoleActives(){
         return  produitAgricoleService.RecupererproduitAgricoleActives();
     }
+
+    @GetMapping("/detailproduitagricole/{id}")
+    public ProduitAgricole recupererDetailProduitAgricole(@PathVariable Long id){
+        return  produitAgricoleService.recupererProduitAgricoleParId(id);
+    }
 }

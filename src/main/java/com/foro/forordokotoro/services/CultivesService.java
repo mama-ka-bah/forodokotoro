@@ -3,7 +3,9 @@ package com.foro.forordokotoro.services;
 import com.foro.forordokotoro.Models.Champ;
 import com.foro.forordokotoro.Models.Cultive;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 

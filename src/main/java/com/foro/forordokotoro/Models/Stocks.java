@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -30,6 +31,8 @@ public class Stocks {
     @Size(max = 25)
     private String photo;
     private Boolean disponibilite;
+
+    private LocalDate datepublication;
     private Boolean etat;
 
     @ManyToOne

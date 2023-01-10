@@ -207,5 +207,10 @@ public class TransporteursServiceImpl implements TransporteursService{
                 }).orElseThrow(() -> new RuntimeException("Transporteur en attente non trouvé ! "));
     }
 
+    @Override
+    public Transporteurs recupererTransporteurParId(Long id) {
+        return transporteurRepository.findById(id).get();
+    }
+
 
 }

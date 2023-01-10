@@ -52,4 +52,9 @@ public class PrevisionServiceImpl implements PrevisionService{
     public List<Previsions> recupererPrevisionActives() {
         return previsionsRepository.findByEtat(true);
     }
+
+    @Override
+    public Previsions recupererPrevisionParId(Long id) {
+        return previsionsRepository.findById(id).get();
+    }
 }

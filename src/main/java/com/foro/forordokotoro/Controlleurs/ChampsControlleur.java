@@ -2,7 +2,9 @@ package com.foro.forordokotoro.Controlleurs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.foro.forordokotoro.Models.Agriculteurs;
 import com.foro.forordokotoro.Models.Champ;
+import com.foro.forordokotoro.Models.Cultive;
 import com.foro.forordokotoro.Models.Enumerations.EstatusChamps;
 import com.foro.forordokotoro.Repository.ChampsRepository;
 import com.foro.forordokotoro.services.AgriculteurService;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/champs")
@@ -42,6 +45,22 @@ public class ChampsControlleur {
         champ.setStatus(EstatusChamps.LIBRE);
 
         return champServices.ajouterChamp(champ, url, nomfile, file);
+    }
+
+    @GetMapping("/recupererchampactives")
+    List<Champ> recupererCultiveChamp(){
+        return champServices.recuperChampActives();
+    }
+
+    @GetMapping("/modifierchamp/{idchamp}")
+    ResponseEntity<?> modifierChamp(@RequestBody Champ champ, @PathVariable Long id){
+        return champServices.modifierChamp(id, champ);
+    }
+
+
+    @GetMapping("/detailChamp/{id}")
+    public Champ recupererChampDetail(@PathVariable Long id){
+        return  champServices.recupererChampParId(id);
     }
 
 

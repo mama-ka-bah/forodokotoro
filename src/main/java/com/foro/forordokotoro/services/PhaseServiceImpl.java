@@ -2,13 +2,16 @@ package com.foro.forordokotoro.services;
 
 import com.foro.forordokotoro.Models.PhaseCultive;
 import com.foro.forordokotoro.Repository.PhaseCultiveRepository;
+import com.foro.forordokotoro.payload.Autres.ConfigImages;
 import com.foro.forordokotoro.payload.Autres.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -18,10 +21,12 @@ public class PhaseServiceImpl implements PhaseService{
     PhaseCultiveRepository phaseCultiveRepository;
 
     @Override
-    public ResponseEntity<?> ajouterPhase(PhaseCultive phaseCultive) {
+    public ResponseEntity<?> ajouterPhase(PhaseCultive phaseCultive, String url, String nomfile, MultipartFile file) throws IOException {
         if(phaseCultiveRepository.existsByLibelle(phaseCultive.getLibelle())){
             return ResponseEntity.ok(new Reponse(phaseCultive.getLibelle() + " existe déjà", 0));
         }else {
+            ConfigImages.saveimg(url, nomfile, file);
+            phaseCultive.setPhoto(nomfile);
             phaseCultiveRepository.save(phaseCultive);
             return ResponseEntity.ok(new Reponse(phaseCultive.getLibelle() + " a été ajouter avec succès", 1));
         }

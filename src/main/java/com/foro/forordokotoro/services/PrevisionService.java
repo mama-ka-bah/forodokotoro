@@ -10,4 +10,5 @@ public interface PrevisionService {
     ResponseEntity<?> modifierPrevision(Long id, Previsions previsions);
 
     List<Previsions> recupererPrevisionActives();
+    Previsions recupererPrevisionParId(Long id);
 }
