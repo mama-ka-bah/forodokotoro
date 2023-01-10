@@ -43,7 +43,7 @@ public class PhaseServiceImpl implements PhaseService{
 
                     return new ResponseEntity<>("Modification reçu", HttpStatus.OK);
 
-                }).orElseThrow(() -> new RuntimeException("Champ non trouvé ! "));
+                }).orElseThrow(() -> new RuntimeException("Phase non trouvé ! "));
     }
 
     @Override

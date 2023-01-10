@@ -1,5 +1,7 @@
 package com.foro.forordokotoro.Models;
 
+import com.foro.forordokotoro.Models.Enumerations.ERole;
+import com.foro.forordokotoro.Models.Enumerations.EstatusChamps;
 import com.foro.forordokotoro.Models.Enumerations.EtypeChamp;
 import lombok.Data;
 
@@ -32,6 +34,10 @@ public class Champ {
     private String photo;
 
     private Boolean etat;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private EstatusChamps status;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)

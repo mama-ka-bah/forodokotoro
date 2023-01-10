@@ -3,6 +3,10 @@ package com.foro.forordokotoro.Repository;
 import com.foro.forordokotoro.Models.Previsions;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PrevisionsRepository extends JpaRepository<Previsions, Long> {
+import java.util.List;
 
+public interface PrevisionsRepository extends JpaRepository<Previsions, Long> {
+    Boolean existsByLibelle(String libelle);
+    Previsions findByLibelle(String libelle);
+    List<Previsions> findByEtat(Boolean etat);
 }

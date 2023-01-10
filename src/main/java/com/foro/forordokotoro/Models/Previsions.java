@@ -20,6 +20,7 @@ public class Previsions {
     @Size(max = 150)
     private String libelle;
     private  Long delaijour;
-
-    private Boolean critrerepluie;
+    private Long nbrepluienecessaire;
+    private Long nbrepluie;
+    private Boolean etat;
 }

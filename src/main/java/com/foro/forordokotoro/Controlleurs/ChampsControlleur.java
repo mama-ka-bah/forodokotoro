@@ -3,6 +3,7 @@ package com.foro.forordokotoro.Controlleurs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.Champ;
+import com.foro.forordokotoro.Models.Enumerations.EstatusChamps;
 import com.foro.forordokotoro.Repository.ChampsRepository;
 import com.foro.forordokotoro.services.AgriculteurService;
 import com.foro.forordokotoro.services.ChampServices;
@@ -37,6 +38,8 @@ public class ChampsControlleur {
 
         Champ champ = new JsonMapper().readValue(champReçu, Champ.class);
         champ.setProprietaire(agriculteurService.recupererAgriculteurPArId(idproprietaire));
+
+        champ.setStatus(EstatusChamps.LIBRE);
 
         return champServices.ajouterChamp(champ, url, nomfile, file);
     }
