@@ -77,7 +77,11 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
                 String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
 
-                emailSenderService.sendSimpleEmail(userExistant.getEmail(), "Demande de profil agriculteur", message);
+                try {
+                    emailSenderService.sendSimpleEmail(userExistant.getEmail(), "Demande de profil agriculteur", message);
+                }catch (Exception e){
+                    System.out.println(e);
+                }
                 return ResponseEntity.ok(new Reponse(message, 1));
             }else if(agriculteurEnAttenteRepository.findByUserid(userExistant).getStatusdemande().equals(EstatusDemande.ENCOURS)){
 
@@ -96,7 +100,11 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
                     String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
 
-                    emailSenderService.sendSimpleEmail(userExistant.getEmail(), "Demande de profil agriculteur", message);
+                    try{
+                        emailSenderService.sendSimpleEmail(userExistant.getEmail(), "Demande de profil agriculteur", message);
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
 
                     return ResponseEntity.ok(new Reponse(message, 1));
                 }
@@ -136,6 +144,11 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                             notifications.setDateNotification(new Date());
                             notifications.setLu(false);
                             notificationRepository.save(notifications);
+                            try {
+                                emailSenderService.sendSimpleEmail(user.getEmail(), "Acceptation de demande", message);
+                            }catch (Exception e){
+                                System.out.println(e);
+                            }
                             return ResponseEntity.ok(new Reponse(message, 1));
                         }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
@@ -197,6 +210,11 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                     return new ResponseEntity<>("Modification reçu", HttpStatus.OK);
 
                 }).orElseThrow(() -> new RuntimeException("Agriculteur non trouvé ! "));
+    }
+
+    @Override
+    public Agriculteurs recupererAgriculteurPArId(Long id) {
+        return agriculteursRepository.findById(id).get();
     }
 
 }

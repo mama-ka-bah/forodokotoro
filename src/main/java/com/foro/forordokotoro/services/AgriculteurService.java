@@ -24,4 +24,5 @@ public interface AgriculteurService {
    ResponseEntity<?> rejeterAgriculteur(String username);
 
    ResponseEntity<?> modifierAgriculteur(Long id, Agriculteurs agriculteurs);
+   Agriculteurs recupererAgriculteurPArId(Long id);
 }

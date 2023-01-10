@@ -35,10 +35,12 @@ public class Cultive {
     private Boolean etat;
     private LocalDate datearrive;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(  name = "cultive_etat",
-            joinColumns = @JoinColumn(name = "cultive_id"),
-            inverseJoinColumns = @JoinColumn(name = "etat_id"))
-    private List<EtatCultive> etatcultives = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "varietes_id")
+    private Varietes varietes;
+
+    @ManyToOne
+    @JoinColumn(name = "champ_id")
+    private Champ champ;
 
 }

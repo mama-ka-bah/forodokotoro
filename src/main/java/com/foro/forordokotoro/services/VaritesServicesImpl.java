@@ -71,4 +71,9 @@ public class VaritesServicesImpl implements VarietesServices {
 
         return varietesRepository.findByProduitagricole(produitAgricole);
     }
+
+    @Override
+    public Varietes recupererVarieteParId(Long id) {
+        return varietesRepository.findById(id).get();
+    }
 }

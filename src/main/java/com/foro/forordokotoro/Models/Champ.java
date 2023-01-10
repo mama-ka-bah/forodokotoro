@@ -14,24 +14,30 @@ public class Champ {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    @NotBlank
+    @Size(max = 120)
+    private String nom;
     @Size(max = 10)
     private Long longueur;
 
     @Size(max = 10)
     private  Long Largeur;
 
-    @Size(max = 20)
-    private Long surface;
-
     @Size(max = 100)
-    private Long adresse;
+    private String adresse;
+
+    @NotBlank
+    @Size(max = 60)
+    private String photo;
+
     private Boolean etat;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private EtypeChamp etypeChamp;
 
-    @ManyToOne
-    @JoinColumn(name = "champ_id")
-    private Champ champ;
+   @ManyToOne
+   @JoinColumn(name = "proprietaire_id")
+   private Agriculteurs proprietaire;
 }

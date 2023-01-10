@@ -14,4 +14,6 @@ public interface VarietesServices {
     List<Varietes> recupererVarietesActives();
     ResponseEntity<?> modifierPhotoVarietes(String url, String nomfile, MultipartFile file);
     List<Varietes> recupererVarietesParProduitAgricole(ProduitAgricole produitAgricole);
+
+    Varietes recupererVarieteParId(Long id);
 }
