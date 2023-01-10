@@ -37,6 +37,7 @@ public class ProduitAgricolesControlleur {
 
     @PatchMapping("/modifier/{id}")
     public ResponseEntity<?> modifierProduitAgricole(@RequestBody ProduitAgricole produitAgricole, @PathVariable Long id){
+
         return  produitAgricoleService.modifierProduitAgricole(produitAgricole, id);
     }
 

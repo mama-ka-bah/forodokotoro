@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/varietes")
@@ -38,5 +39,21 @@ public class VarietesControlleur {
         varietes.setProduitagricole(produitAgricoleService.recupererProduitAgricoleParId(idproduit));
 
         return varietesServices.ajouterVarietes(varietes,url,nomfile, file);
+    }
+
+    @GetMapping("/recuperervarietesactives")
+    public List<Varietes> recupererVarietesActives(){
+        return varietesServices.recupererVarietesActives();
+    }
+
+    @GetMapping("/recuperervarietesparproduit/{idvariete}")
+    public List<Varietes> recupererVarietesParProduit(@PathVariable Long idvariete){
+        return varietesServices.recupererVarietesParProduitAgricole(produitAgricoleService.recupererProduitAgricoleParId(idvariete));
+    }
+
+    @GetMapping("/modifier/{idvariete}")
+    public ResponseEntity<?> modifierVarietes(@RequestBody Varietes varietes, @PathVariable Long idvariete) {
+
+        return varietesServices.modifiervarietes(idvariete, varietes);
     }
 }

@@ -34,7 +34,7 @@ public class Commentaires {
 
     @ManyToOne
     @JoinColumn(name = "problemes_id")
-    private Problemes problemes;
+    private Publications problemes;
 
     @ManyToOne
     @JoinColumn(name = "posteur_id")

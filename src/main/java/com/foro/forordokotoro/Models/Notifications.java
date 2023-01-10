@@ -28,4 +28,8 @@ public class Notifications {
     @ManyToOne
     @JoinColumn(name = "userid_id")
     private Utilisateurs userid;
+
+    @ManyToOne
+    @JoinColumn(name = "champ_id")
+    private Champ champ;
 }

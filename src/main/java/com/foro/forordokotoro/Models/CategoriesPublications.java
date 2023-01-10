@@ -1,4 +1,4 @@
-package com.foro.forordokotoro.Models.Enumerations;
+package com.foro.forordokotoro.Models;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class CategoriesProblemesConseil {
+public class CategoriesPublications {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

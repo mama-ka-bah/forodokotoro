@@ -8,8 +8,9 @@ import java.util.List;
 
 public interface VarietesRepository extends JpaRepository<Varietes, Long> {
     Boolean existsByNom(String nom);
-
     Varietes findByNom(String nom);
-
     List<Varietes> findByProduitagricole(ProduitAgricole produitAgricole);
+    List<Varietes> findByEtat(Boolean etat);
 }
+
+

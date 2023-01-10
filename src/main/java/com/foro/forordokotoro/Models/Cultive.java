@@ -27,16 +27,13 @@ public class Cultive {
 
     @Size(max = 15)
     private String recolterealise;
-    private LocalDate datesemis;
+    private LocalDate datedebutsemis;
+    private LocalDate datefinsemis;
 
     @Size(max = 5)
     private Long quantiteseme;
     private Boolean etat;
     private LocalDate datearrive;
-
-    @ManyToOne
-    @JoinColumn(name = "champ_id")
-    private Champ champ;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "cultive_etat",

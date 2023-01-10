@@ -1,5 +1,6 @@
 package com.foro.forordokotoro.services;
 
+import com.foro.forordokotoro.Models.ProduitAgricole;
 import com.foro.forordokotoro.Models.Varietes;
 import com.foro.forordokotoro.Repository.VarietesRepository;
 import com.foro.forordokotoro.payload.Autres.ConfigImages;
@@ -32,16 +33,42 @@ public class VaritesServicesImpl implements VarietesServices {
 
     @Override
     public ResponseEntity<?> modifiervarietes(Long id, Varietes varietes) {
-        return null;
+        return varietesRepository.findById(id)
+                .map(v-> {
+                    if(varietes.getNom() != null)
+                        v.setNom(varietes.getNom());
+                    if(varietes.getDescription() != null)
+                        v.setDescription(varietes.getDescription());
+                    if(varietes.getEtat() != null)
+                        v.setEtat(varietes.getEtat());
+                    if(varietes.getCycle() != null)
+                        v.setCycle(varietes.getCycle());
+                    if(varietes.getPrevisions() != null)
+                        v.setPrevisions(varietes.getPrevisions());
+                    if(varietes.getProduitagricole() != null)
+                        v.setProduitagricole(varietes.getProduitagricole());
+                    if(varietes.getTaillefinal() != null)
+                        v.setTaillefinal(varietes.getTaillefinal());
+                    varietesRepository.save(v);
+
+                    return ResponseEntity.ok(new Reponse("Modification reçu", 1));
+
+                }).orElseThrow(() -> new RuntimeException("Produit non trouvé ! "));
     }
 
     @Override
     public List<Varietes> recupererVarietesActives() {
-        return null;
+        return varietesRepository.findByEtat(true);
     }
 
     @Override
     public ResponseEntity<?> modifierPhotoVarietes(String url, String nomfile, MultipartFile file) {
         return null;
+    }
+
+    @Override
+    public List<Varietes> recupererVarietesParProduitAgricole(ProduitAgricole produitAgricole) {
+
+        return varietesRepository.findByProduitagricole(produitAgricole);
     }
 }

@@ -1,5 +1,6 @@
 package com.foro.forordokotoro.Models;
 
+import com.foro.forordokotoro.Models.Enumerations.Eactions;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,21 +10,25 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-public class Prix {
+public class PhaseCultive {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 25)
-    private Long valeur;
     private LocalDate datedebut;
     private LocalDate datefin;
+    private Long nbrepluies;
+
+    @NotBlank
+    @Size(max = 150)
+    private String remarques;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 120)
+    private Eactions action;
 
     @ManyToOne
-    @JoinColumn(name = "produit_agricole_id")
-    private ProduitAgricole produitAgricole;
+    @JoinColumn(name = "cultive_id")
+    private Cultive cultive;
 
-    @ManyToOne
-    @JoinColumn(name = "regions_id")
-    private Regions regions;
 }
