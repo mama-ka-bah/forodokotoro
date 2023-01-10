@@ -78,4 +78,9 @@ public class CultiveServiceImpl implements CultivesService{
     public Cultive recupererCultiveParReference(String reference) {
         return cultiveRepository.findByReference(reference);
     }
+
+    @Override
+    public Cultive recupererParId(Long id) {
+        return cultiveRepository.findById(id).get();
+    }
 }

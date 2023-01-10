@@ -15,9 +15,14 @@ public class PhaseCultive {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(max = 150)
+    private String libelle;
     private LocalDate datedebut;
     private LocalDate datefin;
     private Long nbrepluies;
+
+    private Boolean etat;
 
     @NotBlank
     @Size(max = 150)

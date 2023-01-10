@@ -15,4 +15,6 @@ public interface CultivesService {
     Cultive recupererCultiveDunChampEnfonctionDateDebut(LocalDate datedebut, Long champid);
 
     Cultive recupererCultiveParReference(String reference);
+
+    Cultive recupererParId(Long id);
 }
