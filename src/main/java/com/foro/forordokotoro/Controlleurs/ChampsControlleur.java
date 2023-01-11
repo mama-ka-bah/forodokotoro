@@ -1,12 +1,8 @@
 package com.foro.forordokotoro.Controlleurs;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.foro.forordokotoro.Models.Agriculteurs;
 import com.foro.forordokotoro.Models.Champ;
-import com.foro.forordokotoro.Models.Cultive;
 import com.foro.forordokotoro.Models.Enumerations.EstatusChamps;
-import com.foro.forordokotoro.Repository.ChampsRepository;
 import com.foro.forordokotoro.services.AgriculteurService;
 import com.foro.forordokotoro.services.ChampServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,12 +53,9 @@ public class ChampsControlleur {
         return champServices.modifierChamp(id, champ);
     }
 
-
     @GetMapping("/detailChamp/{id}")
     public Champ recupererChampDetail(@PathVariable Long id){
         return  champServices.recupererChampParId(id);
     }
-
-
 
 }
