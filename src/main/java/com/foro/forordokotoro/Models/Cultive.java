@@ -23,7 +23,7 @@ public class Cultive {
 
     @NotBlank
     @Size(max = 15)
-    private String recoleprevue;
+    private Long recoleprevue;
 
     @Size(max = 15)
     private String recolterealise;
@@ -33,14 +33,19 @@ public class Cultive {
     @Size(max = 5)
     private Long quantiteseme;
     private Boolean etat;
-    private LocalDate datearrive;
 
     @ManyToOne
     @JoinColumn(name = "varietes_id")
     private Varietes varietes;
 
+    /*
     @ManyToOne
     @JoinColumn(name = "champ_id")
     private Champ champ;
+     */
+
+    @ManyToOne
+    @JoinColumn(name = "champ_id")
+    private Parserelle parserelle;
 
 }

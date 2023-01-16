@@ -1,6 +1,7 @@
 package com.foro.forordokotoro.Controlleurs;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.foro.forordokotoro.Models.EvolutionStock;
 import com.foro.forordokotoro.Models.PhaseCultive;
 import com.foro.forordokotoro.Models.ProduitAgricole;
 import com.foro.forordokotoro.Models.Stocks;
@@ -61,5 +62,25 @@ public class StockControlleur {
     @GetMapping("/detailstock/{id}")
     public Stocks recupererprodudetailstock(@PathVariable Long id){
         return  stocksService.recupererParId(id);
+    }
+
+    @PostMapping("/mettrejourstock")
+    public ResponseEntity<?> mettreJourStock(@RequestBody EvolutionStock evolutionStock){
+        return stocksService.mettreajourLestock(evolutionStock);
+    }
+
+    @GetMapping("/recuperertousevolutionstocks")
+    public List<EvolutionStock> recupererTousEvolutionStocks(){
+        return stocksService.recupererEvolutionStock();
+    }
+
+    @PatchMapping("/modifierevolutionstocks{id}")
+    public ResponseEntity<?> modifierEvolutionStocks(Long id, @RequestBody EvolutionStock evolutionStock){
+        return stocksService.modifierEvolution(evolutionStock, id);
+    }
+
+    @DeleteMapping("/supprimererevolutionstocks{id}")
+    public ResponseEntity<?> supprimerEvolutionStocks(Long id){
+        return stocksService.supprimerEvolutionStock(id);
     }
 }

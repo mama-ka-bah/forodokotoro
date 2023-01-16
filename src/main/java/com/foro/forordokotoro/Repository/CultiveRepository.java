@@ -2,6 +2,7 @@ package com.foro.forordokotoro.Repository;
 
 import com.foro.forordokotoro.Models.Champ;
 import com.foro.forordokotoro.Models.Cultive;
+import com.foro.forordokotoro.Models.Parserelle;
 import com.foro.forordokotoro.Models.Varietes;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,10 +13,12 @@ public interface CultiveRepository extends JpaRepository<Cultive, Long> {
 
     Boolean existsByReference(String reference);
     Boolean existsByDatedebutsemis(String datedebutsemis);
-    List<Cultive> findByChamp(Champ champ);
+    List<Cultive> findByParserelle(Parserelle parserelle);
     Cultive findByVarietes(Varietes varietes);
     Cultive findByReference(String reference);
 
     List<Cultive> findByEtat(Boolean etat);
-    Cultive findByDatedebutsemisAndChamp(LocalDate datedebutsemis, Champ champ);
+
+    //retourne le cultive d'une parserelle en fonction de la date de debut de semis et d'une parserelle
+    Cultive findByDatedebutsemisAndParserelle(LocalDate datedebutsemis, Parserelle parserelle);
 }

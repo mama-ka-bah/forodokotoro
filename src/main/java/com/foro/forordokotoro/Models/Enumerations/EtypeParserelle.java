@@ -1,6 +1,6 @@
 package com.foro.forordokotoro.Models.Enumerations;
 
-public enum EstatusChamps {
-    LIBRE,
-    OCCUPE
+public enum EtypeParserelle {
+    GRAINE,
+    SEMENCE
 }

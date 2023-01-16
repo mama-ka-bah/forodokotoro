@@ -2,6 +2,7 @@ package com.foro.forordokotoro.Controlleurs;
 
 import com.foro.forordokotoro.Models.Champ;
 import com.foro.forordokotoro.Models.Cultive;
+import com.foro.forordokotoro.Repository.ParserelleRepository;
 import com.foro.forordokotoro.services.ChampServices;
 import com.foro.forordokotoro.services.CultivesService;
 import com.foro.forordokotoro.services.VarietesServices;
@@ -25,25 +26,28 @@ public class CultivesControlleur {
     @Autowired
     VarietesServices varietesServices;
 
-    @PostMapping("/ajouter/{varieteid}/{champid}")
-    ResponseEntity<?> ajouterCultive(@RequestBody Cultive cultive, @PathVariable Long varieteid, @PathVariable Long champid){
-        cultive.setChamp(champServices.recupererChampParId(champid));
+    @Autowired
+    ParserelleRepository parserelleRepository;
+
+    @PostMapping("/ajouter/{varieteid}/{parserelleid}")
+    public ResponseEntity<?> ajouterCultive(@RequestBody Cultive cultive, @PathVariable Long varieteid, @PathVariable Long parserelleid){
+        cultive.setParserelle(parserelleRepository.findById(parserelleid).get());
         cultive.setVarietes(varietesServices.recupererVarieteParId(varieteid));
         return cultivesService.ajouterCultive(cultive);
     }
 
     @PutMapping("/modifier/{idcultive}")
-    ResponseEntity<?> modifierCultive(@RequestBody Cultive cultive, @PathVariable Long idcultive){
+    public ResponseEntity<?> modifierCultive(@RequestBody Cultive cultive, @PathVariable Long idcultive){
         return cultivesService.modifierCultive(cultive, idcultive);
     }
 
     @GetMapping("/cultivedunchamp/{idchamp}")
-    List<Cultive> recupererCultiveChamp(@PathVariable Long idchamp){
+    public List<Cultive> recupererCultiveChamp(@PathVariable Long idchamp){
         return cultivesService.recupererCultiveDunchamp(idchamp);
     }
 
     @GetMapping("/tousLesCultiveActive")
-    List<Cultive> modifierCultive(){
+    public List<Cultive> modifierCultive(){
         return cultivesService.recupererTousLesCultiveActive();
     }
 
@@ -53,7 +57,7 @@ public class CultivesControlleur {
     }
 
     @GetMapping("/cultiveparReference/{reference}")
-    Cultive recupererCultiveParReference(@PathVariable String reference){
+    public Cultive recupererCultiveParReference(@PathVariable String reference){
         return cultivesService.recupererCultiveParReference(reference);
     }
 

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface ChampServices {
@@ -13,4 +14,7 @@ public interface ChampServices {
     List<Champ> recuperChampActives();
 
     Champ recupererChampParId(Long id);
+    ResponseEntity<?> incrementerNombreParserelle(Long id);
+
+    ArrayList<Double> verifierDisponibiliteDimension(Long champid);
 }

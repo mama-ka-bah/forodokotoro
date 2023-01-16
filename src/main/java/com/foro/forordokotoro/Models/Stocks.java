@@ -22,10 +22,9 @@ public class Stocks {
     private Long prixkilo;
 
     @Size(max = 25)
-    private Long prixtotal;
-
-    @Size(max = 25)
     private Long  nombrekilo;
+
+    private Long quantiterestant;
 
     @NotBlank
     @Size(max = 25)

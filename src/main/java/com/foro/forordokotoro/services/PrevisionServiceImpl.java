@@ -50,7 +50,7 @@ public class PrevisionServiceImpl implements PrevisionService{
 
     @Override
     public List<Previsions> recupererPrevisionActives() {
-        return previsionsRepository.findByEtat(true);
+        return previsionsRepository.findByEtatOrderByDelaijour(true);
     }
 
     @Override

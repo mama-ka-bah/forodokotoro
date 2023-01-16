@@ -23,12 +23,13 @@ public class Varietes {
     @Size(max = 60)
     private Long cycle;
 
-    @Size(max = 25)
     private Long taillefinal;
 
     @NotBlank
     @Size(max = 25)
     private String photo;
+
+    private Long resultatparkilo;
 
     @NotBlank
     @Size(max = 255)

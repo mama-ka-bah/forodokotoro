@@ -15,6 +15,8 @@ public class JwtResponse {
   private String photo;
   private String nomcomplet;
   private List<String> roles;
+  private Boolean disponibilite;
+  private String numeroplaque;
 
   public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles, String adresse,
                      String photo, String nomcomplet) {
@@ -26,6 +28,20 @@ public class JwtResponse {
     this.adresse = adresse;
     this.photo = photo;
     this.nomcomplet = nomcomplet;
+  }
+
+  public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles, String adresse,
+                     String photo, String nomcomplet, Boolean disponibilite, String numeroplaque) {
+    this.token = accessToken;
+    this.id = id;
+    this.username = username;
+    this.email = email;
+    this.roles = roles;
+    this.adresse = adresse;
+    this.photo = photo;
+    this.nomcomplet = nomcomplet;
+    this.disponibilite = disponibilite;
+    this.numeroplaque = numeroplaque;
   }
 
   /*

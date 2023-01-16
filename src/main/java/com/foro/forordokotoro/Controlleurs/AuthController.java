@@ -118,37 +118,59 @@ public class AuthController {
 
     log.info("conexion controlleur");
 
-    //on retourne une reponse, contenant l'id username, e-mail et le role du collaborateur
-    return ResponseEntity.ok(new JwtResponse(jwt,
-                         utilisateursDetails.getId(),
-                         utilisateursDetails.getUsername(),
-                         utilisateursDetails.getEmail(),
-                         roles,
-                         utilisateursDetails.getAdresse(),
-                          utilisateursDetails.getPhoto(),
-                         utilisateursDetails.getNomcomplet()
-                         ));
+    if(roles.contains(ERole.ROLE_TRANSPORTEUR)){
+
+      Transporteurs transporteurs = transporteurRepository.findByUsername(utilisateursDetails.getUsername());
+System.out.print("je suis transporteur");
+      //on retourne une reponse, contenant l'id username, e-mail et le role du collaborateur
+      return ResponseEntity.ok(new JwtResponse(jwt,
+              utilisateursDetails.getId(),
+              utilisateursDetails.getUsername(),
+              utilisateursDetails.getEmail(),
+              roles,
+              utilisateursDetails.getAdresse(),
+              utilisateursDetails.getPhoto(),
+              utilisateursDetails.getNomcomplet(),
+              transporteurs.getDisponibilite(),
+              transporteurs.getNumeroplaque()
+
+      ));
+
+    } else {
+      System.out.print("je suis autre");
+
+      //on retourne une reponse, contenant l'id username, e-mail et le role du collaborateur
+      return ResponseEntity.ok(new JwtResponse(jwt,
+              utilisateursDetails.getId(),
+              utilisateursDetails.getUsername(),
+              utilisateursDetails.getEmail(),
+              roles,
+              utilisateursDetails.getAdresse(),
+              utilisateursDetails.getPhoto(),
+              utilisateursDetails.getNomcomplet()
+      ));
+    }
+
   }
 
   //@PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/signup")//@valid s'assure que les données soit validées
-  public ResponseEntity<?> registerUser(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
-                                        @Valid  @RequestParam(value = "donneesuser") String donneesuser) throws IOException {
+  public ResponseEntity<?> registerUser(@Valid  @RequestParam(value = "donneesuser") String donneesuser) throws IOException {
 
     //chemin de stockage des images
-    String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
+    //String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
 
     //recupere le nom de l'image
-    String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
-    System.out.println(nomfile);
+    //String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
+   // System.out.println(nomfile);
 
     //envoie le nom, url et le fichier à la classe ConfigImages qui se chargera de sauvegarder l'image
-    ConfigImages.saveimg(url, nomfile, file);
+    //ConfigImages.saveimg(url, nomfile, file);
 
     //converssion du string reçu en classe SignupRequest
     SignupRequest signUpRequest = new JsonMapper().readValue(donneesuser, SignupRequest.class);
 
-    signUpRequest.setPhoto(nomfile);
+    signUpRequest.setPhoto("nomfile");
 
     if (utilisateursRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity

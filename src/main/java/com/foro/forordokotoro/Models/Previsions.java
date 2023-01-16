@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -22,5 +23,9 @@ public class Previsions {
     private  Long delaijour;
     private Long nbrepluienecessaire;
     private Long nbrepluie;
+
+    private LocalDate datearrive;
     private Boolean etat;
+
+
 }

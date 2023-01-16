@@ -107,6 +107,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
   ---startsWith verifie si une chaine commence par un prefixe
    */
 
+
     if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
 
       //permet de retourner le jwt sans le mot clé Bearer

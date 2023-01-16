@@ -1,6 +1,8 @@
 package com.foro.forordokotoro.services;
 
+import com.foro.forordokotoro.Models.EvolutionStock;
 import com.foro.forordokotoro.Models.Stocks;
+import com.foro.forordokotoro.Repository.EvolutionStockRepository;
 import com.foro.forordokotoro.Repository.StockRepository;
 import com.foro.forordokotoro.payload.Autres.ConfigImages;
 import com.foro.forordokotoro.payload.Autres.Reponse;
@@ -18,6 +20,9 @@ public class StockServiceImpl implements StocksService{
     @Autowired
     StockRepository stockRepository;
 
+    @Autowired
+    EvolutionStockRepository evolutionStockRepository;
+
     @Override
     public ResponseEntity<?> ajouterStock(Stocks stocks, String url, String nomfile, MultipartFile file) throws IOException {
         if(stockRepository.existsByLibelle(stocks.getLibelle())){
@@ -25,6 +30,7 @@ public class StockServiceImpl implements StocksService{
         }else {
             ConfigImages.saveimg(url, nomfile, file);
             stocks.setPhoto(nomfile);
+            stocks.setQuantiterestant(stocks.getNombrekilo());
             stockRepository.save(stocks);
             return ResponseEntity.ok(new Reponse(stocks.getLibelle() + " a été ajouté avec succès", 1));
 
@@ -41,6 +47,8 @@ public class StockServiceImpl implements StocksService{
                         s.setNombrekilo(stocks.getNombrekilo());
                     if(stocks.getPrixkilo() != null)
                         s.setPrixkilo(stocks.getPrixkilo());
+                    if(stocks.getQuantiterestant() != null)
+                        s.setQuantiterestant(stocks.getQuantiterestant());
                     if(stocks.getLibelle() != null)
                         s.setLibelle(stocks.getLibelle());
                     if(stocks.getEtat() != null)
@@ -64,5 +72,53 @@ public class StockServiceImpl implements StocksService{
     @Override
     public Stocks recupererParId(Long id) {
         return stockRepository.findById(id).get();
+    }
+
+    @Override
+    public ResponseEntity<?> mettreajourLestock(EvolutionStock evolutionStock) {
+        evolutionStockRepository.save(evolutionStock);
+        List<EvolutionStock> listEvolutionStocks = recupererEvolutionStock();
+        Long totalStockDeduit = 0L;
+        Long totalStockAjoute = 0l;
+        Stocks stocks = new Stocks();
+
+
+        for(EvolutionStock es : listEvolutionStocks){
+            totalStockDeduit += es.getQuantitededuit();
+            totalStockAjoute += es.getQuantiteajoute();
+        }
+
+        stocks.setQuantiterestant(evolutionStock.getStocks().getNombrekilo() + totalStockAjoute - totalStockDeduit);
+        modifierStock(evolutionStock.getStocks().getId(), stocks);
+
+        return ResponseEntity.ok(new Reponse("Votre stock a été mise à jour avec succès", 1));
+    }
+
+    @Override
+    public ResponseEntity<?> modifierEvolution(EvolutionStock evolutionStock, Long id) {
+        return evolutionStockRepository.findById(id)
+                .map(es-> {
+                    if(evolutionStock.getQuantiteajoute() != null)
+                        es.setQuantiteajoute(evolutionStock.getQuantiteajoute());
+                    if(evolutionStock.getQuantitededuit() != null)
+                        evolutionStock.setQuantitededuit(evolutionStock.getQuantitededuit() );
+                    if(evolutionStock.getDate() != null)
+                        es.setDate(evolutionStock.getDate());
+                    if(evolutionStock.getStocks() != null)
+                        es.setStocks(evolutionStock.getStocks());
+                    evolutionStockRepository.save(es);
+                    return ResponseEntity.ok(new Reponse("Modification reçu", 1));
+                }).orElseThrow(() -> new RuntimeException("evolutionStock non trouvé ! "));
+    }
+
+    @Override
+    public List<EvolutionStock> recupererEvolutionStock() {
+        return evolutionStockRepository.findAll();
+    }
+
+    @Override
+    public ResponseEntity<?> supprimerEvolutionStock(Long id) {
+        evolutionStockRepository.deleteById(id);
+        return ResponseEntity.ok(new Reponse("Mise à jour effectué avec succès", 1));
     }
 }

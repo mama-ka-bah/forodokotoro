@@ -8,5 +8,5 @@ import java.util.List;
 public interface PrevisionsRepository extends JpaRepository<Previsions, Long> {
     Boolean existsByLibelle(String libelle);
     Previsions findByLibelle(String libelle);
-    List<Previsions> findByEtat(Boolean etat);
+    List<Previsions> findByEtatOrderByDelaijour(Boolean etat);
 }
