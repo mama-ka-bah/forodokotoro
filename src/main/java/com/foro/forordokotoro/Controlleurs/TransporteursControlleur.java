@@ -29,7 +29,7 @@ public class TransporteursControlleur {
                                                  @Valid  @RequestParam(value = "donneesTransporteur") String donneesTransporteur, @PathVariable Long id) throws IOException {
 
         //chemin de stockage des images
-        String url = "C:/Users/mkkeita/Desktop/projects/medias/images";
+        String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
 
         //recupere le nom de l'image
         String nomfile = StringUtils.cleanPath(file.getOriginalFilename());

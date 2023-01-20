@@ -225,6 +225,7 @@ System.out.print("je suis transporteur");
     //on ajoute le role au collaborateur
     utilisateurs.setRoles(roles);
     utilisateurs.setEtat(true);
+    utilisateurs.setEnligne(false);
     utilisateursRepository.save(utilisateurs);
 
     return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succès!"));

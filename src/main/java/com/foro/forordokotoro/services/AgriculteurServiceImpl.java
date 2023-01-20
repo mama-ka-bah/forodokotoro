@@ -193,7 +193,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
     @Override
     public ResponseEntity<?> modifierAgriculteur(Long id, Agriculteurs agriculteurs) {
-        return agriculteursRepository.findById(agriculteurs.getId())
+        return agriculteursRepository.findById(id)
                 .map(a-> {
                     if(agriculteurs.getPassword() != null)
                     a.setPassword(agriculteurs.getPassword());

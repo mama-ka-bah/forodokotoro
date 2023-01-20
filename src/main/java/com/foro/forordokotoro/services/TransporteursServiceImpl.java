@@ -188,7 +188,7 @@ public class TransporteursServiceImpl implements TransporteursService{
 
     @Override
     public ResponseEntity<?> modifierTransporteur(Long id, Transporteurs transporteurs) {
-        return transporteurRepository.findById(transporteurs.getId())
+        return transporteurRepository.findById(id)
                 .map(t-> {
                     if(transporteurs.getPassword() != null)
                     t.setPassword(transporteurs.getPassword());
@@ -198,6 +198,12 @@ public class TransporteursServiceImpl implements TransporteursService{
                     t.setNomcomplet(transporteurs.getNomcomplet());
                     if(transporteurs.getUsername() != null)
                     t.setUsername(transporteurs.getUsername());
+                    if(transporteurs.getNumeroplaque() != null)
+                        t.setNumeroplaque(transporteurs.getNumeroplaque());
+                    if(transporteurs.getPhotopermis() != null)
+                        t.setPhotopermis(transporteurs.getPhotopermis());
+                    if(transporteurs.getDisponibilite() != null)
+                        t.setDisponibilite(transporteurs.getDisponibilite());
                     if(transporteurs.getEtat() != null)
                     t.setEtat(transporteurs.getEtat());
                     transporteurRepository.save(t);
