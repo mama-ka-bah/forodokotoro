@@ -2,10 +2,9 @@ package com.foro.forordokotoro.services;
 
 import com.foro.forordokotoro.Models.ProduitAgricole;
 import com.foro.forordokotoro.Repository.ProduitAgricoleRepositrory;
-import com.foro.forordokotoro.payload.Autres.ConfigImages;
-import com.foro.forordokotoro.payload.Autres.Reponse;
+import com.foro.forordokotoro.Utils.Configurations.ConfigImages;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

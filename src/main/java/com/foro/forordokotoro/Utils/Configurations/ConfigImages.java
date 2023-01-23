@@ -1,4 +1,4 @@
-package com.foro.forordokotoro.payload.Autres;
+package com.foro.forordokotoro.Utils.Configurations;
 
 import org.springframework.web.multipart.MultipartFile;
 

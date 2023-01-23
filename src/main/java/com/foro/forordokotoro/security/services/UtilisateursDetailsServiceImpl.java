@@ -46,7 +46,7 @@ public class UtilisateursDetailsServiceImpl implements UserDetailsService, Utili
 
   @Override
   public ResponseEntity<?> modifierUtilisateur(Long id, Utilisateurs utilisateurs) {
-    return utilisateursRepository.findById(utilisateurs.getId())
+    return utilisateursRepository.findById(id)
             .map(u-> {
                 if(utilisateurs.getPassword() != null)
               u.setPassword(utilisateurs.getPassword());

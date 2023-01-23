@@ -22,6 +22,8 @@ public interface UtilisateursRepository extends JpaRepository<Utilisateurs, Long
 
   Boolean existsByEmail(String email);
 
+  Utilisateurs findByEmail(String email);
+
   List<Utilisateurs> findByEtat(Boolean etat);
 
 

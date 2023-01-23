@@ -3,7 +3,7 @@ package com.foro.forordokotoro.services;
 import com.foro.forordokotoro.Models.Previsions;
 import com.foro.forordokotoro.Repository.PhaseCultiveRepository;
 import com.foro.forordokotoro.Repository.PrevisionsRepository;
-import com.foro.forordokotoro.payload.Autres.Reponse;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

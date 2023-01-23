@@ -1,4 +1,4 @@
-package com.foro.forordokotoro.payload.Autres;
+package com.foro.forordokotoro.Utils.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

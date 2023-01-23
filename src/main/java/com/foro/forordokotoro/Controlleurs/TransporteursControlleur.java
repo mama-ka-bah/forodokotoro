@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
 import com.foro.forordokotoro.Models.TransporteurAttente;
 import com.foro.forordokotoro.Models.Transporteurs;
-import com.foro.forordokotoro.payload.request.DemandeTransporteur;
+import com.foro.forordokotoro.Utils.request.DemandeTransporteur;
 import com.foro.forordokotoro.services.TransporteursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

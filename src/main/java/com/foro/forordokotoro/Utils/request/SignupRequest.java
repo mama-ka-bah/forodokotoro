@@ -1,4 +1,4 @@
-package com.foro.forordokotoro.payload.request;
+package com.foro.forordokotoro.Utils.request;
 
 import lombok.Data;
 
@@ -22,7 +22,6 @@ public class SignupRequest {
   @Size(min = 3, max = 80)
   private String nomcomplet;
 
-  @NotBlank
   @Size(min = 3, max = 25)
   private String photo;
 

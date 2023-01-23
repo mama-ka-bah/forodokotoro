@@ -8,7 +8,7 @@ import com.foro.forordokotoro.Repository.ChampsRepository;
 import com.foro.forordokotoro.Repository.CultiveRepository;
 import com.foro.forordokotoro.Repository.ParserelleRepository;
 import com.foro.forordokotoro.Repository.PrevisionDuncultiveRepository;
-import com.foro.forordokotoro.payload.Autres.Reponse;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import com.foro.forordokotoro.Models.PrevisionDunCultive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -5,8 +5,8 @@ import com.foro.forordokotoro.Models.Enumerations.EstatusParserelle;
 import com.foro.forordokotoro.Models.Parserelle;
 import com.foro.forordokotoro.Repository.ChampsRepository;
 import com.foro.forordokotoro.Repository.ParserelleRepository;
-import com.foro.forordokotoro.payload.Autres.ConfigImages;
-import com.foro.forordokotoro.payload.Autres.Reponse;
+import com.foro.forordokotoro.Utils.Configurations.ConfigImages;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

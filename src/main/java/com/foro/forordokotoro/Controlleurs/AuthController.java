@@ -6,14 +6,18 @@ import com.foro.forordokotoro.Models.Enumerations.ERole;
 import com.foro.forordokotoro.Repository.RoleRepository;
 import com.foro.forordokotoro.Repository.TransporteurRepository;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
-import com.foro.forordokotoro.payload.Autres.ConfigImages;
-import com.foro.forordokotoro.payload.request.LoginRequest;
-import com.foro.forordokotoro.payload.request.SignupRequest;
-import com.foro.forordokotoro.payload.response.JwtResponse;
-import com.foro.forordokotoro.payload.response.MessageResponse;
+import com.foro.forordokotoro.Utils.Configurations.ConfigImages;
+import com.foro.forordokotoro.Utils.request.OtpRequest;
+import com.foro.forordokotoro.Utils.response.OtpResponse;
+import com.foro.forordokotoro.Utils.response.Reponse;
+import com.foro.forordokotoro.Utils.request.LoginRequest;
+import com.foro.forordokotoro.Utils.request.SignupRequest;
+import com.foro.forordokotoro.Utils.response.JwtResponse;
+import com.foro.forordokotoro.Utils.response.MessageResponse;
 import com.foro.forordokotoro.security.jwt.JwtUtils;
 import com.foro.forordokotoro.security.services.UtilisateurService;
 import com.foro.forordokotoro.security.services.UtilisateursDetails;
+import com.foro.forordokotoro.services.EmailSenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,18 +35,23 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 //@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
 public class AuthController {
 
   private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
   @Autowired
   AuthenticationManager authenticationManager;
+
+  @Autowired
+  private EmailSenderService senderService;
 
   @Autowired
   UtilisateursRepository utilisateursRepository;
@@ -173,17 +182,13 @@ System.out.print("je suis transporteur");
     signUpRequest.setPhoto("nomfile");
 
     if (utilisateursRepository.existsByUsername(signUpRequest.getUsername())) {
-      return ResponseEntity
-          .badRequest()
-          .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
+      return ResponseEntity.ok(new Reponse("Ce numero existe déjà", 0));
     }
 
     if (utilisateursRepository.existsByEmail(signUpRequest.getEmail())) {
 
       //confectionne l'objet de retour à partir de ResponseEntity(une classe de spring boot) et MessageResponse
-      return ResponseEntity
-          .badRequest()
-          .body(new MessageResponse("Erreur: Cet email est déjà utilisé!"));
+      return ResponseEntity.ok(new Reponse("Cet email existe déjà", 0));
     }
 
     System.out.println(signUpRequest.getNomcomplet());
@@ -231,8 +236,10 @@ System.out.print("je suis transporteur");
     return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succès!"));
   }
 
-  @PatchMapping("/modifieragriculteur/{id}")
+  @PatchMapping("/modifierutilisateur/{id}")
   public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody Utilisateurs utilisateurs) {
+
+    utilisateurs.setPassword(encoder.encode(utilisateurs.getPassword()));
 
     return utilisateurService.modifierUtilisateur(id, utilisateurs);
   }
@@ -259,86 +266,33 @@ System.out.print("je suis transporteur");
     return utilisateurService.recupererUtilisateurActive();
   }
 
+  @PostMapping("/motdepasseoublier")
+  public OtpResponse motDePasseOublier(@RequestBody OtpRequest otpRequest){
+    if(utilisateursRepository.existsByEmail(otpRequest.getEmail())){
 
+      Utilisateurs utilisateurs = utilisateursRepository.findByEmail(otpRequest.getEmail());
 
+      //declaration d'un objet random
+      Random random = new Random();
 
-/*
-  //@PreAuthorize("hasRole('ADMIN')")
-  @PostMapping("/signupT")//@valid s'assure que les données soit validées
-  public ResponseEntity<?> registertransporteur(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
-                                        @Valid  @RequestParam(value = "donneesuser") String donneesuser) throws IOException {
+      //ici on genere un nombre aleatoire comprise entre 0 et 9999
+      int randomCode = random.nextInt(10000);
 
-    //chemin de stockage des images
-    String url = "C:/Users/mkkeita/Desktop/projects/medias/images";
+      //ici on ajoute des devant pour completer sa taille à 3 dans le cas ou sa taille ne vaut pas trois
+      String.format("%04d", randomCode);
 
-    //recupere le nom de l'image
-    String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
-    System.out.println(nomfile);
+      OtpResponse otpResponse = new OtpResponse(randomCode, "code generer avec succès", 1);
+      otpResponse.setIduser(utilisateurs.getId());
 
-    //envoie le nom, url et le fichier à la classe ConfigImages qui se chargera de sauvegarder l'image
-    ConfigImages.saveimg(url, nomfile, file);
+     senderService.sendSimpleEmail(otpRequest.getEmail(), "Renitialisation de mot de passe", "Bonjour " + utilisateurs.getNomcomplet() + " Le code à quatre chiffre ci-dessous est le code de renitialisation de votre mot de passe " + randomCode);
 
-    //converssion du string reçu en classe SignupRequest
-    SignupRequest signUpRequest = new JsonMapper().readValue(donneesuser, SignupRequest.class);
+      return otpResponse;
 
-    signUpRequest.setPhoto(nomfile);
+    }else {
+      OtpResponse otpResponse = new OtpResponse("Adresse email introuvable",  0);
 
-    if (utilisateursRepository.existsByUsername(signUpRequest.getUsername())) {
-      return ResponseEntity
-              .badRequest()
-              .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
+      return otpResponse;
     }
-
-    if (utilisateursRepository.existsByEmail(signUpRequest.getEmail())) {
-
-      //confectionne l'objet de retour à partir de ResponseEntity(une classe de spring boot) et MessageResponse
-      return ResponseEntity
-              .badRequest()
-              .body(new MessageResponse("Erreur: Cet email est déjà utilisé!"));
-    }
-
-    // Create new user's account
-    Transporteurs utilisateurs = new Transporteurs(signUpRequest.getUsername(),
-            signUpRequest.getEmail(),
-            encoder.encode(signUpRequest.getPassword()), signUpRequest.getAdresse(),
-            signUpRequest.getNomcomplet(), signUpRequest.getPhoto(),false,
-            signUpRequest.getPhotopermis(),signUpRequest.getNumeroplaque()
-    );
-
-    //on recupere le role de l'user dans un tableau ordonné de type string
-    Set<String> strRoles = signUpRequest.getRole();
-    Set<Role> roles = new HashSet<>();
-
-    if (strRoles == null) {
-      System.out.println("####################################" + signUpRequest.getRole() + "###########################################");
-
-      //on recupere le role de l'utilisateur
-      Role userRole = roleRepository.findByName(ERole.ROLE_USER);
-      roles.add(userRole);//on ajoute le role de l'user à roles
-    } else {
-      strRoles.forEach(role -> {//on parcours le role
-        switch (role) {
-          case "admin"://si le role est à égale à admin
-            Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN);
-            roles.add(adminRole);
-
-            break;
-          default://dans le cas écheant
-
-            //on recupere le role de l'utilisateur
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER);
-            roles.add(userRole);
-        }
-      });
-    }
-
-    //on ajoute le role au collaborateur
-    utilisateurs.setRoles(roles);
-
-    transporteurRepository.save(utilisateurs);
-
-    return ResponseEntity.ok(new MessageResponse("Utlisateur enregistré avec succès!"));
   }
- */
 
 }
