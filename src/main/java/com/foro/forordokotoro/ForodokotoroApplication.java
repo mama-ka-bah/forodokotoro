@@ -58,7 +58,7 @@ public class ForodokotoroApplication implements CommandLineRunner {
 			utilisateurs.setRoles(roles);
 			utilisateursRepository.save(utilisateurs);
 				try {
-					senderService.sendSimpleEmail("kmahamadou858@gmail.com", "Creation de compte Super admin de Forodokotoro", "Bonjour KEITA Mahamadou nous sommes heureux de vous annoncer les cooordonnées de votre compte super admin sur forodokotoro");
+					senderService.sendSimpleEmail("mamakabah1999@gmail.com", "Creation de compte Super admin de Forodokotoro", "Bonjour KEITA Mahamadou nous sommes heureux de vous annoncer les cooordonnées de votre compte super admin sur forodokotoro");
 				}catch (Exception e){
 					System.out.println(e);
 				}

@@ -179,7 +179,7 @@ System.out.print("je suis transporteur");
     //converssion du string reçu en classe SignupRequest
     SignupRequest signUpRequest = new JsonMapper().readValue(donneesuser, SignupRequest.class);
 
-    signUpRequest.setPhoto("nomfile");
+    //signUpRequest.setPhoto("nomfile");
 
     if (utilisateursRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity.ok(new Reponse("Ce numero existe déjà", 0));
@@ -276,10 +276,10 @@ System.out.print("je suis transporteur");
       Random random = new Random();
 
       //ici on genere un nombre aleatoire comprise entre 0 et 9999
-      int randomCode = random.nextInt(10000);
+      int randomCode = random.nextInt(9000) + 1000;
 
       //ici on ajoute des devant pour completer sa taille à 3 dans le cas ou sa taille ne vaut pas trois
-      String.format("%04d", randomCode);
+      //String.format("%04d", randomCode);
 
       OtpResponse otpResponse = new OtpResponse(randomCode, "code generer avec succès", 1);
       otpResponse.setIduser(utilisateurs.getId());

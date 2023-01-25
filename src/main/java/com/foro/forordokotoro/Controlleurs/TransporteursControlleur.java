@@ -19,6 +19,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/transporteurs")
+@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
 public class TransporteursControlleur {
 
     @Autowired
@@ -28,6 +29,7 @@ public class TransporteursControlleur {
     public ResponseEntity<?> devenirTransporteur(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
                                                  @Valid  @RequestParam(value = "donneesTransporteur") String donneesTransporteur, @PathVariable Long id) throws IOException {
 
+        System.out.println("nnnnnnnnnnnnnnnnnnnnnn" + donneesTransporteur);
         //chemin de stockage des images
         String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
 

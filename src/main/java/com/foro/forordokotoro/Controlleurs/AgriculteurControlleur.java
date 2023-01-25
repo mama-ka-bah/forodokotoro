@@ -4,7 +4,6 @@ package com.foro.forordokotoro.Controlleurs;
 import com.foro.forordokotoro.Models.Agriculteurs;
 import com.foro.forordokotoro.Models.AgricuteurAttente;
 import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
-import com.foro.forordokotoro.Models.Stocks;
 import com.foro.forordokotoro.services.AgriculteurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/agriculteur")
+@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
 public class AgriculteurControlleur {
 
     @Autowired
@@ -33,6 +33,8 @@ public class AgriculteurControlleur {
                         @PathVariable Long id) throws IOException {
 
         //@Valid  @RequestParam(value = "donneesuser") String donneesuser
+
+
 
         //chemin de stockage des images
         String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";

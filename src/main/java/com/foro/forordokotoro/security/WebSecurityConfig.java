@@ -131,6 +131,7 @@ public class WebSecurityConfig {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .authorizeRequests()
             .antMatchers("/api/auth/**").permitAll()
+            .antMatchers("/transporteurs/**").permitAll()
         .antMatchers("/api/bienvenue/**").permitAll()
         .anyRequest().authenticated();
            // .and()

@@ -78,18 +78,18 @@ public class TransporteursServiceImpl implements TransporteursService{
                     emailSenderService.sendSimpleEmail(userExistant.getEmail(),"Demande de profil",message);
                 }
 
-                return ResponseEntity.ok(new Reponse(message, 1));
+                return ResponseEntity.ok(new Reponse(message, 0));
             }else if(transporteurEnAttenteRepository.findByUserid(userExistant).getStatusdemande().equals(EstatusDemande.ENCOURS)){
 
                 String messae = "Veuilez patienter vous avez déjà une demande en cours de traitement";
 
-                return ResponseEntity.ok(new Reponse(messae, 1));
+                return ResponseEntity.ok(new Reponse(messae, 0));
             }else if(transporteurEnAttenteRepository.findByUserid(userExistant).getStatusdemande().equals(EstatusDemande.REJETER)){
                 LocalDate datejour = LocalDate.now();
                 LocalDate datedemande = transporteurEnAttenteRepository.findByUserid(userExistant).getDatedemande();
                 long days_difference = ChronoUnit.DAYS.between(datedemande, datejour);
                 if (days_difference < 10){
-                    return ResponseEntity.ok(new Reponse("Veuilez attendre 10 jours pour faire une nouvelle demande", 1));
+                    return ResponseEntity.ok(new Reponse("Veuilez attendre 10 jours pour faire une nouvelle demande", 0));
                 }else{
                     demandeTransporteur(id, transporteurs, url, nomfile, file);
                     String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
@@ -100,11 +100,11 @@ public class TransporteursServiceImpl implements TransporteursService{
                     return ResponseEntity.ok(new Reponse(message, 1));
                 }
             }else {
-                return ResponseEntity.ok(new Reponse("Vous êtes déjà Transporteur", 1));
+                return ResponseEntity.ok(new Reponse("Vous êtes déjà Transporteur", 0));
             }
 
         }else {
-            return ResponseEntity.ok(new Reponse("Cet utiisateur n'existe pas", 1));
+            return ResponseEntity.ok(new Reponse("Cet utiisateur n'existe pas", 0));
 
         }
     }
