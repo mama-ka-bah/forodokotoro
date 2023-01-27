@@ -15,7 +15,7 @@ public interface AgriculteurService {
 
    /* ResponseEntity<?> ModifierAgriculteur(Long id, Agriculteurs agriculteur); */
 
-   ResponseEntity<?> DevenirAgriculteur(Long id, AgricuteurAttente agricuteurAttente, String url, String nomfile, MultipartFile file) throws IOException;
+   ResponseEntity<?> DevenirAgriculteur(Long id, AgricuteurAttente agricuteurAttente) throws IOException;
 
    ResponseEntity<?> accepterAgriculteur(String username);
 

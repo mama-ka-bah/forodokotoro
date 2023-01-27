@@ -31,7 +31,7 @@ public class TransporteursControlleur {
 
         System.out.println("nnnnnnnnnnnnnnnnnnnnnn" + donneesTransporteur);
         //chemin de stockage des images
-        String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
+        String type = "permis";
 
         //recupere le nom de l'image
         String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
@@ -50,7 +50,7 @@ public class TransporteursControlleur {
         demandeurProfil.setDatedemande(LocalDate.now());
         demandeurProfil.setStatusdemande(EstatusDemande.ENCOURS);
 
-        return transporteursService.devenirTransporteur(id, demandeurProfil, url, nomfile, file);
+        return transporteursService.devenirTransporteur(id, demandeurProfil, type, nomfile, file);
     }
 
     @PostMapping("/accepteratransporteur/{username}")

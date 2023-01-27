@@ -29,15 +29,14 @@ public class PhaseControlleur {
     @PostMapping("/ajouter/{idcultive}")
     public ResponseEntity<?> ajouterPhase(@Valid @RequestParam(value = "file") MultipartFile file,
                                           @Valid  @RequestParam(value = "phaseReçu") String phaseReçu, @PathVariable Long idcultive) throws IOException {
-        //chemin de stockage des images
-        String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
+        String type = "champs";
 
         //recupere le nom de l'image
         String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
         PhaseCultive phase = new JsonMapper().readValue(phaseReçu, PhaseCultive.class);
 
         phase.setCultive(cultivesService.recupererParId(idcultive));
-        return phaseService.ajouterPhase(phase, url, nomfile, file);
+        return phaseService.ajouterPhase(phase, type, nomfile, file);
     }
 
     @PostMapping("/modifer/{idphase}")

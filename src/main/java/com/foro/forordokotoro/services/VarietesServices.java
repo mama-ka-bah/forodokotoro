@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface VarietesServices {
-    ResponseEntity<?> ajouterVarietes(Varietes varietes, String url, String nomfile, MultipartFile file) throws IOException;
+    ResponseEntity<?> ajouterVarietes(Varietes varietes, String type, String nomfile, MultipartFile file) throws IOException;
     ResponseEntity<?> modifiervarietes(Long id, Varietes varietes);
     List<Varietes> recupererVarietesActives();
     ResponseEntity<?> modifierPhotoVarietes(String url, String nomfile, MultipartFile file);

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -24,13 +25,16 @@ public class StockServiceImpl implements StocksService{
     EvolutionStockRepository evolutionStockRepository;
 
     @Override
-    public ResponseEntity<?> ajouterStock(Stocks stocks, String url, String nomfile, MultipartFile file) throws IOException {
+    public ResponseEntity<?> ajouterStock(Stocks stocks, String type, String nomfile, MultipartFile file) throws IOException {
         if(stockRepository.existsByLibelle(stocks.getLibelle())){
             return ResponseEntity.ok(new Reponse(stocks.getLibelle() + " existe déjà", 1));
         }else {
-            ConfigImages.saveimg(url, nomfile, file);
-            stocks.setPhoto(nomfile);
+
+            stocks.setPhoto(ConfigImages.saveimg(type, nomfile, file));
             stocks.setQuantiterestant(stocks.getNombrekilo());
+            stocks.setDatepublication(LocalDate.now());
+            stocks.setEtat(true);
+            stocks.setDisponibilite(true);
             stockRepository.save(stocks);
             return ResponseEntity.ok(new Reponse(stocks.getLibelle() + " a été ajouté avec succès", 1));
 

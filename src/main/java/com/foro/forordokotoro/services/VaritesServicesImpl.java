@@ -20,12 +20,12 @@ public class VaritesServicesImpl implements VarietesServices {
     VarietesRepository varietesRepository;
 
     @Override
-    public ResponseEntity<?> ajouterVarietes(Varietes varietes, String url, String nomfile, MultipartFile file) throws IOException {
+    public ResponseEntity<?> ajouterVarietes(Varietes varietes, String type, String nomfile, MultipartFile file) throws IOException {
         if(varietesRepository.existsByNom(varietes.getNom())){
             return ResponseEntity.ok(new Reponse(varietes.getNom() + " existe déjà", 1));
         }else {
-            ConfigImages.saveimg(url, nomfile, file);
-            varietes.setPhoto(nomfile);
+
+            varietes.setPhoto(ConfigImages.saveimg(type, nomfile, file));
             varietesRepository.save(varietes);
             return ResponseEntity.ok(new Reponse(varietes.getNom() + " a été ajouter avec succès", 1));
         }

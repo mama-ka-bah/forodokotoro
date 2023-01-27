@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ChampServices {
-    ResponseEntity<?> ajouterChamp(Champ champ, String url, String nomfile, MultipartFile file) throws IOException;
+    ResponseEntity<?> ajouterChamp(Champ champ, String type, String nomfile, MultipartFile file) throws IOException;
     ResponseEntity<?> modifierChamp(Long id, Champ champ);
     List<Champ> recuperChampActives();
 

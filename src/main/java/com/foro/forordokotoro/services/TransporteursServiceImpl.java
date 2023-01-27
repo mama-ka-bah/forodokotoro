@@ -40,10 +40,9 @@ public class TransporteursServiceImpl implements TransporteursService{
 
     public void demandeTransporteur(Long id, TransporteurAttente transporteurAttente, String url, String nomfile, MultipartFile file) throws IOException {
 
-        ConfigImages.saveimg(url, nomfile, file);
-
         Utilisateurs userExistant = utilisateursRepository.findById(id).get();
         transporteurAttente.setUserid(userExistant);
+        transporteurAttente.setPhotopermis(ConfigImages.saveimg(url, nomfile, file));
         transporteurEnAttenteRepository.save(transporteurAttente);
         Notifications notifications = new Notifications();
 
@@ -62,7 +61,7 @@ public class TransporteursServiceImpl implements TransporteursService{
 
 
     @Override
-    public ResponseEntity<?> devenirTransporteur(Long id, TransporteurAttente transporteurs, String url, String nomfile, MultipartFile file) throws IOException {
+    public ResponseEntity<?> devenirTransporteur(Long id, TransporteurAttente transporteurs, String type, String nomfile, MultipartFile file) throws IOException {
 
         if(utilisateursRepository.existsById(id)){
             Utilisateurs userExistant = utilisateursRepository.findById(id).get();
@@ -70,7 +69,7 @@ public class TransporteursServiceImpl implements TransporteursService{
 
             System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa " +userExistant);
             if(transporteurEnAttenteRepository.findByUserid(userExistant) == null){
-                demandeTransporteur(id, transporteurs, url, nomfile, file);
+                demandeTransporteur(id, transporteurs, type, nomfile, file);
 
                 String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
 
@@ -91,7 +90,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                 if (days_difference < 10){
                     return ResponseEntity.ok(new Reponse("Veuilez attendre 10 jours pour faire une nouvelle demande", 0));
                 }else{
-                    demandeTransporteur(id, transporteurs, url, nomfile, file);
+                    demandeTransporteur(id, transporteurs, type, nomfile, file);
                     String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
 
                     if (userExistant.getEmail() != null){

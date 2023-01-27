@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,30 +31,13 @@ public class ParserelleServiceImpl implements ParserelleService{
     ChampServices champServices;
 
     @Override
-    public ResponseEntity<?> ajouter(Parserelle parserelle, Long chmpid, String url, String nomfile, MultipartFile file) throws IOException {
+    public ResponseEntity<?> ajouter(Parserelle parserelle, Long chmpid) throws IOException {
         Optional<Champ> champ = champsRepository.findById(parserelle.getChamp().getId());
 
         //verifie si le champ existe
         if(champ == null){
             return ResponseEntity.ok(new Reponse("Ce champ n'existe pas", 0));
         }else {
-            /*
-            Long longueurTotalParserelles = null;
-            Long largeurTotalParserelles = null;
-
-            //recupere le champ conserné
-            Champ champConserner = champsRepository.findById(parserelle.getChamp().getId()).get();
-
-            //recupere la liste des parserelle du champ
-            List<Parserelle> parserelleList = parserelleRepository.findByChamp(champConserner);
-
-            //recuperation de la longueur total et de la largeur total de toutes les pareserelles du champ conserné
-            for(Parserelle p : parserelleList){
-                longueurTotalParserelles += longueurTotalParserelles;
-                largeurTotalParserelles += largeurTotalParserelles;
-            }
-
-             */
 
             //recupere le champ conserné
             Champ champConserner = champsRepository.findById(parserelle.getChamp().getId()).get();
@@ -67,7 +51,6 @@ public class ParserelleServiceImpl implements ParserelleService{
             else if(champServices.verifierDisponibiliteDimension(chmpid).get(1) < 0){
                 return ResponseEntity.ok(new Reponse("La largeur demandée n'est plus disponible", 0));
             }else {
-                ConfigImages.saveimg(url, nomfile, file);
                 parserelle.setChamp(champConserner);
                 parserelle.setStatus(EstatusParserelle.LIBRE);
                 parserelleRepository.save(parserelle);
@@ -109,7 +92,8 @@ public class ParserelleServiceImpl implements ParserelleService{
     @Override
     public List<Parserelle> recupererLesParserelleDunChamp(Long id) {
         if(!parserelleRepository.existsById(id)){
-            return null;
+            List<Parserelle> p = new ArrayList<>();
+            return p;
         }
         return parserelleRepository.findByChamp(champsRepository.findById(id).get());
     }

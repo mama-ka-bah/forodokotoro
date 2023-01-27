@@ -22,18 +22,13 @@ public class ParserelleControllleur {
     ParserelleService parserelleService;
 
     @PostMapping("/ajouterparserelle/{champid}")
-    public ResponseEntity<?> ajouterParserelle(@Valid @RequestParam(value = "file") MultipartFile file,
-                                               @Valid  @RequestParam(value = "parserelleReçu") String parserelleReçu, @PathVariable Long champid) throws IOException {
+    public ResponseEntity<?> ajouterParserelle(@Valid  @RequestParam(value = "parserelleReçu") String parserelleReçu, @PathVariable Long champid) throws IOException {
 
-        String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
-
-        //recupere le nom de l'image
-        String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
-        System.out.println(nomfile);
+        String type = "champs";
 
         Parserelle parserelle = new JsonMapper().readValue(parserelleReçu, Parserelle.class);
 
-        return parserelleService.ajouter(parserelle, champid, url, nomfile, file);
+        return parserelleService.ajouter(parserelle, champid);
     }
 
     @PatchMapping("/modifierparserelle/{idparserelle}")
@@ -49,6 +44,5 @@ public class ParserelleControllleur {
 
         return parserelleService.recupererLesParserelleDunChamp(idparserelle);
     }
-
 
 }

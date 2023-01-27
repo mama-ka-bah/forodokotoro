@@ -20,12 +20,12 @@ public class produitAgricoleServiceImpl implements ProduitAgricoleService{
 
     //methode permettant d'ajouter un produit agricole
     @Override
-    public ResponseEntity<?> ajouterProduitAgricole(ProduitAgricole produitAgricole, String url, String nomfile, MultipartFile file) throws IOException {
+    public ResponseEntity<?> ajouterProduitAgricole(ProduitAgricole produitAgricole, String type, String nomfile, MultipartFile file) throws IOException {
         if(produitAgricoleRepositrory.existsByNom(produitAgricole.getNom())){
             return  ResponseEntity.ok(new Reponse(produitAgricole.getNom() + " existe déjà", 0));
         }else {
-            ConfigImages.saveimg(url, nomfile, file);
-            produitAgricole.setPhoto(nomfile);
+
+            produitAgricole.setPhoto(ConfigImages.saveimg(type, nomfile, file));
             produitAgricoleRepositrory.save(produitAgricole);
             return ResponseEntity.ok(new Reponse(produitAgricole.getNom() + "a été ajouter avec succès", 1));
         }

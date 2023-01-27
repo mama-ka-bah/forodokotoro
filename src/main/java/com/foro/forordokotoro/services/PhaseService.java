@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PhaseService {
-    ResponseEntity<?> ajouterPhase(PhaseCultive phaseCultive, String url, String nomfile, MultipartFile file) throws IOException;
+    ResponseEntity<?> ajouterPhase(PhaseCultive phaseCultive, String type, String nomfile, MultipartFile file) throws IOException;
     ResponseEntity<?> modifierPhase(Long id, PhaseCultive phaseCultive);
     List<PhaseCultive> recupererPhaseActive();
 

@@ -26,6 +26,12 @@ public class Champ {
     @Size(max = 100)
     private String adresse;
 
+    @Size(max = 100)
+    private String longitude;
+
+    @Size(max = 100)
+    private String latitude;
+
     @Size(max = 10)
     private Long nombreParserelle;
 

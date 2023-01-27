@@ -25,10 +25,6 @@ public class Parserelle {
     @Size(max = 10)
     private  Long Largeur;
 
-    @NotBlank
-    @Size(max = 60)
-    private String photo;
-
     private Boolean etat;
 
     //le status de la parserelle occupée ou libre

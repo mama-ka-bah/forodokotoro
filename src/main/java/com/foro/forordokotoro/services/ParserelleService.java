@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ParserelleService {
-    ResponseEntity<?> ajouter(Parserelle parserelle, Long chmpid, String url, String nomfile, MultipartFile file) throws IOException;
+    ResponseEntity<?> ajouter(Parserelle parserelle, Long chmpid) throws IOException;
     ResponseEntity<?> modifier(Parserelle parserelle, Long id);
     List<Parserelle> recupererLesParserelleDunChamp(Long id);
 }

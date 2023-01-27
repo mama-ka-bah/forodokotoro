@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ProduitAgricoleService {
-    ResponseEntity<?> ajouterProduitAgricole(ProduitAgricole produitAgricole, String url, String nomfile, MultipartFile file) throws IOException;
+    ResponseEntity<?> ajouterProduitAgricole(ProduitAgricole produitAgricole, String type, String nomfile, MultipartFile file) throws IOException;
 
     ResponseEntity<?> modifierProduitAgricole(ProduitAgricole produitAgricole, Long id);
 

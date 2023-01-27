@@ -21,11 +21,11 @@ public class PhaseServiceImpl implements PhaseService{
     PhaseCultiveRepository phaseCultiveRepository;
 
     @Override
-    public ResponseEntity<?> ajouterPhase(PhaseCultive phaseCultive, String url, String nomfile, MultipartFile file) throws IOException {
+    public ResponseEntity<?> ajouterPhase(PhaseCultive phaseCultive, String type, String nomfile, MultipartFile file) throws IOException {
         if(phaseCultiveRepository.existsByLibelle(phaseCultive.getLibelle())){
             return ResponseEntity.ok(new Reponse(phaseCultive.getLibelle() + " existe déjà", 0));
         }else {
-            ConfigImages.saveimg(url, nomfile, file);
+            phaseCultive.setPhoto(ConfigImages.saveimg(type, nomfile, file));
             phaseCultive.setPhoto(nomfile);
             phaseCultiveRepository.save(phaseCultive);
             return ResponseEntity.ok(new Reponse(phaseCultive.getLibelle() + " a été ajouter avec succès", 1));

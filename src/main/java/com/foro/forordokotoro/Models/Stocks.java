@@ -1,5 +1,6 @@
 package com.foro.forordokotoro.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -38,6 +39,7 @@ public class Stocks {
     @JoinColumn(name = "varietes_id")
     private Varietes varietes;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "proprietaire_id")
     private Agriculteurs proprietaire;

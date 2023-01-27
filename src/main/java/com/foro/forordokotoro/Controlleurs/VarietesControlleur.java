@@ -30,15 +30,16 @@ public class VarietesControlleur {
     public ResponseEntity<?> ajouterVarietes(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
                                              @Valid  @RequestParam(value = "varieteReçue") String varieteReçue, @PathVariable Long idproduit) throws IOException {
         //chemin de stockage des images
-        String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
+        String type = "produitsAgricoles";
 
         //recupere le nom de l'image
         String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
 
         Varietes varietes = new JsonMapper().readValue(varieteReçue, Varietes.class);
         varietes.setProduitagricole(produitAgricoleService.recupererProduitAgricoleParId(idproduit));
+        varietes.setEtat(true);
 
-        return varietesServices.ajouterVarietes(varietes,url,nomfile, file);
+        return varietesServices.ajouterVarietes(varietes,type,nomfile, file);
     }
 
     @GetMapping("/recuperervarietesactives")

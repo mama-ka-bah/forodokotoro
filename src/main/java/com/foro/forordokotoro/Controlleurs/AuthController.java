@@ -76,14 +76,6 @@ public class AuthController {
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-    String url = "C:/Users/mkkeita/Desktop/projects/angular/interfaceMaliTourist/src/assets/images";
-
-    /*
-    String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
-    System.out.println(nomfile);
-    ConfigImage.saveimgA(url, nomfile, file);
-    */
-
 
     /*
      AuthenticationManager est comme un coordinateur où vous pouvez enregistrer plusieurs fournisseurs et,
@@ -165,16 +157,6 @@ System.out.print("je suis transporteur");
   //@PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/signup")//@valid s'assure que les données soit validées
   public ResponseEntity<?> registerUser(@Valid  @RequestParam(value = "donneesuser") String donneesuser) throws IOException {
-
-    //chemin de stockage des images
-    //String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
-
-    //recupere le nom de l'image
-    //String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
-   // System.out.println(nomfile);
-
-    //envoie le nom, url et le fichier à la classe ConfigImages qui se chargera de sauvegarder l'image
-    //ConfigImages.saveimg(url, nomfile, file);
 
     //converssion du string reçu en classe SignupRequest
     SignupRequest signUpRequest = new JsonMapper().readValue(donneesuser, SignupRequest.class);

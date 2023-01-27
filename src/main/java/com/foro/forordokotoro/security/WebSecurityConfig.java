@@ -132,7 +132,12 @@ public class WebSecurityConfig {
         .authorizeRequests()
             .antMatchers("/api/auth/**").permitAll()
             .antMatchers("/transporteurs/**").permitAll()
-        .antMatchers("/api/bienvenue/**").permitAll()
+            .antMatchers("/agriculteur/**").permitAll()
+            .antMatchers("/stocks/**").permitAll()
+            .antMatchers("/agriculteur/**").permitAll()
+            .antMatchers("/agriculteur/**").permitAll()
+             .antMatchers("/champs/**").permitAll()
+        .antMatchers("/produitagricoles/**").permitAll()
         .anyRequest().authenticated();
            // .and()
             //.oauth2Login();

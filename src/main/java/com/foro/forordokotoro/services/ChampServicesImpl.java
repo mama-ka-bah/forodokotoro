@@ -31,8 +31,9 @@ public class ChampServicesImpl implements ChampServices{
         if(champsRepository.existsByNom(champ.getNom())){
             return ResponseEntity.ok(new Reponse(champ.getNom() + " existe déjà", 0));
         }else {
-            ConfigImages.saveimg(url, nomfile, file);
-            champ.setPhoto(nomfile);
+
+            champ.setPhoto(ConfigImages.saveimg(url, nomfile, file));
+            champ.setNombreParserelle(0L);
             champ.setEtat(true);
             champsRepository.save(champ);
             return ResponseEntity.ok(new Reponse(champ.getNom() + " a été engistré avec succès", 1));
