@@ -2,7 +2,9 @@ package com.foro.forordokotoro.Controlleurs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.foro.forordokotoro.Models.Enumerations.EtypeParserelle;
 import com.foro.forordokotoro.Models.Parserelle;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import com.foro.forordokotoro.services.ParserelleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +24,17 @@ public class ParserelleControllleur {
     ParserelleService parserelleService;
 
     @PostMapping("/ajouterparserelle/{champid}")
-    public ResponseEntity<?> ajouterParserelle(@Valid  @RequestParam(value = "parserelleReçu") String parserelleReçu, @PathVariable Long champid) throws IOException {
+    public ResponseEntity<?> ajouterParserelle(@Valid  @RequestParam(value = "parserelleReçu") String parserelleReçu, @RequestParam(value = "typeParserelle") String typeParserelle, @PathVariable Long champid) throws IOException {
 
         String type = "champs";
-
         Parserelle parserelle = new JsonMapper().readValue(parserelleReçu, Parserelle.class);
-
+        if(typeParserelle.equals("graine")){
+            parserelle.setEtypeparserelle(EtypeParserelle.GRAINE);
+        }else if(typeParserelle.equals("semence")){
+            parserelle.setEtypeparserelle(EtypeParserelle.SEMENCE);
+        }else {
+            return  ResponseEntity.ok(new Reponse("Veuillez choisir un type de parserelle", 0));
+        }
         return parserelleService.ajouter(parserelle, champid);
     }
 

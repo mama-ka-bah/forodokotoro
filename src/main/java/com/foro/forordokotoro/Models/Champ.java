@@ -18,19 +18,19 @@ public class Champ {
     @Size(max = 120)
     private String nom;
     @Size(max = 10)
-    private Long longueur;
+    private Double longueur;
 
     @Size(max = 10)
-    private  Long Largeur;
+    private  Double Largeur;
 
     @Size(max = 100)
     private String adresse;
 
     @Size(max = 100)
-    private String longitude;
+    private Double longitude;
 
     @Size(max = 100)
-    private String latitude;
+    private Double latitude;
 
     @Size(max = 10)
     private Long nombreParserelle;

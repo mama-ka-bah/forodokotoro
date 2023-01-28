@@ -32,23 +32,27 @@ public class ParserelleServiceImpl implements ParserelleService{
 
     @Override
     public ResponseEntity<?> ajouter(Parserelle parserelle, Long chmpid) throws IOException {
-        Optional<Champ> champ = champsRepository.findById(parserelle.getChamp().getId());
+        Optional<Champ> champ = champsRepository.findById(chmpid);
 
+        if(!parserelleRepository.existsByNom(parserelle.getNom())){
         //verifie si le champ existe
         if(champ == null){
             return ResponseEntity.ok(new Reponse("Ce champ n'existe pas", 0));
         }else {
 
             //recupere le champ conserné
-            Champ champConserner = champsRepository.findById(parserelle.getChamp().getId()).get();
+            Champ champConserner = champsRepository.findById(chmpid).get();
+System.out.println("Longueur disponible: " + champServices.verifierDisponibiliteDimension(chmpid, parserelle).get(0));
+            System.out.println("Largueur disponible: " + champServices.verifierDisponibiliteDimension(chmpid, parserelle).get(1));
 
             //verifier si la longueur demandée est disponible
-            if(champServices.verifierDisponibiliteDimension(chmpid).get(0) < 0){
+            if(champServices.verifierDisponibiliteDimension(chmpid, parserelle).get(0) < 0){
+
                 return ResponseEntity.ok(new Reponse("La longueur demandée n'est plus disponible", 0));
             }
 
             //verifier si la largeur demandée est disponible
-            else if(champServices.verifierDisponibiliteDimension(chmpid).get(1) < 0){
+            else if(champServices.verifierDisponibiliteDimension(chmpid, parserelle).get(1) < 0){
                 return ResponseEntity.ok(new Reponse("La largeur demandée n'est plus disponible", 0));
             }else {
                 parserelle.setChamp(champConserner);
@@ -57,6 +61,9 @@ public class ParserelleServiceImpl implements ParserelleService{
                 champServices.incrementerNombreParserelle(parserelle.getChamp().getId());
                 return ResponseEntity.ok(new Reponse(parserelle.getNom() + " a été ajouté avec succès", 0));
             }
+        }
+        }else {
+            return ResponseEntity.ok(new Reponse("Cette Parserelle existe déjà", 0));
         }
 
     }
@@ -67,17 +74,17 @@ public class ParserelleServiceImpl implements ParserelleService{
                 .map(p-> {
                     if(parserelle.getNom() != null)
                         p.setNom(parserelle.getNom());
-                    if(parserelle.getEtypeParserelle() != null)
-                        p.setEtypeParserelle(parserelle.getEtypeParserelle());
+                    if(parserelle.getEtypeparserelle() != null)
+                        p.setEtypeparserelle(parserelle.getEtypeparserelle());
                     if(parserelle.getStatus() != null)
                         p.setStatus(parserelle.getStatus());
                     if(parserelle.getChamp() != null)
                         p.setChamp(parserelle.getChamp());
-                    if(parserelle.getLargeur() != null && champServices.verifierDisponibiliteDimension(p.getChamp().getId()).get(1) < 0)
+                    if(parserelle.getLargeur() != null && champServices.verifierDisponibiliteDimension(p.getChamp().getId(), parserelle).get(1) < 0)
                         p.setLargeur(parserelle.getLargeur());
                     else
                         return ResponseEntity.ok(new Reponse("Largeur non disponible", 0));
-                    if(parserelle.getLongueur() != null && champServices.verifierDisponibiliteDimension(p.getChamp().getId()).get(0) < 0)
+                    if(parserelle.getLongueur() != null && champServices.verifierDisponibiliteDimension(p.getChamp().getId(), parserelle).get(0) < 0)
                         p.setLongueur(parserelle.getLongueur());
                     else
                         return ResponseEntity.ok(new Reponse("Longueur non disponible", 0));

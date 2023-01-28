@@ -20,10 +20,10 @@ public class Parserelle {
     private String nom;
 
     @Size(max = 10)
-    private Long longueur;
+    private Double longueur;
 
     @Size(max = 10)
-    private  Long Largeur;
+    private  Double largeur;
 
     private Boolean etat;
 
@@ -35,7 +35,7 @@ public class Parserelle {
     //le type de la parserelle SEMENCE OU GRAINE
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private EtypeParserelle etypeParserelle;
+    private EtypeParserelle etypeparserelle;
 
     //Le champ au quelle la parserelle est liée
     @ManyToOne

@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ParserelleRepository extends JpaRepository<Parserelle, Long> {
     List<Parserelle> findByChamp(Champ champ);
+
+    Boolean existsByNom(String nom);
 }

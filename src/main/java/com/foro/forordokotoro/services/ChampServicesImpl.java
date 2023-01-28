@@ -90,9 +90,11 @@ public class ChampServicesImpl implements ChampServices{
     }
 
     @Override
-    public ArrayList<Double> verifierDisponibiliteDimension(Long champid) {
-        Double longueurTotalParserelles = null;
-        Double largeurTotalParserelles = null;
+    public ArrayList<Double> verifierDisponibiliteDimension(Long champid, Parserelle parserelle) {
+        Double longueurTotalParserelles = 0.0;
+        Double largeurTotalParserelles = 0.0;
+
+        //va contenir la largeur et la longeur disponible
         ArrayList<Double> dimensions = new ArrayList<>();
 
         //recupere le champ conserné
@@ -100,14 +102,31 @@ public class ChampServicesImpl implements ChampServices{
 
         //recupere la liste des parserelles du champ
         List<Parserelle> parserelleList = parserelleRepository.findByChamp(champConserner);
+//System.out.println("le nombre de parserelle: " + parserelleList.size() );
+        if(!parserelleList.isEmpty()){
+            //System.out.println("je suis là");
+            //recuperation de la longueur total et de la largeur total de toutes les pareserelles du champ conserné
+            //for (int i = 0; i < parserelleList.size(); i++){
+            for(Parserelle p : parserelleList){
+               // System.out.println("je suis rentré: " + i );
+                //Parserelle p = parserelleList.get(i);
+                longueurTotalParserelles += p.getLongueur();
+                largeurTotalParserelles += p.getLargeur();
+            }
+            System.out.println("Longueur totale: " + longueurTotalParserelles );
+            System.out.println("Largeur total: " + largeurTotalParserelles );
+            dimensions.add(0, champConserner.getLongueur() - longueurTotalParserelles);
+            dimensions.add(1, champConserner.getLargeur() - largeurTotalParserelles);
+            System.out.println("dimension L: " + dimensions.get(0));
+            System.out.println("dimension: Lar" + dimensions.get(1));
 
-        //recuperation de la longueur total et de la largeur total de toutes les pareserelles du champ conserné
-        for(Parserelle p : parserelleList){
-            longueurTotalParserelles += longueurTotalParserelles;
-            largeurTotalParserelles += largeurTotalParserelles;
+            return dimensions;
+        }else {
+            dimensions.add(0, champConserner.getLongueur());
+            dimensions.add(1, champConserner.getLargeur());
+
+            return  dimensions;
         }
-        dimensions.add(0, champConserner.getLongueur() - longueurTotalParserelles);
-        dimensions.add(1, champConserner.getLargeur() - largeurTotalParserelles);
-        return dimensions;
+
     }
 }
