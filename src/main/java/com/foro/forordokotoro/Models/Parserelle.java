@@ -2,13 +2,17 @@ package com.foro.forordokotoro.Models;
 
 import com.foro.forordokotoro.Models.Enumerations.EstatusParserelle;
 import com.foro.forordokotoro.Models.Enumerations.EtypeParserelle;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class Parserelle {
     @Id
@@ -41,4 +45,10 @@ public class Parserelle {
     @ManyToOne
     @JoinColumn(name = "champ_id")
     private Champ champ;
+
+    public Parserelle(String nom, Double longueur, Double largeur) {
+        this.nom = nom;
+        this.longueur = longueur;
+        this.largeur = largeur;
+    }
 }

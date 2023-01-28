@@ -7,7 +7,7 @@ import java.time.LocalTime;
 
 @Data
 public class Meteo {
-    Long ChampId;
+    private Long ChampId;
     private LocalDate jour;
     private LocalTime heure;
 }

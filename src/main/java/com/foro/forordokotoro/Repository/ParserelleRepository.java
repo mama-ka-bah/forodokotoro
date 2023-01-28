@@ -9,5 +9,7 @@ import java.util.List;
 public interface ParserelleRepository extends JpaRepository<Parserelle, Long> {
     List<Parserelle> findByChamp(Champ champ);
 
+    List<Parserelle> findByChampAndEtat(Champ champ, Boolean etat);
+
     Boolean existsByNom(String nom);
 }

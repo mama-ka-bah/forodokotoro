@@ -104,26 +104,20 @@ public class ChampServicesImpl implements ChampServices{
         List<Parserelle> parserelleList = parserelleRepository.findByChamp(champConserner);
 //System.out.println("le nombre de parserelle: " + parserelleList.size() );
         if(!parserelleList.isEmpty()){
-            //System.out.println("je suis là");
             //recuperation de la longueur total et de la largeur total de toutes les pareserelles du champ conserné
-            //for (int i = 0; i < parserelleList.size(); i++){
             for(Parserelle p : parserelleList){
-               // System.out.println("je suis rentré: " + i );
-                //Parserelle p = parserelleList.get(i);
                 longueurTotalParserelles += p.getLongueur();
                 largeurTotalParserelles += p.getLargeur();
             }
-            System.out.println("Longueur totale: " + longueurTotalParserelles );
-            System.out.println("Largeur total: " + largeurTotalParserelles );
-            dimensions.add(0, champConserner.getLongueur() - longueurTotalParserelles);
-            dimensions.add(1, champConserner.getLargeur() - largeurTotalParserelles);
-            System.out.println("dimension L: " + dimensions.get(0));
-            System.out.println("dimension: Lar" + dimensions.get(1));
+            System.out.println("Longueur totale des parserelle: " + longueurTotalParserelles + "Longueur du champ: " +  champConserner.getLongueur());
+            System.out.println("Largeur totale des parserelle: " + largeurTotalParserelles + "Largeur du champ: " +  champConserner.getLargeur());
+            dimensions.add(0, champConserner.getLongueur() - longueurTotalParserelles - parserelle.getLongueur());
+            dimensions.add(1, champConserner.getLargeur() - largeurTotalParserelles - parserelle.getLargeur());
 
             return dimensions;
         }else {
-            dimensions.add(0, champConserner.getLongueur());
-            dimensions.add(1, champConserner.getLargeur());
+            dimensions.add(0, champConserner.getLongueur() - parserelle.getLongueur());
+            dimensions.add(1, champConserner.getLargeur() - parserelle.getLargeur());
 
             return  dimensions;
         }
