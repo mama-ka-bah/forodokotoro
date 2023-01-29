@@ -22,9 +22,6 @@ public class Previsions {
     private String libelle;
     private  Long delaijour;
     private Long nbrepluienecessaire;
-    private Long nbrepluie;
-
-    private LocalDate datearrive;
     private Boolean etat;
 
 

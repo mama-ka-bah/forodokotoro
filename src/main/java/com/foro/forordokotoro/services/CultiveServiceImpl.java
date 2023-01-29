@@ -1,15 +1,9 @@
 package com.foro.forordokotoro.services;
 
-import com.foro.forordokotoro.Models.Cultive;
+import com.foro.forordokotoro.Models.*;
 import com.foro.forordokotoro.Models.Enumerations.EstatusParserelle;
-import com.foro.forordokotoro.Models.Parserelle;
-import com.foro.forordokotoro.Models.Previsions;
-import com.foro.forordokotoro.Repository.ChampsRepository;
-import com.foro.forordokotoro.Repository.CultiveRepository;
-import com.foro.forordokotoro.Repository.ParserelleRepository;
-import com.foro.forordokotoro.Repository.PrevisionDuncultiveRepository;
+import com.foro.forordokotoro.Repository.*;
 import com.foro.forordokotoro.Utils.response.Reponse;
-import com.foro.forordokotoro.Models.PrevisionDunCultive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -47,6 +42,12 @@ public class CultiveServiceImpl implements CultivesService{
     @Autowired
     ParserelleService parserelleService;
 
+    @Autowired
+    VarietesRepository varietesRepository;
+
+    @Autowired
+    NotificationRepository notificationRepository;
+
     /*
     * L'ajout d'un cultive c'est à dire le semis
     * Pour ajouter unn cultive on a besoin de la date de debut du semis et la date de fin du semis
@@ -58,11 +59,18 @@ public class CultiveServiceImpl implements CultivesService{
     @Override
     public ResponseEntity<?> ajouterCultive(Cultive cultive) {
         LocalDate datejour = LocalDate.now();
-        String reference = cultive.getParserelle().getNom() + "-" + cultive.getDatedebutsemis().getMonth() + "-" + cultive.getDatefinsemis() + "-" + datejour.getYear();
+        /*
+        * On forme la reference avec le mon du parserelle + le jour eu debut  et fin de semis plus l'anne de semis plus l'anne actuelle
+        * */
+        String reference = cultive.getParserelle().getNom() + cultive.getDatedebutsemis().getMonthValue() + cultive.getDatedebutsemis().getDayOfMonth() + cultive.getDatefinsemis().getMonthValue() + cultive.getDatefinsemis().getDayOfMonth() + cultive.getDatefinsemis().getYear() + datejour.getYear();
         cultive.setReference(reference);
         if(cultiveRepository.existsByReference(reference)){
-            return ResponseEntity.ok(new Reponse("Vous avez déjà semé à cette date", 0));
-        }else {
+            return ResponseEntity.ok(new Reponse("Vous avez déjà semé à cet intervalle", 0));
+        } else if (cultive.getParserelle().getStatus() == EstatusParserelle.OCCUPE) {
+            return ResponseEntity.ok(new Reponse("Cette parserelle est occupée", 0));
+        } else if (cultive.getDatedebutsemis().isAfter(cultive.getDatefinsemis()) || cultive.getDatedebutsemis().isAfter(datejour) ||  cultive.getDatefinsemis().isAfter(datejour)) {
+            return ResponseEntity.ok(new Reponse("Veuillez verifier les dates de semis", 0));
+        } else {
 
             //Utilise pour recuperer les previsions lié à la variete semé qui seront ensuite modifier pour adapter à la culture actuelle
             List<Previsions> previsionsVarietes = new ArrayList<>();
@@ -70,19 +78,21 @@ public class CultiveServiceImpl implements CultivesService{
             //Cette liste sera utilise pour parcourir les previsions contenant dans *previsionsVarietes*
             List<PrevisionDunCultive> toutesprevisionsDunCultive = new ArrayList<>();
 
-            //sera utilisé de maniere temporaire pour parcourir *toutesprevisionsDunCultive*
-            PrevisionDunCultive previsiontmp = new PrevisionDunCultive();
 
             cultive.setEtat(true);
             //on recupere la valeur du recolte prevue
             Long recolteprevue = varietesServices.recupererVarieteParId(cultive.getVarietes().getId()).getResultatparkilo()*cultive.getQuantiteseme();
             cultive.setRecoleprevue(recolteprevue);
 
-            //on recupere la liste des previsions lié à la varieté semé
-            previsionsVarietes = previsionService.recupererPrevisionActives();
 
-            //on calcule la moyenne entre la date de debut et la date de fin
+            //on recupere la liste des previsions lié à la varieté semé
+           // previsionsVarietes = previsionService.recupererPrevisionActives();
+            previsionsVarietes = cultive.getVarietes().getPrevisions();
+
+            //on calcule la moyenne entre la date de debut et la date de fin (difference de jours divisé par deux
             long moyenneDifferenceDateSemis = ChronoUnit.DAYS.between(cultive.getDatefinsemis(), cultive.getDatedebutsemis())/2;
+
+            //ici on calcule une date de reference pour nos differentes traiteements
             LocalDate dateReference = cultive.getDatedebutsemis().plusDays(moyenneDifferenceDateSemis);
 
             //on parcours la previsons pour determiner la previsions rééles de la culture
@@ -90,29 +100,36 @@ public class CultiveServiceImpl implements CultivesService{
             Cette boucle va determiner les previsions un à un puis les stocker un obget "prevision temporaire"
             Cet objet est ensuite ajouter aufur et à mesure à une liste qui sera en fin enregistré dans la base
              */
+
+            //enregistre la lultive
+            cultiveRepository.save(cultive);
             for(Previsions pc : previsionsVarietes){
+                //sera utilisé de maniere temporaire pour parcourir *toutesprevisionsDunCultive*
+                PrevisionDunCultive previsiontmp = new PrevisionDunCultive();
+
                 //detrmination d'une prevision
                 previsiontmp.setDateprevisionnelle(dateReference.plusDays(pc.getDelaijour()));
                 previsiontmp.setLibelle(pc.getLibelle());
-                previsiontmp.setNbrepluieNec(pc.getNbrepluie());
+                previsiontmp.setNbrepluieNec(pc.getNbrepluienecessaire());
                 previsiontmp.setRecoltePrevue(recolteprevue);
                 previsiontmp.setCultive(cultive);
 
-                //ajout des previosns à la liste au fur et à mesure de l'execution de la boucle
-                toutesprevisionsDunCultive.add(previsiontmp);
+
+                //toutesprevisionsDunCultive.add(previsiontmp);
+                //on enregistre la prevision conrrespondant à cette cultive à chaque tour du boucle
+                previsionDuncultiveRepository.save(previsiontmp);
             }
 
-            //enregistre la lultive
-            Parserelle parserelle = cultiveRepository.save(cultive).getParserelle();
+            //on recupere la parserelle concerné
+            Parserelle parserelle = cultive.getParserelle();
 
+            //on met son état à ocuupe
             parserelle.setStatus(EstatusParserelle.OCCUPE);
 
             //on modifie l' état de la parserelle
             parserelleService.modifier(parserelle, parserelle.getId());
 
-            //Enregistrement de la liste de previsions
-            previsionDuncultiveRepository.saveAll(toutesprevisionsDunCultive);
-
+            System.out.println("Le nombre de previson à enregistré" + toutesprevisionsDunCultive.size());
 
             return ResponseEntity.ok(new Reponse("Votre cultive a été créé avec le reference: "+cultive.getReference(), 1));
         }
@@ -135,6 +152,15 @@ public class CultiveServiceImpl implements CultivesService{
                System.out.println("ghgjklmvbn "+ ecart);
                if( ecart <= 5 && ecart >= -5){
                    String message = "Votre cultive avec le reference "+ pc.getCultive().getReference()  +" du champ " + pc.getCultive().getParserelle() + " tend vers" + pc.getLibelle();
+
+                   Notifications notifications =new Notifications();
+                   notifications.setLu(false);
+                   notifications.setDateNotification(new Date());
+                   notifications.setContenu("message");
+                   notifications.setTitre("Prevision");
+                   notifications.setUserid(pc.getCultive().getParserelle().getChamp().getProprietaire());
+                   notificationRepository.save(notifications);
+                   notificationRepository.save(new Notifications());
                    emailSenderService.sendSimpleEmail(pc.getCultive().getParserelle().getChamp().getProprietaire().getEmail(), "Prevision", message);
                }
            }

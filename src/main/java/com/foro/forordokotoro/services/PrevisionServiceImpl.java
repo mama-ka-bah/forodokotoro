@@ -24,6 +24,7 @@ public class PrevisionServiceImpl implements PrevisionService{
         if(previsionsRepository.existsByLibelle(previsions.getLibelle())){
             return ResponseEntity.ok(new Reponse(previsions.getLibelle() + " existe déjà", 0));
         }else {
+            previsions.setEtat(true);
             previsionsRepository.save(previsions);
             return ResponseEntity.ok(new Reponse(previsions.getLibelle() + " a été ajouté avec succès", 1));
         }
@@ -37,8 +38,7 @@ public class PrevisionServiceImpl implements PrevisionService{
                         p.setLibelle(previsions.getLibelle());
                     if(previsions.getDelaijour() != null)
                         p.setDelaijour(previsions.getDelaijour());
-                    if(previsions.getNbrepluie() != null)
-                        p.setNbrepluie(previsions.getNbrepluie());
+
                     if(previsions.getNbrepluienecessaire() != null)
                         p.setNbrepluienecessaire(previsions.getNbrepluienecessaire());
                     previsionsRepository.save(p);

@@ -138,6 +138,7 @@ public class WebSecurityConfig {
             .antMatchers("/agriculteur/**").permitAll()
              .antMatchers("/champs/**").permitAll()
         .antMatchers("/produitagricoles/**").permitAll()
+            .antMatchers("/cultive/**").permitAll()
         .anyRequest().authenticated();
            // .and()
             //.oauth2Login();
