@@ -18,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/varietes")
+@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
 public class VarietesControlleur {
 
     @Autowired
@@ -47,9 +48,9 @@ public class VarietesControlleur {
         return varietesServices.recupererVarietesActives();
     }
 
-    @GetMapping("/recuperervarietesparproduit/{idvariete}")
-    public List<Varietes> recupererVarietesParProduit(@PathVariable Long idvariete){
-        return varietesServices.recupererVarietesParProduitAgricole(produitAgricoleService.recupererProduitAgricoleParId(idvariete));
+    @GetMapping("/recuperervarietesparproduit/{idProduit}")
+    public List<Varietes> recupererVarietesParProduit(@PathVariable Long idProduit){
+        return varietesServices.recupererVarietesParProduitAgricole(produitAgricoleService.recupererProduitAgricoleParId(idProduit));
     }
 
     @GetMapping("/modifier/{idvariete}")

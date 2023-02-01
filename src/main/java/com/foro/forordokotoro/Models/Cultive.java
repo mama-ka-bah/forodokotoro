@@ -1,5 +1,7 @@
 package com.foro.forordokotoro.Models;
 
+import com.foro.forordokotoro.Models.Enumerations.EstatusCultive;
+import com.foro.forordokotoro.Models.Enumerations.EstatusParserelle;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,18 +23,25 @@ public class Cultive {
     @Size(max = 15)
     private String reference;
 
-    @NotBlank
-    @Size(max = 15)
+    //en kilo
     private Long recoleprevue;
 
-    @Size(max = 15)
-    private String recolterealise;
+    //en kilo
+    private Long recolterealise;
     private LocalDate datedebutsemis;
     private LocalDate datefinsemis;
+
+    private LocalDate datefinCultive;
+
+    private LocalDate dateRecolteRéelle;
 
     @Size(max = 5)
     private Long quantiteseme;
     private Boolean etat;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private EstatusCultive status;
 
     @ManyToOne
     @JoinColumn(name = "varietes_id")

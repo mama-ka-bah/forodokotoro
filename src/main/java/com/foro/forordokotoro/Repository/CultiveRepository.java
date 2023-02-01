@@ -21,4 +21,7 @@ public interface CultiveRepository extends JpaRepository<Cultive, Long> {
 
     //retourne le cultive d'une parserelle en fonction de la date de debut de semis et d'une parserelle
     Cultive findByDatedebutsemisAndParserelle(LocalDate datedebutsemis, Parserelle parserelle);
+
+    List<Cultive> findByParserelleAndEtatOrderByDatedebutsemisDesc(Parserelle parserelle, Boolean etat);
+
 }

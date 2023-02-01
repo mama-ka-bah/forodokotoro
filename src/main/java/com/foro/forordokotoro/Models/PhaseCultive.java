@@ -1,5 +1,6 @@
 package com.foro.forordokotoro.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.foro.forordokotoro.Models.Enumerations.Eactions;
 import lombok.Data;
 
@@ -30,10 +31,13 @@ public class PhaseCultive {
     @Size(max = 150)
     private String remarques;
 
+    /*
     @Enumerated(EnumType.STRING)
     @Column(length = 120)
     private Eactions action;
 
+     */
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cultive_id")
     private Cultive cultive;

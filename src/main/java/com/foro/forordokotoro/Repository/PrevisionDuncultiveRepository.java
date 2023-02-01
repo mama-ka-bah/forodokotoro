@@ -11,4 +11,8 @@ import java.util.List;
 public interface PrevisionDuncultiveRepository extends JpaRepository<PrevisionDunCultive, Long> {
     List<PrevisionDunCultive> findByCultiveOrderByDateprevisionnelleAsc(Cultive cultive);
 
+    List<PrevisionDunCultive> findByCultive(Cultive cultive);
+
+    Boolean existsByCultive(Cultive cultive);
+
 }

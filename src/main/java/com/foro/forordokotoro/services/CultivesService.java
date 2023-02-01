@@ -16,4 +16,6 @@ public interface CultivesService {
     Cultive recupererCultiveParReference(String reference);
 
     Cultive recupererParId(Long id);
+
+    //List<RetourInfoCultive> transfomerListCultiveEnListRetourInfoCultive(List<Cultive> lesCultiveAtransformer);
 }

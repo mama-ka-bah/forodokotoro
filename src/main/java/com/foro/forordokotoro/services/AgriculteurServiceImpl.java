@@ -88,7 +88,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
                 String messae = "Veuilez patienter vous avez déjà une demande en cours de traitement";
 
-                return ResponseEntity.ok(new Reponse(messae, 1));
+                return ResponseEntity.ok(new Reponse(messae, 0));
             }else if(agriculteurEnAttenteRepository.findByUserid(userExistant).getStatusdemande().equals(EstatusDemande.REJETER)){
                 LocalDate datejour = LocalDate.now();
                 LocalDate datedemande = agriculteurEnAttenteRepository.findByUserid(userExistant).getDatedemande();

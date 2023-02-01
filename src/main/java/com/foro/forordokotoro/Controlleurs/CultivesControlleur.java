@@ -2,6 +2,8 @@ package com.foro.forordokotoro.Controlleurs;
 
 import com.foro.forordokotoro.Models.Champ;
 import com.foro.forordokotoro.Models.Cultive;
+import com.foro.forordokotoro.Models.Parserelle;
+import com.foro.forordokotoro.Repository.CultiveRepository;
 import com.foro.forordokotoro.Repository.ParserelleRepository;
 import com.foro.forordokotoro.services.ChampServices;
 import com.foro.forordokotoro.services.CultivesService;
@@ -15,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("cultive")
+@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
 public class CultivesControlleur {
 
     @Autowired
@@ -28,6 +31,9 @@ public class CultivesControlleur {
 
     @Autowired
     ParserelleRepository parserelleRepository;
+
+    @Autowired
+    CultiveRepository cultiveRepository;
 
     @PostMapping("/ajouter/{varieteid}/{parserelleid}")
     public ResponseEntity<?> ajouterCultive(@RequestBody Cultive cultive, @PathVariable Long varieteid, @PathVariable Long parserelleid){
@@ -47,7 +53,7 @@ public class CultivesControlleur {
     }
 
     @GetMapping("/tousLesCultiveActive")
-    public List<Cultive> modifierCultive(){
+    public List<Cultive> recupererLesCultiveActive(){
         return cultivesService.recupererTousLesCultiveActive();
     }
 
@@ -64,6 +70,12 @@ public class CultivesControlleur {
     @GetMapping("/detailCultive/{id}")
     public Cultive recupererCultiveDetail(@PathVariable Long id){
         return  cultivesService.recupererParId(id);
+    }
+
+    @GetMapping("/recupererlescultivesactiveduneparserelleordonnepardatedefin/{idparserelle}")
+    public List<Cultive> recupererLesCultivesActiveDuneParserelleOrdonneParDateDefin(@PathVariable Parserelle idparserelle){
+
+        return  cultiveRepository.findByParserelleAndEtatOrderByDatedebutsemisDesc(idparserelle, true);
     }
 
 }
