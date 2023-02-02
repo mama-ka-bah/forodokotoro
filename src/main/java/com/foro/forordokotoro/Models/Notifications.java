@@ -21,7 +21,7 @@ public class Notifications {
     @NotBlank
     @Size(max = 60)
     private String titre;
-    private Date dateNotification;
+    private Date datenotification;
     private Boolean lu;
 
 

@@ -61,10 +61,10 @@ public class PhaseControlleur {
         return phaseService.ajouterPhase(phase, type, nomfile, file);
     }
 
-    @PostMapping("/modifer/{idphase}")
-    public ResponseEntity<?> modifierPhase(@RequestBody PhaseCultive phase, @PathVariable Long id){
-
-        return phaseService.modifierPhase(id, phase);
+    @PatchMapping("/modifer/{idphase}")
+    public ResponseEntity<?> modifierPhase(@RequestBody PhaseCultive phase, @PathVariable Long idphase){
+        System.out.println("id id id id id id id : " + idphase);
+        return phaseService.modifierPhase(idphase, phase);
     }
 
     @GetMapping("/recupererPhaseActives")

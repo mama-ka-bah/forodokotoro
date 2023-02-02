@@ -42,7 +42,7 @@ public class CultivesControlleur {
         return cultivesService.ajouterCultive(cultive);
     }
 
-    @PutMapping("/modifier/{idcultive}")
+    @PatchMapping("/modifier/{idcultive}")
     public ResponseEntity<?> modifierCultive(@RequestBody Cultive cultive, @PathVariable Long idcultive){
         return cultivesService.modifierCultive(cultive, idcultive);
     }

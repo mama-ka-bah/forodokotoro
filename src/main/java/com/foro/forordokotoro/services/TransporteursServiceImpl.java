@@ -51,7 +51,7 @@ public class TransporteursServiceImpl implements TransporteursService{
 
         notifications.setContenu(message);
         notifications.setUserid(userExistant);
-        notifications.setDateNotification(new Date());
+        notifications.setDatenotification(new Date());
         notifications.setTitre("Demande de profil");
         notifications.setLu(false);
         notificationRepository.save(notifications);
@@ -131,7 +131,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                             utilisateursRepository.DONNERROLEAUSER(user.getId(), 4L);
                             notifications.setContenu(message);
                             notifications.setUserid(user);
-                            notifications.setDateNotification(new Date());
+                            notifications.setDatenotification(new Date());
                             notifications.setLu(false);
                             notificationRepository.save(notifications);
                             if(user.getEmail() != null){
@@ -167,7 +167,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                             notifications.setContenu(message);
                             notifications.setUserid(user);
                             notifications.setTitre("Rejet de demande");
-                            notifications.setDateNotification(new Date());
+                            notifications.setDatenotification(new Date());
                             notifications.setLu(false);
                             notificationRepository.save(notifications);
                             if(user.getEmail() != null){

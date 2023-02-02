@@ -59,7 +59,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
         notifications.setContenu(message);
         notifications.setUserid(userExistant);
-        notifications.setDateNotification(new Date());
+        notifications.setDatenotification(new Date());
         notifications.setTitre("Demande de profil");
         notifications.setLu(false);
         notificationRepository.save(notifications);
@@ -142,7 +142,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                             String message = "Votre demande a étée accepter, vous êtes desormais agriculteur";
                             notifications.setContenu(message);
                             notifications.setUserid(user);
-                            notifications.setDateNotification(new Date());
+                            notifications.setDatenotification(new Date());
                             notifications.setLu(false);
                             notificationRepository.save(notifications);
                             try {
@@ -180,7 +180,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                         String message = "Nous sommes desolé de vous annoncer que votre demande n'a pas été accepté";
                         notifications.setContenu(message);
                         notifications.setUserid(user);
-                        notifications.setDateNotification(new Date());
+                        notifications.setDatenotification(new Date());
                         notifications.setLu(false);
                         notificationRepository.save(notifications);
                         return ResponseEntity.ok(new Reponse(message, 1));

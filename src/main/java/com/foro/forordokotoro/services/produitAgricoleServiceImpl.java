@@ -26,6 +26,7 @@ public class produitAgricoleServiceImpl implements ProduitAgricoleService{
         }else {
 
             produitAgricole.setPhoto(ConfigImages.saveimg(type, nomfile, file));
+            produitAgricole.setEtat(true);
             produitAgricoleRepositrory.save(produitAgricole);
             return ResponseEntity.ok(new Reponse(produitAgricole.getNom() + "a été ajouter avec succès", 1));
         }

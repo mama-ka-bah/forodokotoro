@@ -161,7 +161,7 @@ public class CultiveServiceImpl implements CultivesService{
 
                    Notifications notifications =new Notifications();
                    notifications.setLu(false);
-                   notifications.setDateNotification(new Date());
+                   notifications.setDatenotification(new Date());
                    notifications.setContenu("message");
                    notifications.setTitre("Prevision");
                    notifications.setUserid(pc.getCultive().getParserelle().getChamp().getProprietaire());

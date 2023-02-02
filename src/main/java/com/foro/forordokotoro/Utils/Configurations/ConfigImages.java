@@ -13,7 +13,13 @@ import java.nio.file.StandardCopyOption;
 
 public class ConfigImages {
 
+    //le chemin des diffrents directoy de sauvegardes avec l'adresse ip de la machine(serveur) sur le
+    // quelle le sauvegarde sera effectué
+
+    //varivale contenant le l'ip oudresse du directory
     public static String localhost = "http://127.0.0.1/";
+
+    //les directory
     public static String serveruser = localhost + "forodokotoro/images/profils/";
     public static String serverproduitagicole = localhost + "forodokotoro/images/produitsAgricoles/";
     public static String serverchamp = localhost + "forodokotoro/images/champs/";
@@ -22,6 +28,8 @@ public class ConfigImages {
     public static String serverphases = localhost + "forodokotoro/images/phases/";
     public static String serverpermis = localhost + "forodokotoro/images/permis/";
 
+
+    //les chemin complets des differents directory de sauvegardes des fichiers
     public static String Userlocation = "C:/xampp/htdocs/forodokotoro/images/profils/";
     public static String Produitagicolelocation = "C:/xampp/htdocs/forodokotoro/images/produitsAgricoles/";
     public static String Champlocation = "C:/xampp/htdocs/forodokotoro/images/champs/";
@@ -34,23 +42,6 @@ public class ConfigImages {
     //pour l'image de l'entite
     //public static void saveimg(String uploaDir, String nomfile, MultipartFile multipartFile) throws IOException{
     public static String saveimg(String typeImage, String fileName, MultipartFile file) throws IOException{
-
-    /*
-        Path UploadPath = Paths.get(uploaDir);
-
-        if(!Files.exists(UploadPath)) {
-            Files.createDirectories(UploadPath);
-        }
-            try(InputStream inputStream = multipartFile.getInputStream()){
-                Path fichierPath = UploadPath.resolve(nomfile);
-
-                Files.copy(inputStream, fichierPath, StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException ioe){
-                throw new IOException("Impossible d'enregistrer le fichier image:" + nomfile, ioe);
-            }
-
-     */
-
 
         String src = "";
         String server = "";
@@ -80,7 +71,6 @@ public class ConfigImages {
             server = serverstocks;
         }
         try {
-            //Path filePath = Paths.get(location + fileName);
             Path filePath = Paths.get(location + fileName);
 
             if (!Files.exists(filePath)) {
@@ -102,31 +92,6 @@ public class ConfigImages {
     }
 
 }
-
-
-
-
-
-
-    /*
-    public static void saveimgA(String uploaDira, String nomfilea, MultipartFile multipartFile) throws IOException{
-
-        Path UploadPatha = Paths.get(uploaDira);
-
-        if(!Files.exists(UploadPatha)) {
-            Files.createDirectories(UploadPatha);
-        }
-        try(InputStream inputStream = multipartFile.getInputStream()){
-            Path fichierPatha = UploadPatha.resolve(nomfilea);
-
-            Files.copy(inputStream, fichierPatha, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException ioe){
-            throw new IOException("Impossible d'enregistrer le fichier image:" + nomfilea, ioe);
-        }
-    }
-
-     */
-
 
 
 

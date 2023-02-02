@@ -32,17 +32,19 @@ public class PhaseServiceImpl implements PhaseService{
              *  la date de fin de cultive
              * */
             if(phaseCultive.getDatedebut().isAfter(phaseCultive.getDatefin())){
-                return ResponseEntity.ok(new Reponse("Date debut superieur à date fin", 1));
+                return ResponseEntity.ok(new Reponse("Date debut superieur à date fin", 0));
             } else {
                 if(phaseCultive.getCultive().getDatefinCultive() != null){
+                    /*
                     System.out.println("date debut de semis: "+ phaseCultive.getCultive().getDatedebutsemis());
                     System.out.println("date fin cultive: " + phaseCultive.getCultive().getDatefinCultive());
 
                     System.out.println("date debut phase: "+ phaseCultive.getDatedebut());
                     System.out.println("date fin phase: "+ phaseCultive.getDatefin());
 
-                    if (!(phaseCultive.getCultive().getDatedebutsemis().isBefore(phaseCultive.getDatedebut()) && phaseCultive.getCultive().getDatefinCultive().isAfter(phaseCultive.getDatedebut())) ||
-                            !(phaseCultive.getCultive().getDatedebutsemis().isBefore(phaseCultive.getDatefin()) && phaseCultive.getCultive().getDatefinCultive().isAfter(phaseCultive.getDatefin()))) {
+                     */
+
+                    if (!phaseCultive.getCultive().getDatefinCultive().isAfter(phaseCultive.getDatedebut()) || !phaseCultive.getCultive().getDatefinCultive().isAfter(phaseCultive.getDatefin())) {
                         return ResponseEntity.ok(new Reponse("Les dates doivent etres comprises entre " + phaseCultive.getCultive().getDatefinsemis() + " et " + phaseCultive.getCultive().getDatefinCultive(), 0));
                     } else {
                         System.out.println("je suis dans le premier");
@@ -52,14 +54,15 @@ public class PhaseServiceImpl implements PhaseService{
                         return ResponseEntity.ok(new Reponse(phaseCultive.getLibelle() + " a été ajouter avec succès", 1));
                     }
                 } else {
+                    if(!phaseCultive.getCultive().getDatedebutsemis().isBefore(phaseCultive.getDatedebut()) ||  !phaseCultive.getCultive().getDatedebutsemis().isBefore(phaseCultive.getDatefin())){
+                        return ResponseEntity.ok(new Reponse("La date de debut doit être après " + phaseCultive.getCultive().getDatefinsemis(), 0));
+                    }
                     System.out.println("je suis dans le deuxieme");
                     phaseCultive.setPhoto(ConfigImages.saveimg(type, nomfile, file));
-                    phaseCultive.setPhoto(nomfile);
                     phaseCultiveRepository.save(phaseCultive);
                     return ResponseEntity.ok(new Reponse(phaseCultive.getLibelle() + " a été ajouter avec succès", 1));
                 }
             }
-
 
         }
     }
@@ -76,6 +79,10 @@ public class PhaseServiceImpl implements PhaseService{
                         pc.setNbrepluies(phaseCultive.getNbrepluies());
                     if(phaseCultive.getRemarques() != null)
                         pc.setRemarques(phaseCultive.getRemarques());
+                    if(phaseCultive.getRemarques() != null)
+                        pc.setRemarques(phaseCultive.getRemarques());
+                    if(phaseCultive.getNbrepluies() != null)
+                        pc.setNbrepluies(phaseCultive.getNbrepluies());
                     phaseCultiveRepository.save(pc);
 
                     return new ResponseEntity<>("Modification reçu", HttpStatus.OK);
