@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -31,10 +32,14 @@ public class Parserelle {
 
     private Boolean etat;
 
+    private LocalDateTime datecreation;
+
     //le status de la parserelle occupée ou libre
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private EstatusParserelle status;
+
+    private Long nombrecultive;
 
     //le type de la parserelle SEMENCE OU GRAINE
     @Enumerated(EnumType.STRING)

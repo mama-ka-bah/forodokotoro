@@ -15,6 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -41,10 +44,9 @@ public class ChampsControlleur {
         String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
         System.out.println(nomfile);
 
-
-
         Champ champ = new JsonMapper().readValue(champReçu, Champ.class);
         champ.setProprietaire(agriculteurService.recupererAgriculteurPArId(idproprietaire));
+        champ.setDatecreation(LocalDateTime.now());
 
         return champServices.ajouterChamp(champ, type, nomfile, file);
     }
@@ -67,8 +69,7 @@ public class ChampsControlleur {
     @GetMapping("/leschampagriculteur/{id}")
     public List<Champ> recupererChampParProprietaire(@PathVariable Long id){
         Agriculteurs agriculteurs = agriculteurService.recupererAgriculteurPArId(id);
-        return  champsRepository.findByProprietaire(agriculteurs);
+        return  champsRepository.findByProprietaireOrderByDatecreationDesc(agriculteurs);
     }
-
 
 }

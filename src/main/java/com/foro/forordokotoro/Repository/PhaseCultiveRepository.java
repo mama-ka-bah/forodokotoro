@@ -16,5 +16,7 @@ public interface PhaseCultiveRepository extends JpaRepository<PhaseCultive, Long
 
     List<PhaseCultive> findByCultiveAndEtatOrderByDatefinDesc(Cultive cultive, Boolean etat);
 
+    List<PhaseCultive> findByEtatAndCultive(Boolean etat, Cultive cultive);
+
 
 }

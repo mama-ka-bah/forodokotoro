@@ -86,7 +86,8 @@ public class ChampServicesImpl implements ChampServices{
 
     @Override
     public Champ recupererChampParId(Long id) {
-        return champsRepository.findById(id).get();
+        Champ champ =  champsRepository.findById(id).get();
+        return champ;
     }
 
     @Override

@@ -24,10 +24,10 @@ public class Cultive {
     private String reference;
 
     //en kilo
-    private Long recoleprevue;
+    private Double recoleprevue;
 
     //en kilo
-    private Long recolterealise;
+    private Double recolterealise;
     private LocalDate datedebutsemis;
     private LocalDate datefinsemis;
 
@@ -36,7 +36,7 @@ public class Cultive {
     private LocalDate dateRecolteRéelle;
 
     @Size(max = 5)
-    private Long quantiteseme;
+    private Double quantiteseme;
     private Boolean etat;
 
     @Enumerated(EnumType.STRING)

@@ -13,7 +13,7 @@ public interface CultiveRepository extends JpaRepository<Cultive, Long> {
 
     Boolean existsByReference(String reference);
     Boolean existsByDatedebutsemis(String datedebutsemis);
-    List<Cultive> findByParserelle(Parserelle parserelle);
+    List<Cultive> findByParserelleAndEtat(Parserelle parserelle, Boolean etat);
     Cultive findByVarietes(Varietes varietes);
     Cultive findByReference(String reference);
 

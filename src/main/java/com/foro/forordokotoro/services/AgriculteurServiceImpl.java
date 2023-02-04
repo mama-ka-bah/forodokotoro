@@ -41,8 +41,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
     public ResponseEntity<?> AjouterAgriculteur(Agriculteurs agriculteurs) {
         agriculteursRepository.save(agriculteurs);
         return ResponseEntity.ok(
-                new Reponse("Agriculteur ajouter avec succès", 200)
-        );
+                new Reponse("Agriculteur ajouter avec succès", 200));
     }
 
     public void demandeAgricuteur(Long id, AgricuteurAttente agriculteur) throws IOException {
@@ -95,7 +94,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                 long days_difference = ChronoUnit.DAYS.between(datedemande, datejour);
                 System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm: "+ days_difference);
                 if (days_difference < 10){
-                    return ResponseEntity.ok(new Reponse("Veuilez attendre 10 jours pour faire une nouvelle demande", 1));
+                    return ResponseEntity.ok(new Reponse("Veuilez attendre 10 jours pour faire une nouvelle demande", 0));
                 }else{
                     demandeAgricuteur(id, agriculteur);
 
@@ -110,10 +109,10 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                     return ResponseEntity.ok(new Reponse(message, 1));
                 }
             }else {
-                return ResponseEntity.ok(new Reponse("Vous êtes déjà agriculteur", 1));
+                return ResponseEntity.ok(new Reponse("Vous êtes déjà agriculteur", 0));
             }
         }else {
-            return ResponseEntity.ok(new Reponse("Cet utilisateur nexiste pas", 1));
+            return ResponseEntity.ok(new Reponse("Cet utilisateur nexiste pas", 0));
         }
 
     }

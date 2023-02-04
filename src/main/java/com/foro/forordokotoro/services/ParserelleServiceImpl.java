@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,11 +33,11 @@ public class ParserelleServiceImpl implements ParserelleService{
     public ResponseEntity<?> ajouter(Parserelle parserelle, Long chmpid) throws IOException {
         Optional<Champ> champ = champsRepository.findById(chmpid);
 
-        if(!parserelleRepository.existsByNom(parserelle.getNom())){
-        //verifie si le champ existe
-        if(champ == null){
-            return ResponseEntity.ok(new Reponse("Ce champ n'existe pas", 0));
-        }else {
+        if(!parserelleRepository.existsByNomAndChamp(parserelle.getNom(), parserelle.getChamp())){
+            //verifie si le champ existe
+            if(champ == null){
+                return ResponseEntity.ok(new Reponse("Ce champ n'existe pas", 0));
+            }else {
 
             //recupere le champ conserné
             Champ champConserner = champsRepository.findById(chmpid).get();
@@ -62,9 +63,11 @@ public class ParserelleServiceImpl implements ParserelleService{
                 parserelle.setChamp(champConserner);
                 parserelle.setStatus(EstatusParserelle.LIBRE);
                 parserelle.setEtat(true);
+                parserelle.setDatecreation(LocalDateTime.now());
+                parserelle.setNombrecultive(0L);
                 parserelleRepository.save(parserelle);
                 champServices.incrementerNombreParserelle(parserelle.getChamp().getId());
-                return ResponseEntity.ok(new Reponse(parserelle.getNom() + " a été ajouté avec succès", 0));
+                return ResponseEntity.ok(new Reponse(parserelle.getNom() + " a été ajouté avec succès", 1));
             }
         }
         }else {
@@ -85,12 +88,16 @@ public class ParserelleServiceImpl implements ParserelleService{
                         p.setStatus(parserelle.getStatus());
                     if(parserelle.getChamp() != null)
                         p.setChamp(parserelle.getChamp());
-                    if(parserelle.getLargeur() != null && champServices.verifierDisponibiliteDimension(p.getChamp().getId(), parserelle).get(1) < 0)
-                        p.setLargeur(parserelle.getLargeur());
+                    if(parserelle.getNombrecultive() != null)
+                        p.setNombrecultive(parserelle.getNombrecultive());
+                    if(parserelle.getLargeur() != null)
+                        if(champServices.verifierDisponibiliteDimension(p.getChamp().getId(), parserelle).get(1) < 0)
+                            p.setLargeur(parserelle.getLargeur());
                     else
                         return ResponseEntity.ok(new Reponse("Largeur non disponible", 0));
-                    if(parserelle.getLongueur() != null && champServices.verifierDisponibiliteDimension(p.getChamp().getId(), parserelle).get(0) < 0)
-                        p.setLongueur(parserelle.getLongueur());
+                    if(parserelle.getLongueur() != null)
+                        if(champServices.verifierDisponibiliteDimension(p.getChamp().getId(), parserelle).get(0) < 0)
+                         p.setLongueur(parserelle.getLongueur());
                     else
                         return ResponseEntity.ok(new Reponse("Longueur non disponible", 0));
                     parserelleRepository.save(p);
@@ -107,6 +114,6 @@ public class ParserelleServiceImpl implements ParserelleService{
             List<Parserelle> p = new ArrayList<>();
             return p;
         }
-        return parserelleRepository.findByChampAndEtat(champsRepository.findById(idchamp).get(), true);
+        return parserelleRepository.findByChampAndEtatOrderByDatecreationDesc(champsRepository.findById(idchamp).get(), true);
     }
 }

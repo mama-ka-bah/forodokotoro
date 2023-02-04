@@ -5,14 +5,17 @@ import com.foro.forordokotoro.Models.Cultive;
 import com.foro.forordokotoro.Models.Parserelle;
 import com.foro.forordokotoro.Repository.CultiveRepository;
 import com.foro.forordokotoro.Repository.ParserelleRepository;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import com.foro.forordokotoro.services.ChampServices;
 import com.foro.forordokotoro.services.CultivesService;
 import com.foro.forordokotoro.services.VarietesServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -77,5 +80,27 @@ public class CultivesControlleur {
 
         return  cultiveRepository.findByParserelleAndEtatOrderByDatedebutsemisDesc(idparserelle, true);
     }
+
+    @PatchMapping("/mettrefinauncultive/{idCultive}/{quatiteRecolte}")
+    public ResponseEntity<?> mettreFinAUnCultive(@Param(value = "datefin") String datefin, @PathVariable Long idCultive, @PathVariable Double quatiteRecolte){
+        Cultive cultive = new Cultive();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate datefinCultive = LocalDate.parse(datefin, formatter);
+
+        cultive.setDatefinCultive(datefinCultive);
+        cultive.setRecolterealise(quatiteRecolte);
+
+        Cultive cultive1 = cultiveRepository.findById(idCultive).get();
+
+        if(datefinCultive.isAfter(LocalDate.now())){
+            return ResponseEntity.ok(new Reponse("La date de fin doit etre inferieur à la date du jour", 0));
+        } else if (datefinCultive.isAfter(cultive1.getDatedebutsemis()) && datefinCultive.isAfter(cultive1.getDatefinsemis())) {
+            return ResponseEntity.ok(new Reponse("La date de fin doit etre à " + cultive1.getDatedebutsemis() + " et à " + cultive1.getDatefinsemis(), 0));
+        }
+
+        return cultivesService.mettreFincultive(idCultive, cultive);
+    }
+
 
 }

@@ -18,4 +18,7 @@ public class ParserelleVevant {
 
     @Column(length = 20)
     private String etypeparserelle;
+
+    @Column(length = 20)
+    private String status;
 }
