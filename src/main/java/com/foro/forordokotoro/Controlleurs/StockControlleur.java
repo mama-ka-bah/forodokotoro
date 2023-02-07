@@ -40,6 +40,8 @@ public class StockControlleur {
         //chemin de stockage des images
         String type = "stocks";
 
+        System.out.println("ccccccccccccccccccc: " + idvarietes);
+
         //recupere le nom de l'image
         String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
         Stocks stocks = new JsonMapper().readValue(stocksReçu, Stocks.class);

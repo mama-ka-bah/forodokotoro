@@ -1,8 +1,10 @@
 package com.foro.forordokotoro.Utils.response;
 
+import com.foro.forordokotoro.Models.Role;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class JwtResponse {
@@ -18,8 +20,11 @@ public class JwtResponse {
   private Boolean disponibilite;
   private String numeroplaque;
 
+  private Boolean etat;
+  private Boolean sesouvenir;
+
   public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles, String adresse,
-                     String photo, String nomcomplet) {
+                     String photo, String nomcomplet, Boolean etat, Boolean sesouvenir) {
     this.token = accessToken;
     this.id = id;
     this.username = username;
@@ -28,10 +33,12 @@ public class JwtResponse {
     this.adresse = adresse;
     this.photo = photo;
     this.nomcomplet = nomcomplet;
+    this.etat = etat;
+    this.sesouvenir = sesouvenir;
   }
 
   public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles, String adresse,
-                     String photo, String nomcomplet, Boolean disponibilite, String numeroplaque) {
+                     String photo, String nomcomplet, Boolean disponibilite, String numeroplaque, Boolean etat, Boolean sesouvenir) {
     this.token = accessToken;
     this.id = id;
     this.username = username;
@@ -42,6 +49,21 @@ public class JwtResponse {
     this.nomcomplet = nomcomplet;
     this.disponibilite = disponibilite;
     this.numeroplaque = numeroplaque;
+    this.etat = etat;
+    this.sesouvenir = sesouvenir;
+
+  }
+
+  public JwtResponse(Long id, String username, String email, List<String> roles, String adresse, String photo, String nomcomplet, Boolean etat, Boolean sesouvenir) {
+    this.id = id;
+    this.username = username;
+    this.email = email;
+    this.roles = roles;
+    this.adresse = adresse;
+    this.photo = photo;
+    this.nomcomplet = nomcomplet;
+    this.etat = etat;
+    this.sesouvenir = sesouvenir;
   }
 
   /*

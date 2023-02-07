@@ -1,6 +1,7 @@
 package com.foro.forordokotoro.Models;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -19,6 +20,7 @@ import java.util.Set;
       @UniqueConstraint(columnNames = "email") 
     })
 @Data
+@ToString
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="profession", discriminatorType = DiscriminatorType.STRING)
 public class Utilisateurs {
@@ -54,6 +56,8 @@ public class Utilisateurs {
   private Boolean etat;
 
   private Boolean enligne;
+
+  private Boolean sesouvenir;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(  name = "user_roles", 

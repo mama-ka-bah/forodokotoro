@@ -8,6 +8,9 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notifications, Long> {
 
-    List<Notifications> findByLuAndUseridOrderByDatenotification(Boolean lu, Utilisateurs utilisateurs);
-    List<Notifications> findByUseridOrderByDatenotification(Utilisateurs utilisateurs);
+    List<Notifications> findByLuAndUseridOrderByDatenotificationDesc(Boolean lu, Utilisateurs utilisateurs);
+    List<Notifications> findByUseridOrderByDatenotificationDesc(Utilisateurs utilisateurs);
+    List<Notifications> findAllByUseridOrderByDatenotificationDesc(Utilisateurs utilisateurs);
+
+    List<Notifications> findByUseridAndLu(Utilisateurs utilisateurs, Boolean lu);
 }

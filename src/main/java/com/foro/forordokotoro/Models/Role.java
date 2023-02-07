@@ -2,11 +2,13 @@ package com.foro.forordokotoro.Models;
 
 import com.foro.forordokotoro.Models.Enumerations.ERole;
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "roles")
+@ToString
 @AllArgsConstructor
 public class Role {
   @Id

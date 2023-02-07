@@ -119,6 +119,8 @@ public class AuthController {
 
     log.info("conexion controlleur");
 
+    Utilisateurs user =  utilisateursRepository.findByUsername(utilisateursDetails.getUsername()).get();
+
     if(roles.contains(ERole.ROLE_TRANSPORTEUR)){
 
       Transporteurs transporteurs = transporteurRepository.findByUsername(utilisateursDetails.getUsername());
@@ -133,7 +135,9 @@ System.out.print("je suis transporteur");
               utilisateursDetails.getPhoto(),
               utilisateursDetails.getNomcomplet(),
               transporteurs.getDisponibilite(),
-              transporteurs.getNumeroplaque()
+              transporteurs.getNumeroplaque(),
+              user.getEtat(),
+              user.getSesouvenir()
 
       ));
 
@@ -148,7 +152,9 @@ System.out.print("je suis transporteur");
               roles,
               utilisateursDetails.getAdresse(),
               utilisateursDetails.getPhoto(),
-              utilisateursDetails.getNomcomplet()
+              utilisateursDetails.getNomcomplet(),
+              user.getEtat(),
+              user.getSesouvenir()
       ));
     }
 
@@ -221,7 +227,10 @@ System.out.print("je suis transporteur");
   @PatchMapping("/modifierutilisateur/{id}")
   public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody Utilisateurs utilisateurs) {
 
-    utilisateurs.setPassword(encoder.encode(utilisateurs.getPassword()));
+    System.out.println(utilisateurs.getSesouvenir());
+
+    if(utilisateurs.getPassword() != null)
+      utilisateurs.setPassword(encoder.encode(utilisateurs.getPassword()));
 
     return utilisateurService.modifierUtilisateur(id, utilisateurs);
   }
@@ -232,6 +241,7 @@ System.out.print("je suis transporteur");
 
     //chemin de stockage des images
     String url = "C:/Users/mkkeita/Desktop/projects/medias/images";
+
 
     //recupere le nom de l'image
     String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
