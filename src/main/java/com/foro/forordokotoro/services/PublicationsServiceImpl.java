@@ -22,7 +22,10 @@ public class PublicationsServiceImpl implements PublicationsService{
 
         if(publicationsRepositroy.findByTitreOrSoustitre(publications.getTitre(),publications.getSoustitre()) == null){
 
-            publications.setMedia(ConfigImages.saveimg(type, nomfile, file));
+            if(file != null && !file.isEmpty()){
+                publications.setMedia(ConfigImages.saveimg(type, nomfile, file));
+            }
+
 
             publicationsRepositroy.save(publications);
 

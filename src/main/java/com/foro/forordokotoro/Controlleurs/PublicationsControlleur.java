@@ -45,14 +45,17 @@ public class PublicationsControlleur {
     CommentaireRepository commentaireRepository;
 
     @PostMapping("/ajouter/{iduser}")
-    public ResponseEntity<?> ajouterPublication(@Valid @RequestParam(value = "file") MultipartFile file,
+    public ResponseEntity<?> ajouterPublication(@Valid @RequestParam(value = "file", required = false) MultipartFile file,
                                                     @Valid  @RequestParam(value = "pubReçu") String pubReçu, @PathVariable Long iduser) throws IOException {
-
+        String nomfile = "";
         //chemin de stockage des images
         String type = "publications";
 
-        //recupere le nom de l'image
-        String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
+        if(file != null && !file.isEmpty()){
+            //recupere le nom de l'image
+             nomfile = StringUtils.cleanPath(file.getOriginalFilename());
+        }
+
 
         PublicationReçu publicationReçu = new JsonMapper().readValue(pubReçu, PublicationReçu.class);
 

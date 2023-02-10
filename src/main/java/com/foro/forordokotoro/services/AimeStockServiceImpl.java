@@ -57,10 +57,21 @@ public class AimeStockServiceImpl implements AimeStockService{
 
     @Override
     public ResponseEntity<?> modifier(Long id, AimeStock aimeStock, Stocks stocks, Utilisateurs utilisateurs) {
+
         return aimeStockRepository.findById(id)
                 .map(as-> {
-                    as.setAime(aimeStock.getAime());
-                    AimeStock aimeStockRetourner = aimeStockRepository.save(as);
+
+                    AimeStock aimeStockRetourner = new AimeStock();
+                    Stocks stocksARetourner = as.getStocks();
+
+                    if(as.getAime() != aimeStock.getAime()){
+                        //aimeStockRetourner = aimeStockRepository.save(as);
+                        as.setAime(aimeStock.getAime());
+                        aimeStockRepository.save(as);
+                    }else {
+                        aimeStockRepository.deleteById(as.getId());
+                    }
+
 
                     int nombreAimeStock = 0;
                     int nombreNonAimeStock = 0;
@@ -76,7 +87,9 @@ public class AimeStockServiceImpl implements AimeStockService{
                     }catch (Exception e){
                         return ResponseEntity.ok(e);
                     }
-                    return ResponseEntity.ok(aimeStockRetourner.getStocks());
+
+                    return ResponseEntity.ok(stocksService.recupererParId(stocksARetourner.getId()));
+
                 }).orElseThrow(() -> new RuntimeException("Aime non trouvé ! "));
     }
 
