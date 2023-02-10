@@ -5,6 +5,7 @@ import com.foro.forordokotoro.Models.PrevisionDunCultive;
 import com.foro.forordokotoro.Models.Previsions;
 import com.foro.forordokotoro.Repository.CultiveRepository;
 import com.foro.forordokotoro.Repository.PrevisionDuncultiveRepository;
+import com.foro.forordokotoro.Repository.PrevisionsRepository;
 import com.foro.forordokotoro.services.CultivesService;
 import com.foro.forordokotoro.services.PrevisionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,10 @@ public class PrevisionsControlleur {
 
     @Autowired
     PrevisionDuncultiveRepository previsionDuncultiveRepository;
+
+    @Autowired
+    PrevisionsRepository previsionsRepository;
+
     @PostMapping("/ajouter")
     public ResponseEntity<?> ajouterPrevisions(@RequestBody Previsions previsions){
         return previsionService.ajouterPrevisions(previsions);

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
 import com.foro.forordokotoro.Models.TransporteurAttente;
 import com.foro.forordokotoro.Models.Transporteurs;
+import com.foro.forordokotoro.Repository.TransporteurRepository;
 import com.foro.forordokotoro.Utils.request.DemandeTransporteur;
 import com.foro.forordokotoro.services.TransporteursService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @RestController
@@ -24,6 +26,9 @@ public class TransporteursControlleur {
 
     @Autowired
     TransporteursService transporteursService;
+
+    @Autowired
+    TransporteurRepository transporteurRepository;
 
     @PostMapping("/devenirtransporteur/{id}")
     public ResponseEntity<?> devenirTransporteur(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
@@ -72,8 +77,13 @@ public class TransporteursControlleur {
         return transporteursService.modifierTransporteur(id, transporteurs);
     }
 
-    @GetMapping("/detailChamp/{id}")
-    public Transporteurs recupererTransporteurDetail(@PathVariable Long id){
+    @GetMapping("/RecupererTousTransporteur")
+    public List<Transporteurs> recupererTransporteurDetail(){
+        return  transporteurRepository.findByEtat(true);
+    }
+
+    @GetMapping("/detailTransprteur/{id}")
+    public Transporteurs recupererTousLesTransporteur(@PathVariable Long id){
         return  transporteursService.recupererTransporteurParId(id);
     }
 

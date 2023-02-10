@@ -3,26 +3,21 @@ package com.foro.forordokotoro.Models;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 @Data
-public class EvolutionStock {
+public class AimeStock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate date;
-    private Double quantitededuit;
-
-    private Double quantiteajoute;
-
-    private Double quantiterestant;
-
-    private String motif;
+    private Boolean aime;
 
     @ManyToOne
     @JoinColumn(name = "stocks_id")
     private Stocks stocks;
 
+    @ManyToOne
+    @JoinColumn(name = "utilisateur_id")
+    private Utilisateurs utilisateur;
 }

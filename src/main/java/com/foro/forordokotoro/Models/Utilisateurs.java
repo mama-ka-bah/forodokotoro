@@ -1,5 +1,6 @@
 package com.foro.forordokotoro.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 
@@ -36,7 +37,7 @@ public class Utilisateurs {
   @Size(max = 50)
   @Email
   private String email;
-
+  @JsonIgnore
   @NotBlank
   @Size(max = 120)
   private String password;

@@ -2,11 +2,13 @@ package com.foro.forordokotoro.Controlleurs;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.*;
+import com.foro.forordokotoro.Repository.AimeStockRepository;
+import com.foro.forordokotoro.Repository.EvolutionStockRepository;
 import com.foro.forordokotoro.Repository.StockRepository;
-import com.foro.forordokotoro.services.AgriculteurService;
-import com.foro.forordokotoro.services.ProduitAgricoleService;
-import com.foro.forordokotoro.services.StocksService;
-import com.foro.forordokotoro.services.VarietesServices;
+import com.foro.forordokotoro.Repository.UtilisateursRepository;
+import com.foro.forordokotoro.Utils.response.ReponseUserAimeStock;
+import com.foro.forordokotoro.security.services.UtilisateurService;
+import com.foro.forordokotoro.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -34,6 +37,21 @@ public class StockControlleur {
     @Autowired
     StockRepository stockRepository;
 
+    @Autowired
+    EvolutionStockRepository evolutionStockRepository;
+
+    @Autowired
+    AimeStockRepository aimeStockRepository;
+
+    @Autowired
+    UtilisateurService utilisateurService;
+
+    @Autowired
+    UtilisateursRepository utilisateursRepository;
+
+    @Autowired
+    AimeStockService aimeStockService;
+
     @PostMapping("/ajouter/{idvarietes}/{idproprietaire}")
     public ResponseEntity<?> ajouterStocks(@Valid @RequestParam(value = "file") MultipartFile file,
                                           @Valid  @RequestParam(value = "stocksReçu") String stocksReçu, @PathVariable Long idvarietes, @PathVariable Long idproprietaire) throws IOException {
@@ -48,6 +66,8 @@ public class StockControlleur {
 
         stocks.setVarietes(varietesServices.recupererVarieteParId(idvarietes));
         stocks.setProprietaire(agriculteurService.recupererAgriculteurPArId(idproprietaire));
+        stocks.setNombreaime(0L);
+        stocks.setNombrenonaime(0L);
         return stocksService.ajouterStock(stocks, type, nomfile, file);
     }
 
@@ -67,8 +87,17 @@ public class StockControlleur {
         return  stocksService.recupererParId(id);
     }
 
-    @PostMapping("/mettrejourstock")
-    public ResponseEntity<?> mettreJourStock(@RequestBody EvolutionStock evolutionStock){
+    @PostMapping("/mettrejourstock/{stockid}/{quantiteRestant}")
+    public ResponseEntity<?> mettreJourStock(@RequestBody EvolutionStock evolutionStock, @PathVariable Long stockid, @PathVariable Double quantiteRestant){
+
+        Stocks stocks = stocksService.recupererParId(stockid);
+        Stocks stock1 = new Stocks();
+        stock1.setQuantiterestant(quantiteRestant);
+
+        evolutionStock.setStocks(stocks);
+        evolutionStock.setDate(LocalDate.now());
+        stocksService.modifierStock(stocks.getId(), stock1);
+
         return stocksService.mettreajourLestock(evolutionStock);
     }
 
@@ -77,8 +106,14 @@ public class StockControlleur {
         return stocksService.recupererEvolutionStock();
     }
 
-    @PatchMapping("/modifierevolutionstocks{id}")
-    public ResponseEntity<?> modifierEvolutionStocks(Long id, @RequestBody EvolutionStock evolutionStock){
+    @GetMapping("/recuperertousevolutionstocksdunstocks/{idStock}")
+    public List<EvolutionStock> recupererTousEvolutionStocksDunStocks(@PathVariable Long idStock){
+        Stocks stocks = stocksService.recupererParId(idStock);
+        return evolutionStockRepository.findByStocksOrderByDateDesc(stocks);
+    }
+
+    @PatchMapping("/modifierevolutionstocks/{id}")
+    public ResponseEntity<?> modifierEvolutionStocks(@PathVariable Long id, @RequestBody EvolutionStock evolutionStock){
         return stocksService.modifierEvolution(evolutionStock, id);
     }
 
@@ -93,4 +128,26 @@ public class StockControlleur {
         return stockRepository.findByEtatAndProprietaireOrderByDatepublicationDesc(true,idagri);
     }
 
+    @GetMapping("/recupererlisteaimesdunstock/{idstock}")
+    public ResponseEntity<?> recupererListeAimesDunStock(@PathVariable Long idstock){
+
+        return aimeStockService.recupererListeDesJaimeDunStock(stocksService.recupererParId(idstock));
+    }
+
+    @PostMapping("/aimerunstock/{idstock}/{iduser}")
+    public ResponseEntity<?> aimerUnStock(@PathVariable Long idstock, @PathVariable Long iduser, @RequestBody AimeStock aimeStock){
+
+        Stocks stocks = stocksService.recupererParId(idstock);
+        Utilisateurs utilisateur = utilisateursRepository.findById(iduser).get();
+
+        AimeStock aimeStockRetourner = aimeStockRepository.findByStocksAndUtilisateur(stocks, utilisateur);
+
+        if(aimeStockRetourner != null){
+            return aimeStockService.modifier(aimeStockRetourner.getId(), aimeStock, stocks, utilisateur);
+            //aimeStockRepository.deleteById(aimeStockRetourner.getId());
+            //return ResponseEntity.ok(aimeStockService.ajouter(aimeStock,utilisateur, stocks));
+        }else {
+            return ResponseEntity.ok(aimeStockService.ajouter(aimeStock,utilisateur, stocks));
+        }
+    }
 }

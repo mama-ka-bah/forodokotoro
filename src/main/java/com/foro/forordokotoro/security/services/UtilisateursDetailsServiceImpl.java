@@ -7,6 +7,7 @@ import com.foro.forordokotoro.Models.Utilisateurs;
 
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
 import com.foro.forordokotoro.Repository.RoleRepository;
+import com.foro.forordokotoro.Utils.Configurations.ConfigImages;
 import com.foro.forordokotoro.Utils.response.JwtResponse;
 import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -74,9 +77,6 @@ public class UtilisateursDetailsServiceImpl implements UserDetailsService, Utili
 
                 List<String> rolesstr =  new ArrayList<>();
 
-
-                //List<Role> roleList = Arrays.asList(new Role(1, "ROLE_USER"), new Role(3, "ROLE_AGRIGULTEUR"));
-
                 for (Role role : user.getRoles()) {
                     rolesstr.add(role.getName().toString());
                 }
@@ -112,12 +112,21 @@ public class UtilisateursDetailsServiceImpl implements UserDetailsService, Utili
 
 
     @Override
-    public ResponseEntity<?> modifierProfil(Long id, String nomfile) {
+    public ResponseEntity<?> modifierProfil(Long id, String nomfile, String type, MultipartFile file) {
         return utilisateursRepository.findById(id)
                 .map(u-> {
-                    u.setPhoto(nomfile);
-                    utilisateursRepository.save(u);
-                    return new ResponseEntity<>("Modification reçue", HttpStatus.OK);
+                    try {
+                        u.setPhoto(ConfigImages.saveimg(type, nomfile, file));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+
+                  utilisateursRepository.save(u);
+
+
+                    return ResponseEntity.ok(new Reponse(u.getPhoto(), 1));
+
                 }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé ! "));
     }
 

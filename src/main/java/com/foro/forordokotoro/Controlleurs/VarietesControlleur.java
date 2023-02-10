@@ -2,6 +2,7 @@ package com.foro.forordokotoro.Controlleurs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.foro.forordokotoro.Models.Previsions;
 import com.foro.forordokotoro.Models.ProduitAgricole;
 import com.foro.forordokotoro.Models.Varietes;
 import com.foro.forordokotoro.services.ProduitAgricoleService;
@@ -63,4 +64,15 @@ public class VarietesControlleur {
     public Varietes recupererDetailVariete(@PathVariable Long id){
         return  varietesServices.recupererVarieteParId(id);
     }
+
+
+    @GetMapping("/recupererprevisionsdunevariete/{idVariete}")
+    public List<Previsions> recupererPrevisionsDuneVariete(@PathVariable Long idVariete){
+
+        Varietes varietes =  varietesServices.recupererVarieteParId(idVariete);
+
+        return  varietes.getPrevisions();
+    }
+
+
 }

@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -21,11 +22,14 @@ public class Stocks {
 
     @Size(max = 25)
     private Long prixkilo;
-
     @Size(max = 25)
-    private Long  nombrekilo;
+    private Double  nombrekilo;
 
-    private Long quantiterestant;
+    private Double quantiterestant;
+
+    private Long nombreaime;
+
+    private Long nombrenonaime;
 
     @NotBlank
     @Size(max = 25)
@@ -39,8 +43,12 @@ public class Stocks {
     @JoinColumn(name = "varietes_id")
     private Varietes varietes;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "proprietaire_id")
     private Agriculteurs proprietaire;
+
+    /*
+    @OneToMany(mappedBy = "stocks")
+    private List<AimeStock> listeaimestock;
+     */
 }

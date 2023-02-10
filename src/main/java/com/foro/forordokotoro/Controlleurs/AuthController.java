@@ -239,18 +239,14 @@ System.out.print("je suis transporteur");
   public ResponseEntity<?> updateUser(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
           @PathVariable Long id) throws IOException {
 
-    //chemin de stockage des images
-    String url = "C:/Users/mkkeita/Desktop/projects/medias/images";
+    String type = "user";
 
 
     //recupere le nom de l'image
     String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
     System.out.println(nomfile);
 
-    //envoie le nom, url et le fichier à la classe ConfigImages qui se chargera de sauvegarder l'image
-    ConfigImages.saveimg(url, nomfile, file);
-
-    return utilisateurService.modifierProfil(id, nomfile);
+    return utilisateurService.modifierProfil(id, nomfile, type, file);
   }
 
   @GetMapping("/utilisatuersactive")

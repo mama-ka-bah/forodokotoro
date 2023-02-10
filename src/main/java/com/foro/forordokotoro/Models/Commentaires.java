@@ -14,27 +14,17 @@ public class Commentaires {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(max = 60)
-    private String titre;
     private LocalDateTime datepub;
 
     @NotBlank
     @Size(max = 255)
     private String description;
 
-
-    @Size(max = 25)
-    private String photo;
-
-
-    @Size(max = 25)
-    private String video;
     private Boolean etat;
 
     @ManyToOne
     @JoinColumn(name = "problemes_id")
-    private Publications problemes;
+    private Publications publications;
 
     @ManyToOne
     @JoinColumn(name = "posteur_id")

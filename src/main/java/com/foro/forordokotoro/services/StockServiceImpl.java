@@ -55,6 +55,10 @@ public class StockServiceImpl implements StocksService{
                         s.setQuantiterestant(stocks.getQuantiterestant());
                     if(stocks.getLibelle() != null)
                         s.setLibelle(stocks.getLibelle());
+                    if(stocks.getNombreaime() != null)
+                        s.setNombreaime(stocks.getNombreaime());
+                    if(stocks.getNombrenonaime() != null)
+                        s.setNombrenonaime(stocks.getNombrenonaime());
                     if(stocks.getEtat() != null)
                         s.setEtat(stocks.getEtat());
                     if(stocks.getNombrekilo() != null)
@@ -81,9 +85,12 @@ public class StockServiceImpl implements StocksService{
     @Override
     public ResponseEntity<?> mettreajourLestock(EvolutionStock evolutionStock) {
         evolutionStockRepository.save(evolutionStock);
+        return ResponseEntity.ok(new Reponse("Votre stock a été mise à jour avec succès", 1));
+
+/*
         List<EvolutionStock> listEvolutionStocks = recupererEvolutionStock();
-        Long totalStockDeduit = 0L;
-        Long totalStockAjoute = 0l;
+        Double totalStockDeduit = 0.0;
+        Double totalStockAjoute = 0.0;
         Stocks stocks = new Stocks();
 
 
@@ -92,10 +99,18 @@ public class StockServiceImpl implements StocksService{
             totalStockAjoute += es.getQuantiteajoute();
         }
 
-        stocks.setQuantiterestant(evolutionStock.getStocks().getNombrekilo() + totalStockAjoute - totalStockDeduit);
-        modifierStock(evolutionStock.getStocks().getId(), stocks);
+        Double quantiteRestant = evolutionStock.getStocks().getNombrekilo() + totalStockAjoute - totalStockDeduit;
 
-        return ResponseEntity.ok(new Reponse("Votre stock a été mise à jour avec succès", 1));
+        if(quantiteRestant < 0){
+            return ResponseEntity.ok(new Reponse("impossible", 0));
+        }else {
+            stocks.setQuantiterestant(quantiteRestant);
+            modifierStock(evolutionStock.getStocks().getId(), stocks);
+
+            return ResponseEntity.ok(new Reponse("Votre stock a été mise à jour avec succès", 1));
+        }
+
+ */
     }
 
     @Override

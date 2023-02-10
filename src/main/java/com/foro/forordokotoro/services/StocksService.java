@@ -16,9 +16,9 @@ public interface StocksService {
 
     Stocks recupererParId(Long id);
 
-    ResponseEntity<?> mettreajourLestock(@RequestBody EvolutionStock evolutionStock);
+    ResponseEntity<?> mettreajourLestock(EvolutionStock evolutionStock);
 
-    ResponseEntity<?> modifierEvolution(@RequestBody EvolutionStock evolutionStock, Long id);
+    ResponseEntity<?> modifierEvolution(EvolutionStock evolutionStock, Long id);
 
     List<EvolutionStock> recupererEvolutionStock();
 

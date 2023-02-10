@@ -126,7 +126,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                             transporteurEnAttenteRepository.save(te);
 
                             utilisateursRepository.DEVENIRTRANSPORTEURDEPROFESSION(user.getId());
-                            transporteurRepository.DEVENIRTRANSPORTEUR(user.getId(), transporteurAttente.getDisponibilite(), transporteurAttente.getPhotopermis(), transporteurAttente.getNumeroplaque());
+                            transporteurRepository.DEVENIRTRANSPORTEUR(user.getId(), transporteurAttente.getDisponibilite(), transporteurAttente.getPhotopermis(), transporteurAttente.getNumeroplaque(), 0L);
                             String message = "Votre demande a étée accepter, vous êtes desormais transporteur";
                             utilisateursRepository.DONNERROLEAUSER(user.getId(), 4L);
                             notifications.setContenu(message);
@@ -203,6 +203,8 @@ public class TransporteursServiceImpl implements TransporteursService{
                         t.setPhotopermis(transporteurs.getPhotopermis());
                     if(transporteurs.getDisponibilite() != null)
                         t.setDisponibilite(transporteurs.getDisponibilite());
+                    if(transporteurs.getNombrecontact() != null)
+                        t.setNombrecontact(transporteurs.getNombrecontact());
                     if(transporteurs.getEtat() != null)
                     t.setEtat(transporteurs.getEtat());
                     transporteurRepository.save(t);

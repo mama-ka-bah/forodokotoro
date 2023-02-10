@@ -27,6 +27,8 @@ public class ConfigImages {
     public static String servervarietes = localhost + "forodokotoro/images/varietes/";
     public static String serverphases = localhost + "forodokotoro/images/phases/";
     public static String serverpermis = localhost + "forodokotoro/images/permis/";
+    public static String serverpublications = localhost + "forodokotoro/images/publications/";
+
 
 
     //les chemin complets des differents directory de sauvegardes des fichiers
@@ -37,6 +39,7 @@ public class ConfigImages {
     public static String Varieteslocation = "C:/xampp/htdocs/forodokotoro/images/varietes/";
     public static String Phaseslocation = "C:/xampp/htdocs/forodokotoro/images/phases/";
     public static String Permislocation = "C:/xampp/htdocs/forodokotoro/images/permis/";
+    public static String Publicationslocation = "C:/xampp/htdocs/forodokotoro/images/publications/";
 
 
     //pour l'image de l'entite
@@ -65,6 +68,9 @@ public class ConfigImages {
         }else if(typeImage == "permis"){
             location = Permislocation;
             server = serverpermis;
+        }else if(typeImage == "publications"){
+            location = Publicationslocation;
+            server = serverpublications;
         }
         else{
             location = Stockslocation;
