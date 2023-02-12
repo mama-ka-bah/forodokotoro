@@ -44,6 +44,12 @@ public class PublicationsServiceImpl implements PublicationsService{
                 .map(p-> {
                     if(publications.getTitre() != null)
                         p.setTitre(publications.getTitre());
+                    if(publications.getNombreaime() != null)
+                        p.setNombreaime(publications.getNombreaime());
+                    if(publications.getNombrenonaime() != null)
+                        p.setNombrenonaime(publications.getNombrenonaime());
+                    if(publications.getNombrecommentaire() != null)
+                        p.setNombrenonaime(publications.getNombrecommentaire());
                     if(publications.getSoustitre() != null)
                         p.setSoustitre(publications.getSoustitre());
                     if(publications.getDescription() != null)

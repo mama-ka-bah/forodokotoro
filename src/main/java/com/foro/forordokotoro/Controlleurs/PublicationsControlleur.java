@@ -3,13 +3,11 @@ package com.foro.forordokotoro.Controlleurs;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.*;
 import com.foro.forordokotoro.Models.Enumerations.EtypePublication;
-import com.foro.forordokotoro.Repository.AgriculteursRepository;
-import com.foro.forordokotoro.Repository.CommentaireRepository;
-import com.foro.forordokotoro.Repository.PublicationsRepositroy;
-import com.foro.forordokotoro.Repository.UtilisateursRepository;
+import com.foro.forordokotoro.Repository.*;
 import com.foro.forordokotoro.Utils.request.PublicationReçu;
 import com.foro.forordokotoro.Utils.response.Reponse;
 import com.foro.forordokotoro.security.services.UtilisateurService;
+import com.foro.forordokotoro.services.AimePublicationService;
 import com.foro.forordokotoro.services.PublicationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -44,6 +42,11 @@ public class PublicationsControlleur {
 
     @Autowired
     CommentaireRepository commentaireRepository;
+    @Autowired
+    AimePublicationRepository aimePublicationRepository;
+
+    @Autowired
+    AimePublicationService aimePublicationService;
 
     @PostMapping("/ajouter/{iduser}")
     public ResponseEntity<?> ajouterPublication(@Valid @RequestParam(value = "file", required = false) MultipartFile file,
@@ -71,6 +74,12 @@ public class PublicationsControlleur {
         }
 
         return publicationsService.ajouter(publications, type, nomfile, file);
+    }
+
+
+    @PatchMapping("modifierpublication/{idPub}")
+    ResponseEntity<?> modifierPublication(@RequestBody Publications publications, @PathVariable Long idPub){
+        return publicationsService.modifier(idPub, publications);
     }
 
 
@@ -121,6 +130,25 @@ public class PublicationsControlleur {
             return ResponseEntity.ok(commentaireRepository.findByPublicationsOrderByDatepubDesc(publications));
         }catch (Exception e){
             return ResponseEntity.ok(e);
+        }
+    }
+
+
+
+
+    @PostMapping("/aimerunpublication/{idpub}/{iduser}")
+    public ResponseEntity<?> aimerUnPublication(@PathVariable Long idpub, @PathVariable Long iduser, @RequestBody AimePublication aimePublication){
+        System.err.println("je suis venu");
+        Publications publications = publicationsRepositroy.findById(idpub).get();
+        Utilisateurs utilisateur = utilisateursRepository.findById(iduser).get();
+
+        AimePublication aimePublicationRetourner = aimePublicationRepository.findByPublicationsAndUtilisateur(publications, utilisateur);
+
+        if(aimePublicationRetourner != null){
+            return aimePublicationService.modifier(aimePublicationRetourner.getId(), aimePublication, publications, utilisateur);
+
+        }else {
+            return aimePublicationService.ajouter(aimePublication,utilisateur, publications);
         }
     }
 

@@ -144,8 +144,6 @@ public class StockControlleur {
 
         if(aimeStockRetourner != null){
             return aimeStockService.modifier(aimeStockRetourner.getId(), aimeStock, stocks, utilisateur);
-            //aimeStockRepository.deleteById(aimeStockRetourner.getId());
-            //return ResponseEntity.ok(aimeStockService.ajouter(aimeStock,utilisateur, stocks));
         }else {
             return aimeStockService.ajouter(aimeStock,utilisateur, stocks);
         }
