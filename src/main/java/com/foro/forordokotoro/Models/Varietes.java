@@ -31,6 +31,8 @@ public class Varietes {
 
     private Long resultatparkilo;
 
+    private String lien;
+
     @NotBlank
     @Size(max = 255)
     private  String description;

@@ -28,6 +28,11 @@ public class Publications {
 
     private LocalDateTime datepub;
 
+    private Long nombreaime;
+
+    private Long nombrenonaime;
+    private Long nombrecommentaire;
+
     @Size(max = 60)
     private String media;
 
@@ -35,6 +40,8 @@ public class Publications {
     @Size(max = 255)
     private String description;
     private Boolean etat;
+
+    private String lien;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)

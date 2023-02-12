@@ -2,6 +2,8 @@ package com.foro.forordokotoro.Controlleurs;
 
 import com.foro.forordokotoro.Models.Champ;
 import com.foro.forordokotoro.Models.Cultive;
+import com.foro.forordokotoro.Models.Enumerations.EstatusCultive;
+import com.foro.forordokotoro.Models.Enumerations.EstatusParserelle;
 import com.foro.forordokotoro.Models.Parserelle;
 import com.foro.forordokotoro.Repository.CultiveRepository;
 import com.foro.forordokotoro.Repository.ParserelleRepository;
@@ -42,12 +44,30 @@ public class CultivesControlleur {
     public ResponseEntity<?> ajouterCultive(@RequestBody Cultive cultive, @PathVariable Long varieteid, @PathVariable Long parserelleid){
         cultive.setParserelle(parserelleRepository.findById(parserelleid).get());
         cultive.setVarietes(varietesServices.recupererVarieteParId(varieteid));
-        return cultivesService.ajouterCultive(cultive);
+        if(cultive.getDatedebutsemis().isAfter(cultive.getDatefinsemis())){
+            return ResponseEntity.ok(new Reponse("La date de debut ne peut pas etre superieur à la date de fin", 1));
+        }else {
+            return cultivesService.ajouterCultive(cultive);
+        }
+
     }
 
     @PatchMapping("/modifier/{idcultive}")
     public ResponseEntity<?> modifierCultive(@RequestBody Cultive cultive, @PathVariable Long idcultive){
         return cultivesService.modifierCultive(cultive, idcultive);
+    }
+
+    @DeleteMapping("signalercultivecommenonterminer/{idCultive}")
+    public ResponseEntity<?> signalerCultiveCommeNonTerminer(@PathVariable Long idCultive){
+        Cultive  cultive = new Cultive();
+        cultive.setStatus(EstatusCultive.ENCOURS);
+        cultive.setDatefinCultive(null);
+
+            if(cultiveRepository.findById(idCultive).get().getParserelle().getStatus() == EstatusParserelle.OCCUPE){
+                return ResponseEntity.ok(new Reponse("Cette parserelle est occupée veuillez d'abord liberer", 0));
+            }
+
+        return cultivesService.modifierCultive(cultive, idCultive);
     }
 
     @GetMapping("/cultivedunchamp/{idchamp}")
@@ -94,9 +114,9 @@ public class CultivesControlleur {
         Cultive cultive1 = cultiveRepository.findById(idCultive).get();
 
         if(datefinCultive.isAfter(LocalDate.now())){
-            return ResponseEntity.ok(new Reponse("La date de fin doit etre inferieur à la date du jour", 0));
-        } else if (datefinCultive.isAfter(cultive1.getDatedebutsemis()) && datefinCultive.isAfter(cultive1.getDatefinsemis())) {
-            return ResponseEntity.ok(new Reponse("La date de fin doit etre à " + cultive1.getDatedebutsemis() + " et à " + cultive1.getDatefinsemis(), 0));
+            return ResponseEntity.ok(new Reponse("Imposible de signaler la fin de la culture avant de terminer", 0));
+        } else if (cultive1.getDatedebutsemis().isAfter(datefinCultive) || cultive1.getDatefinsemis().isAfter(datefinCultive)) {
+            return ResponseEntity.ok(new Reponse("La date de fin ne peut pas etre dans l'intervalle de semis", 0));
         }
 
         return cultivesService.mettreFincultive(idCultive, cultive);

@@ -78,13 +78,11 @@ public class CultiveServiceImpl implements CultivesService{
         //on verifie si la parsell n'etatait pas occuper dans l'intervalle demandé
         Reponse reponse = verifierValiditeDesDatesDeCultive(cultive.getDatedebutsemis(), cultive.getDatefinsemis(), cultive);
 
-        if(reponse.getStatus() == 0){
+            if(reponse.getStatus() == 0){
                 return ResponseEntity.ok(reponse);
             } else if (cultive.getParserelle().getStatus() == EstatusParserelle.OCCUPE) {
                 return ResponseEntity.ok(new Reponse("Cette parserelle est occupée", 0));
-            } else if (cultive.getDatedebutsemis().isAfter(cultive.getDatefinsemis())) {
-                return ResponseEntity.ok(new Reponse("Date de debut ne peut pas etre supeieur à la date de fin", 0));
-            } else {
+            }else {
 
             //si la date de de debut du semis est aujourd'hui ou avant aujoujourd'hui
              if((cultive.getDatedebutsemis().isBefore(datejour) || cultive.getDatedebutsemis().equals(datejour)) && cultive.getDatefinsemis().isBefore(datejour) || cultive.getDatefinsemis().equals(cultive.getDatedebutsemis())){
@@ -210,6 +208,8 @@ public class CultiveServiceImpl implements CultivesService{
                         c.setDatefinCultive(cultive.getDatefinCultive());
                     if(cultive.getEtat() != null)
                         c.setEtat(cultive.getEtat());
+                    if(cultive.getStatus() != null)
+                        c.setStatus(cultive.getStatus());
                     if(cultive.getRecoleprevue() != null)
                         c.setRecoleprevue(cultive.getRecoleprevue());
                     if(cultive.getRecolterealise() != null)
@@ -219,7 +219,7 @@ public class CultiveServiceImpl implements CultivesService{
                     if(cultive.getVarietes() != null)
                         c.setVarietes(cultive.getVarietes());
                     cultiveRepository.save(c);
-                    return new ResponseEntity<>("Modification reçu", HttpStatus.OK);
+                    return ResponseEntity.ok(new Reponse("Mise à jour reçue", 1));
     }).orElseThrow(() -> new RuntimeException("Champ non trouvé ! "));
     }
 
@@ -252,17 +252,21 @@ public class CultiveServiceImpl implements CultivesService{
     //cette methode permet de verifier s'il ya une phase du cultive qui n'est pas dans l'intervalle dateFinCultive
     @Override
     public Reponse verificationAvantMettreFinUnCultive(Long idCultive, Cultive cultive) {
-    cultive.setId(idCultive);
-        List<PhaseCultive> lesPhasesDuCunltive = phaseCultiveRepository.findByEtatAndCultive(true, cultive);
+    //cultive.setId(idCultive);
+        List<PhaseCultive> lesPhasesDuCunltive = phaseCultiveRepository.findByEtatAndCultive(true, cultiveRepository.findById(idCultive).get());
+
         Cultive lecultive  = cultiveRepository.findById(idCultive).get();
 
         if(lecultive.getDatefinCultive() == null){
-            for(PhaseCultive phc : lesPhasesDuCunltive){
-                if(phc.getDatefin().isAfter(cultive.getDatefinCultive())){
-                    System.out.println("" + phc.getDatefin());
-                    return new Reponse("La date de fin de la phase " + phc.getLibelle() + " est superieur à " + cultive.getDatefinCultive(), 0);
+            if(lesPhasesDuCunltive.size() > 0){
+                for(PhaseCultive phc : lesPhasesDuCunltive){
+                    if(phc.getDatefin().isAfter(cultive.getDatefinCultive())){
+                        System.out.println("" + phc.getDatefin());
+                        return new Reponse("La date de fin de la phase " + phc.getLibelle() + " est superieur à " + cultive.getDatefinCultive(), 0);
+                    }
                 }
             }
+
             return  new Reponse("Le cultive " + lecultive.getReference() +" est desormais terminé" , 1);
         }else {
             return  new Reponse("Ce cultive est déjà terminé" , 0);
@@ -273,7 +277,9 @@ public class CultiveServiceImpl implements CultivesService{
     @Override
     public ResponseEntity<?> mettreFincultive(Long idCultive, Cultive cultive) {
         Cultive cultiveAvecDonneeComplet = cultiveRepository.findById(idCultive).get();
-        Reponse reponse = verificationAvantMettreFinUnCultive(idCultive, cultiveAvecDonneeComplet);
+        //Reponse reponse = verificationAvantMettreFinUnCultive(idCultive, cultiveAvecDonneeComplet);
+
+        Reponse reponse = verificationAvantMettreFinUnCultive(idCultive, cultive);
 
         Reponse reponse1 = verifierValiditeDesDatesDeCultive(cultiveAvecDonneeComplet.getDatedebutsemis(), cultiveAvecDonneeComplet.getDatefinsemis(), cultiveAvecDonneeComplet);
         return cultiveRepository.findById(idCultive)
@@ -298,18 +304,25 @@ public class CultiveServiceImpl implements CultivesService{
 
     @Override
     public Reponse verifierValiditeDesDatesDeCultive(LocalDate datedebut, LocalDate datefin, Cultive cultive) {
+        //on recuper toutes les cultives actives lié à la parserelle
         List<Cultive> cultivesActives = cultiveRepository.findByParserelleAndEtat(cultive.getParserelle(), true);
 
+        //on verifie s'il ya dejà une cultive active
         if(!cultivesActives.isEmpty()){
+            //dans le cas ou il existe de cultive active on verfie les dates de ces differentes cultives
             for (Cultive c : cultivesActives){
+                //ici on verifie si le cultive actuel est terminer ou pas dans le cas ou c'est  termine on verfie sa date de fin sinon
+                //on verifie uniquement des dates de semis
                 if(c.getDatefinCultive() != null){
                     if(datedebut.equals(c.getDatedebutsemis()) || datedebut.equals(c.getDatedebutsemis()) || datefin.equals(c.getDatedebutsemis()) || datefin.equals(c.getDatedebutsemis()) || datefin.equals(c.getDatefinCultive()) || datedebut.equals(c.getDatefinCultive())){
-                        return new Reponse("Vous avez déjà semé dans cet intervalle", 0);
-                    } else if(datedebut.isAfter(c.getDatedebutsemis()) && datedebut.isBefore(c.getDatefinCultive()) || datefin.isAfter(c.getDatedebutsemis()) && datefin.isBefore(c.getDatefinCultive())){  //|| datedebut.equals(c.getDatedebutsemis()) ||  datedebut.equals(c.getDatedebutsemis())
+                        return new Reponse("Ce Parserelle était occupé dans cet intervalle", 0);
+                    }
+                    //dans le cas ou le cultive n'est pas termine on se concentre uniquement sur les dates de semis
+                    else if(datedebut.isAfter(c.getDatedebutsemis()) && datedebut.isBefore(c.getDatefinCultive()) || datefin.isAfter(c.getDatedebutsemis()) && datefin.isBefore(c.getDatefinCultive())){  //|| datedebut.equals(c.getDatedebutsemis()) ||  datedebut.equals(c.getDatedebutsemis())
                         return new Reponse("Ce Parserelle était occupé dans cet intervalle", 0);
                     }
                     else if (datedebut.isAfter(c.getDatedebutsemis()) && datedebut.isBefore(c.getDatefinsemis()) || datefin.isAfter(c.getDatedebutsemis()) && datefin.isBefore(c.getDatefinsemis()) ) { //|| datedebut.equals(c.getDatedebutsemis()) ||  datedebut.equals(c.getDatefinsemis())
-                        return new Reponse("Cet espace était occupée dans cet intervalle", 0);
+                        return new Reponse("Cet Parserelle était occupée dans cet intervalle", 0);
                     }
                     }
             }

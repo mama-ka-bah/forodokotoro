@@ -35,6 +35,7 @@ public class PhaseServiceImpl implements PhaseService{
                 return ResponseEntity.ok(new Reponse("Date debut superieur à date fin", 0));
             } else {
                 if(phaseCultive.getCultive().getDatefinCultive() != null){
+                    System.err.println(phaseCultive.getCultive().getDatefinCultive());
                     /*
                     System.out.println("date debut de semis: "+ phaseCultive.getCultive().getDatedebutsemis());
                     System.out.println("date fin cultive: " + phaseCultive.getCultive().getDatefinCultive());

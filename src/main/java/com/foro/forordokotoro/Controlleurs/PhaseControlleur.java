@@ -7,6 +7,7 @@ import com.foro.forordokotoro.Models.Cultive;
 import com.foro.forordokotoro.Models.PhaseCultive;
 import com.foro.forordokotoro.Repository.CultiveRepository;
 import com.foro.forordokotoro.Repository.PhaseCultiveRepository;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import com.foro.forordokotoro.services.CultivesService;
 import com.foro.forordokotoro.services.PhaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,12 @@ public class PhaseControlleur {
         phase.setEtat(true);
 
         phase.setCultive(cultivesService.recupererParId(idcultive));
-        return phaseService.ajouterPhase(phase, type, nomfile, file);
+
+        if(phase.getDatedebut().isAfter(LocalDate.now()) || phase.getDatefin().isAfter(LocalDate.now())){
+            return ResponseEntity.ok(new Reponse("Veuilez attendre la fin de la phase puis renseigner", 0));
+        }else {
+            return phaseService.ajouterPhase(phase, type, nomfile, file);
+        }
     }
 
     @PatchMapping("/modifer/{idphase}")

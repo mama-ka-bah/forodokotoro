@@ -132,6 +132,7 @@ public class WebSecurityConfig {
         .authorizeRequests()
             .antMatchers("/api/auth/**").permitAll()
             .antMatchers("/transporteurs/**").permitAll()
+            .antMatchers("/publications/**").permitAll()
             .antMatchers("/agriculteur/**").permitAll()
             .antMatchers("/stocks/**").permitAll()
             .antMatchers("/agriculteur/**").permitAll()

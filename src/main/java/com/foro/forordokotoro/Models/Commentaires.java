@@ -16,9 +16,15 @@ public class Commentaires {
 
     private LocalDateTime datepub;
 
+    private Long nombreaime;
+
+    private Long nombrenonaime;
+
     @NotBlank
     @Size(max = 255)
     private String description;
+
+    private String lien;
 
     private Boolean etat;
 

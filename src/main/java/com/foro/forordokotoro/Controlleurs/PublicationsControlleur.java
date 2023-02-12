@@ -8,6 +8,7 @@ import com.foro.forordokotoro.Repository.CommentaireRepository;
 import com.foro.forordokotoro.Repository.PublicationsRepositroy;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
 import com.foro.forordokotoro.Utils.request.PublicationReçu;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import com.foro.forordokotoro.security.services.UtilisateurService;
 import com.foro.forordokotoro.services.PublicationsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,10 +83,13 @@ public class PublicationsControlleur {
             commentaires.setPublications(publications);
             commentaires.setPosteur(posteur);
             commentaires.setDatepub(LocalDateTime.now());
-
-            return ResponseEntity.ok(commentaireRepository.save(commentaires));
+            commentaires.setEtat(true);
+            commentaires.setNombreaime(0L);
+            commentaires.setNombrenonaime(0L);
+            commentaireRepository.save(commentaires);
+            return ResponseEntity.ok(new Reponse("Commentaire ajouté avec succès", 1));
         }catch (Exception e){
-            return ResponseEntity.ok(e);
+            return ResponseEntity.ok(e.getMessage());
         }
     }
 
@@ -94,7 +98,18 @@ public class PublicationsControlleur {
         try{
             return ResponseEntity.ok(publicationsRepositroy.findAllByOrderByDatepubDesc());
         }catch (Exception e){
-            return ResponseEntity.ok(e);
+            return ResponseEntity.ok(e.getMessage());
+        }
+    }
+
+
+
+    @GetMapping("recupererpublicationparid/{idPub}")
+    ResponseEntity<?> recupererPublicationParId(@PathVariable Long idPub){
+        try{
+            return ResponseEntity.ok(publicationsRepositroy.findById(idPub));
+        }catch (Exception e){
+            return ResponseEntity.ok(e.getMessage());
         }
     }
 

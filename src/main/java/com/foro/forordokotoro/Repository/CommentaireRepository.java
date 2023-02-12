@@ -8,5 +8,5 @@ import org.w3c.dom.stylesheets.LinkStyle;
 import java.util.List;
 
 public interface CommentaireRepository extends JpaRepository<Commentaires, Long> {
-    List<Publications> findByPublicationsOrderByDatepubDesc(Publications publications);
+    List<Commentaires> findByPublicationsOrderByDatepubDesc(Publications publications);
 }

@@ -26,6 +26,9 @@ public class PublicationsServiceImpl implements PublicationsService{
                 publications.setMedia(ConfigImages.saveimg(type, nomfile, file));
             }
 
+            publications.setNombreaime(0L);
+            publications.setNombrenonaime(0L);
+            publications.setNombrecommentaire(0L);
 
             publicationsRepositroy.save(publications);
 
