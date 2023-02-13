@@ -99,6 +99,11 @@ public class PublicationsControlleur {
             commentaires.setEtat(true);
             commentaires.setNombreaime(0L);
             commentaires.setNombrenonaime(0L);
+
+            Publications publications1 = new Publications();
+            publications1.setNombrecommentaire(publications.getNombrecommentaire()+1);
+            publicationsService.modifier(idPub, publications);
+
             commentaireRepository.save(commentaires);
             return ResponseEntity.ok(new Reponse("Commentaire ajouté avec succès", 1));
         }catch (Exception e){

@@ -113,9 +113,9 @@ public class StockControlleur {
     }
 
     @GetMapping("/recuperertousevolutionstocksdunstocks/{idStock}")
-    public List<EvolutionStock> recupererTousEvolutionStocksDunStocks(@PathVariable Long idStock){
+    public ResponseEntity<?> recupererTousEvolutionStocksDunStocks(@PathVariable Long idStock){
         Stocks stocks = stocksService.recupererParId(idStock);
-        return evolutionStockRepository.findByStocksOrderByDateDesc(stocks);
+        return ResponseEntity.ok(evolutionStockRepository.findByStocksOrderByDateDesc(stocks));
     }
 
     @PatchMapping("/modifierevolutionstocks/{id}")

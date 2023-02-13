@@ -227,7 +227,7 @@ System.out.print("je suis transporteur");
   @PatchMapping("/modifierutilisateur/{id}")
   public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody Utilisateurs utilisateurs) {
 
-    System.out.println(utilisateurs.getSesouvenir());
+    System.out.println("test test test test test: " + utilisateurs.getPassword());
 
     if(utilisateurs.getPassword() != null)
       utilisateurs.setPassword(encoder.encode(utilisateurs.getPassword()));
@@ -255,7 +255,7 @@ System.out.print("je suis transporteur");
   }
 
   @PostMapping("/motdepasseoublier")
-  public OtpResponse motDePasseOublier(@RequestBody OtpRequest otpRequest){
+  public ResponseEntity<?> motDePasseOublier(@RequestBody OtpRequest otpRequest){
     if(utilisateursRepository.existsByEmail(otpRequest.getEmail())){
 
       Utilisateurs utilisateurs = utilisateursRepository.findByEmail(otpRequest.getEmail());
@@ -271,15 +271,16 @@ System.out.print("je suis transporteur");
 
       OtpResponse otpResponse = new OtpResponse(randomCode, "code generer avec succès", 1);
       otpResponse.setIduser(utilisateurs.getId());
+      otpResponse.setValidite(true);
 
      senderService.sendSimpleEmail(otpRequest.getEmail(), "Renitialisation de mot de passe", "Bonjour " + utilisateurs.getNomcomplet() + " Le code à quatre chiffre ci-dessous est le code de renitialisation de votre mot de passe " + randomCode);
 
-      return otpResponse;
+      return ResponseEntity.ok(otpResponse);
 
     }else {
       OtpResponse otpResponse = new OtpResponse("Adresse email introuvable",  0);
 
-      return otpResponse;
+      return ResponseEntity.ok(otpResponse);
     }
   }
 

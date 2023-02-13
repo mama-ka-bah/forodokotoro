@@ -37,7 +37,7 @@ public class Utilisateurs {
   @Size(max = 50)
   @Email
   private String email;
-  @JsonIgnore
+
   @NotBlank
   @Size(max = 120)
   private String password;

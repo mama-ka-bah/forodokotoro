@@ -183,7 +183,7 @@ public class CultiveServiceImpl implements CultivesService{
                    notifications.setLu(false);
                    notifications.setDatenotification(new Date());
                    notifications.setContenu("message votre cultive ayant les references suivant a une activiteé qui doit etre effectué dans deux jours veuillez la realiser");
-                   notifications.setTitre("Prevision");
+                   notifications.setTitre("Simulation");
                    notifications.setUserid(pc.getCultive().getParserelle().getChamp().getProprietaire());
                    notificationRepository.save(notifications);
                    notificationRepository.save(new Notifications());

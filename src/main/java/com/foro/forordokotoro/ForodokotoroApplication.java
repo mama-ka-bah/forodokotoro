@@ -19,19 +19,14 @@ import java.util.Set;
 @SpringBootApplication
 @EnableScheduling
 public class ForodokotoroApplication implements CommandLineRunner {
-
-
 	@Autowired
 	private EmailSenderService senderService;
 	@Autowired
 	PasswordEncoder encoder;
-
 	@Autowired
 	private RoleRepository roleRepository;
-
 	@Autowired
 	private UtilisateursRepository utilisateursRepository;
-
 
 	public static void main(String[] args) {
 		SpringApplication.run(ForodokotoroApplication.class, args);
@@ -51,7 +46,7 @@ public class ForodokotoroApplication implements CommandLineRunner {
 			Set<Role> roles = new HashSet<>();
 			Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN);
 			roles.add(adminRole);
-			Utilisateurs utilisateurs = new Utilisateurs("keita@123",
+			Utilisateurs utilisateurs = new Utilisateurs("82644606",
 					"kmahamadou858@gmail.com",
 					encoder.encode("keita@pass"), "Badinko/kita", "Mahamadou KEITA", true);
 			utilisateurs.setRoles(roles);

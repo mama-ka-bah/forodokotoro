@@ -105,7 +105,9 @@ public class CultivesControlleur {
     public ResponseEntity<?> mettreFinAUnCultive(@Param(value = "datefin") String datefin, @PathVariable Long idCultive, @PathVariable Double quatiteRecolte){
         Cultive cultive = new Cultive();
 
+        //DateTimeFormatter permet de formatter la date
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        //on lui passe notre date de fin recuperer en tant que string por qu'il le convertit en localdate sous la  forme "yyyy-MM-dd"
         LocalDate datefinCultive = LocalDate.parse(datefin, formatter);
 
         cultive.setDatefinCultive(datefinCultive);

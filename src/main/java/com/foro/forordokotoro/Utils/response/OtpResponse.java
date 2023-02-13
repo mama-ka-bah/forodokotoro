@@ -9,6 +9,8 @@ public class OtpResponse {
     private Long iduser;
     private String message;
 
+    private Boolean validite;
+
     public OtpResponse(String message, int status) {
         this.message = message;
         this.status = status;

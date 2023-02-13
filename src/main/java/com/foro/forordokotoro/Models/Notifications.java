@@ -15,7 +15,7 @@ public class Notifications {
     private Long id;
 
     @NotBlank
-    //@Column(columnDefinition = "text")
+    @Column(columnDefinition = "text")
     private String contenu;
 
     @NotBlank
