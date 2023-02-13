@@ -1,13 +1,12 @@
 package com.foro.forordokotoro.Models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.foro.forordokotoro.Models.Enumerations.EtypeParserelle;
 import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Data
@@ -37,6 +36,11 @@ public class Stocks {
     private Boolean disponibilite;
 
     private LocalDate datepublication;
+
+    @NotBlank
+    @Size(max = 25)
+    private String typestock;
+
     private Boolean etat;
 
     @ManyToOne

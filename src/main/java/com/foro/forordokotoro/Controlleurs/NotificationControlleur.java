@@ -4,8 +4,10 @@ import com.foro.forordokotoro.Models.Notifications;
 import com.foro.forordokotoro.Models.Utilisateurs;
 import com.foro.forordokotoro.Repository.NotificationRepository;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import com.foro.forordokotoro.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,10 +52,7 @@ public class NotificationControlleur {
         }
         return notificationRepository.findByLuAndUseridOrderByDatenotification(true, utilisateurs);
     }
-
  */
-
-
 
     @GetMapping("/recupererLesNotificationNonLuDunUser/{idUser}")
     public List<Notifications> recupererLesNotificationsNonLuDunUser(@PathVariable Long idUser){
@@ -79,11 +78,6 @@ public class NotificationControlleur {
     }
 
 
-
-
-
-
-
     @GetMapping("/recupererLesNotificationDunUser/{idUser}")
     public List<Notifications> recupererLesNotificationsDunUser(@PathVariable Long idUser){
         Utilisateurs utilisateurs = new Utilisateurs();
@@ -104,17 +98,21 @@ public class NotificationControlleur {
 
 
     @PatchMapping("/marquerlesNotificationdunusercommelus/{idUser}")
-    public void marquerLesNotificationDunUserCommeLus(@PathVariable Long idUser, @RequestBody Notifications notifications){
+    public ResponseEntity<?> marquerLesNotificationDunUserCommeLus(@PathVariable Long idUser, @RequestBody Notifications notifications){
         Utilisateurs utilisateurs = new Utilisateurs();
         try {
             utilisateurs = utilisateursRepository.findById(idUser).get();
-        }catch (Exception e){}
+        }catch (Exception e){
+            return ResponseEntity.ok(new Reponse("Echec", 1));
+        }
 
         List<Notifications> notifs = notificationRepository.findByUseridAndLu(utilisateurs, false);
 
         for (Notifications n: notifs){
             notificationService.mettrejourNotification(n.getId(), notifications);
         }
+
+        return ResponseEntity.ok(new Reponse("Notification lu", 1));
     }
 
 }

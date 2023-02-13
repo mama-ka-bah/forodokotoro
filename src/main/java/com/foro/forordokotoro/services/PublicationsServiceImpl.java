@@ -1,6 +1,8 @@
 package com.foro.forordokotoro.services;
 
+import com.foro.forordokotoro.Models.Commentaires;
 import com.foro.forordokotoro.Models.Publications;
+import com.foro.forordokotoro.Repository.CommentaireRepository;
 import com.foro.forordokotoro.Repository.PublicationsRepositroy;
 import com.foro.forordokotoro.Utils.Configurations.ConfigImages;
 import com.foro.forordokotoro.Utils.response.Reponse;
@@ -16,6 +18,8 @@ public class PublicationsServiceImpl implements PublicationsService{
 
     @Autowired
     PublicationsRepositroy publicationsRepositroy;
+    @Autowired
+    private CommentaireRepository commentaireRepository;
 
     @Override
     public ResponseEntity<?> ajouter(Publications publications, String type, String nomfile, MultipartFile file) throws IOException {
@@ -56,7 +60,21 @@ public class PublicationsServiceImpl implements PublicationsService{
                        p.setDescription(publications.getDescription());
 
                     publicationsRepositroy.save(p);
-                    return ResponseEntity.ok(new Reponse("Modification reçu", 1));
-                }).orElseThrow(() -> new RuntimeException("Stock non trouvé ! "));
+                    return ResponseEntity.ok(new Reponse("Mise à jour reçue", 1));
+                }).orElseThrow(() -> new RuntimeException("Publication non trouvé ! "));
+    }
+
+    @Override
+    public ResponseEntity<?> modifierCommentaire(Long idCommentaire, Commentaires commentaire) {
+        return commentaireRepository.findById(idCommentaire)
+                .map(c-> {
+                    if(commentaire.getDescription() != null)
+                        c.setDescription(commentaire.getDescription());
+                    if(commentaire.getLien() != null)
+                        c.setLien(commentaire.getLien());
+
+                    commentaireRepository.save(c);
+                    return ResponseEntity.ok(new Reponse("Mise à jour reçue", 1));
+                }).orElseThrow(() -> new RuntimeException("Commentaire non trouvé ! "));
     }
 }

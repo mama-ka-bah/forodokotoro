@@ -82,6 +82,10 @@ public class PublicationsControlleur {
         return publicationsService.modifier(idPub, publications);
     }
 
+    @PatchMapping("modifiercommentaire/{idCommentaire}")
+    ResponseEntity<?> modifierPublication(@RequestBody Commentaires commentaires, @PathVariable Long idCommentaire){
+        return publicationsService.modifierCommentaire(idCommentaire, commentaires);
+    }
 
     @PostMapping("ajoutercomentaire/{idPosteur}/{idPub}")
     ResponseEntity<?> ajouterComentaire(@RequestBody Commentaires commentaires, @PathVariable Long idPosteur, @PathVariable Long idPub){
@@ -132,8 +136,6 @@ public class PublicationsControlleur {
             return ResponseEntity.ok(e);
         }
     }
-
-
 
 
     @PostMapping("/aimerunpublication/{idpub}/{iduser}")

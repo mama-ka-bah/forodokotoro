@@ -15,7 +15,7 @@ public class Notifications {
     private Long id;
 
     @NotBlank
-    @Size(max = 255)
+    //@Column(columnDefinition = "text")
     private String contenu;
 
     @NotBlank
@@ -23,7 +23,6 @@ public class Notifications {
     private String titre;
     private Date datenotification;
     private Boolean lu;
-
 
     @ManyToOne
     @JoinColumn(name = "userid_id")

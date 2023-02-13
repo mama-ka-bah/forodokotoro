@@ -170,7 +170,6 @@ public class CultiveServiceImpl implements CultivesService{
      */
     @Scheduled(fixedRate = 86400000)
     public void verificationDatePrevisionelle(){
-        System.out.println("ttttttttttttttttttttttttttttttttttttt");
         List<PrevisionDunCultive> toutesprevisionsDunCultive = previsionDuncultiveRepository.findAll();
         LocalDate datejour = LocalDate.now();
        for(PrevisionDunCultive pc: toutesprevisionsDunCultive){
@@ -183,7 +182,7 @@ public class CultiveServiceImpl implements CultivesService{
                    Notifications notifications =new Notifications();
                    notifications.setLu(false);
                    notifications.setDatenotification(new Date());
-                   notifications.setContenu("message");
+                   notifications.setContenu("message votre cultive ayant les references suivant a une activiteé qui doit etre effectué dans deux jours veuillez la realiser");
                    notifications.setTitre("Prevision");
                    notifications.setUserid(pc.getCultive().getParserelle().getChamp().getProprietaire());
                    notificationRepository.save(notifications);

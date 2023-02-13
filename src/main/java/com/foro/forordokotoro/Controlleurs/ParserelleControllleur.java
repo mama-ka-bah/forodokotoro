@@ -2,7 +2,6 @@ package com.foro.forordokotoro.Controlleurs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.foro.forordokotoro.Models.Champ;
 import com.foro.forordokotoro.Models.Enumerations.EstatusParserelle;
 import com.foro.forordokotoro.Models.Enumerations.EtypeParserelle;
 import com.foro.forordokotoro.Models.Parserelle;
@@ -12,9 +11,7 @@ import com.foro.forordokotoro.Utils.response.Reponse;
 import com.foro.forordokotoro.services.ParserelleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;

@@ -12,4 +12,6 @@ public interface StockRepository extends JpaRepository<Stocks, Long> {
     List<Stocks> findByEtatOrderByDatepublicationDesc(Boolean etat);
 
     List<Stocks> findByEtatAndProprietaireOrderByDatepublicationDesc(Boolean etat, Agriculteurs agriculteurs);
+
+    List<Stocks> findByTypestockAndEtatOrderByDatepublicationDesc(String typestock, Boolean etat);
 }

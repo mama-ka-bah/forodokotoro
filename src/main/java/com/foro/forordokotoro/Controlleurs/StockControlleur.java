@@ -78,13 +78,19 @@ public class StockControlleur {
     }
 
     @GetMapping("/stocksactives")
-    public List<Stocks> produitAgricoleActives(){
-        return  stocksService.recupererStockActive();
+    public ResponseEntity<?> produitAgricoleActives(){
+        return ResponseEntity.ok(stocksService.recupererStockActive());
     }
 
     @GetMapping("/detailstock/{id}")
-    public Stocks recupererprodudetailstock(@PathVariable Long id){
-        return  stocksService.recupererParId(id);
+    public ResponseEntity<?> recupererprodudetailstock(@PathVariable Long id){
+        return  ResponseEntity.ok(stocksService.recupererParId(id));
+    }
+
+
+    @GetMapping("/recupererstockpartypestock/{typestock}")
+    public ResponseEntity<?> recupererStockParTypeStock(@PathVariable String typestock){
+        return  ResponseEntity.ok(stockRepository.findByTypestockAndEtatOrderByDatepublicationDesc(typestock, true));
     }
 
     @PostMapping("/mettrejourstock/{stockid}/{quantiteRestant}")

@@ -23,7 +23,6 @@ public class ForodokotoroApplication implements CommandLineRunner {
 
 	@Autowired
 	private EmailSenderService senderService;
-
 	@Autowired
 	PasswordEncoder encoder;
 
