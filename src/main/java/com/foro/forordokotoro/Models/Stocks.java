@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -35,7 +36,7 @@ public class Stocks {
     private String photo;
     private Boolean disponibilite;
 
-    private LocalDate datepublication;
+    private LocalDateTime datepublication;
 
     @NotBlank
     @Size(max = 25)

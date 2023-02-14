@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -32,7 +33,7 @@ public class StockServiceImpl implements StocksService{
 
             stocks.setPhoto(ConfigImages.saveimg(type, nomfile, file));
             stocks.setQuantiterestant(stocks.getNombrekilo());
-            stocks.setDatepublication(LocalDate.now());
+            stocks.setDatepublication(LocalDateTime.now().now());
             stocks.setEtat(true);
             stocks.setDisponibilite(true);
             stockRepository.save(stocks);
