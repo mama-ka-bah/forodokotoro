@@ -33,7 +33,7 @@ public class PhaseCultive {
     //une petite description de la phase
     @NotBlank
     //@Column(columnDefinition = "text")
-    @Size(max = 150)
+    @Size(max = 255)
     private String remarques;
 
     /*

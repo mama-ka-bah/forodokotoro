@@ -22,5 +22,8 @@ public class PublicationReçu {
 
     private String typepub;
 
+    @Size(max = 255)
+    private String lien;
+
 }
 

@@ -21,13 +21,10 @@ public class Parserelle {
     private Long id;
 
     @NotBlank
-    @Size(max = 120)
     private String nom;
 
-    @Size(max = 10)
     private Double longueur;
 
-    @Size(max = 10)
     private  Double largeur;
 
     private Boolean etat;

@@ -39,7 +39,7 @@ public class AimePublicationServiceImpl implements AimePublicationService{
             }else{
                 nombreNonAimePublication = aimePublicationRepository.findByPublicationsAndAime(publications, aimePublication.getAime()).size();
                 publications1.setNombrenonaime((long) nombreNonAimePublication);
-                publicationsService.modifier(publications.getId(), publications);
+                publicationsService.modifier(publications.getId(), publications1);
             }
         }catch (Exception e){
             return ResponseEntity.ok(e);

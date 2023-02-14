@@ -137,7 +137,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
                             utilisateursRepository.DEVENIRAGRICULTEURDEPROFESSION(user.getId());
                             agriculteursRepository.DEVENIRAGRICULTEUR(user.getId(), agricuteurAttente.getPhotocarteidentite());
-                            utilisateursRepository.DONNERROLEAUSER(user.getId(), 3L);
+                            utilisateursRepository.DONNERROLEAUSER(user.getId(), 4L);
                             String message = "Votre demande a étée accepter, vous êtes desormais agriculteur";
                             notifications.setContenu(message);
                             notifications.setUserid(user);
@@ -145,7 +145,9 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                             notifications.setLu(false);
                             notificationRepository.save(notifications);
                             try {
-                                emailSenderService.sendSimpleEmail(user.getEmail(), "Acceptation de demande", message);
+                                if(user.getEmail() != null){
+                                    //emailSenderService.sendSimpleEmail(user.getEmail(), "Acceptation de demande", message);
+                                }
                             }catch (Exception e){
                                 System.out.println(e);
                             }
@@ -214,7 +216,12 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
     @Override
     public Agriculteurs recupererAgriculteurPArId(Long id) {
-        return agriculteursRepository.findById(id).get();
+        if(agriculteursRepository.existsById(id)){
+            return agriculteursRepository.findById(id).get();
+        }else {
+            return  null;
+        }
+
     }
 
 }

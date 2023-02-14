@@ -20,8 +20,8 @@ public interface TransporteurRepository extends JpaRepository<Transporteurs, Lon
 
     @Modifying
     @Transactional
-    @Query(value = "insert into transporteurs(id,disponibilite,photopermis,numeroplaque, :nombrecontact) values (:id, :disponibilite, :photopermis, :numeroplaque, :nombrecontact);", nativeQuery = true)
-    int DEVENIRTRANSPORTEUR(@Param("id") Long id, @Param("disponibilite") Boolean disponibilite, @Param("photopermis") String photopermis, @Param("numeroplaque") String numeroplaque, @Param("nombrecontact") Long nombrecontact);
+    @Query(value = "insert into transporteurs(id,disponibilite,photopermis,numeroplaque) values (:id, :disponibilite, :photopermis, :numeroplaque);", nativeQuery = true)
+    int DEVENIRTRANSPORTEUR(@Param("id") Long id, @Param("disponibilite") Boolean disponibilite, @Param("photopermis") String photopermis, @Param("numeroplaque") String numeroplaque);
 
 
     List<Transporteurs> findByEtat(Boolean etat);

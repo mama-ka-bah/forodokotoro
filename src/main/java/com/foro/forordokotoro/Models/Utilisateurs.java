@@ -81,7 +81,7 @@ public class Utilisateurs {
   }
 
   public Utilisateurs(String username, String email, String password, String adresse,
-                      String nomcomplet, Boolean etat)
+                      String nomcomplet, Boolean etat, Boolean enligne, Boolean sesouvenir)
   {
     this.username = username;
     this.email = email;
@@ -89,6 +89,8 @@ public class Utilisateurs {
     this.adresse = adresse;
     this.nomcomplet = nomcomplet;
     this.etat = etat;
+    this.enligne = enligne;
+    this.sesouvenir = sesouvenir;
   }
 
   public Long getId() {

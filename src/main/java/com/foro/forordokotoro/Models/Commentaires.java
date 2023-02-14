@@ -21,7 +21,7 @@ public class Commentaires {
     private Long nombrenonaime;
 
     @NotBlank
-    @Size(max = 255)
+    @Lob
     private String description;
 
     private String lien;

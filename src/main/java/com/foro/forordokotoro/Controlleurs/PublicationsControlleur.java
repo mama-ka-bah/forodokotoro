@@ -102,7 +102,7 @@ public class PublicationsControlleur {
 
             Publications publications1 = new Publications();
             publications1.setNombrecommentaire(publications.getNombrecommentaire()+1);
-            publicationsService.modifier(idPub, publications);
+            publicationsService.modifier(idPub, publications1);
 
             commentaireRepository.save(commentaires);
             return ResponseEntity.ok(new Reponse("Commentaire ajouté avec succès", 1));

@@ -1,6 +1,8 @@
 package com.foro.forordokotoro.Models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -9,6 +11,8 @@ import java.util.Date;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Notifications {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +35,11 @@ public class Notifications {
     @ManyToOne
     @JoinColumn(name = "champ_id")
     private Champ champ;
+
+    public Notifications(String titre, String contenu, Date date, boolean lu) {
+        this.titre = titre;
+        this.contenu = contenu;
+        this.datenotification = date;
+        this.lu = lu;
+    }
 }

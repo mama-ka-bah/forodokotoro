@@ -53,7 +53,7 @@ public class PublicationsServiceImpl implements PublicationsService{
                     if(publications.getNombrenonaime() != null)
                         p.setNombrenonaime(publications.getNombrenonaime());
                     if(publications.getNombrecommentaire() != null)
-                        p.setNombrenonaime(publications.getNombrecommentaire());
+                        p.setNombrecommentaire(publications.getNombrecommentaire());
                     if(publications.getSoustitre() != null)
                         p.setSoustitre(publications.getSoustitre());
                     if(publications.getDescription() != null)

@@ -19,11 +19,11 @@ public class Publications {
     private Long id;
 
     @NotBlank
-    @Size(max = 60)
+    @Size(max = 80)
     private String titre;
 
     @NotBlank
-    @Size(max = 60)
+    @Size(max = 80)
     private String soustitre;
 
     private LocalDateTime datepub;
@@ -37,10 +37,11 @@ public class Publications {
     private String media;
 
     @NotBlank
-    @Size(max = 255)
+    @Lob
     private String description;
     private Boolean etat;
 
+    @Lob
     private String lien;
 
     @Enumerated(EnumType.STRING)

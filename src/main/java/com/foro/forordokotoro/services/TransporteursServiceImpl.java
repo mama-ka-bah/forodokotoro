@@ -77,7 +77,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                     emailSenderService.sendSimpleEmail(userExistant.getEmail(),"Demande de profil",message);
                 }
 
-                return ResponseEntity.ok(new Reponse(message, 0));
+                return ResponseEntity.ok(new Reponse(message, 1));
             }else if(transporteurEnAttenteRepository.findByUserid(userExistant).getStatusdemande().equals(EstatusDemande.ENCOURS)){
 
                 String messae = "Veuilez patienter vous avez déjà une demande en cours de traitement";
@@ -126,16 +126,16 @@ public class TransporteursServiceImpl implements TransporteursService{
                             transporteurEnAttenteRepository.save(te);
 
                             utilisateursRepository.DEVENIRTRANSPORTEURDEPROFESSION(user.getId());
-                            transporteurRepository.DEVENIRTRANSPORTEUR(user.getId(), transporteurAttente.getDisponibilite(), transporteurAttente.getPhotopermis(), transporteurAttente.getNumeroplaque(), 0L);
+                            transporteurRepository.DEVENIRTRANSPORTEUR(user.getId(), transporteurAttente.getDisponibilite(), transporteurAttente.getPhotopermis(), transporteurAttente.getNumeroplaque());
                             String message = "Votre demande a étée accepter, vous êtes desormais transporteur";
-                            utilisateursRepository.DONNERROLEAUSER(user.getId(), 4L);
+                            utilisateursRepository.DONNERROLEAUSER(user.getId(), 5L);
                             notifications.setContenu(message);
                             notifications.setUserid(user);
                             notifications.setDatenotification(new Date());
                             notifications.setLu(false);
                             notificationRepository.save(notifications);
                             if(user.getEmail() != null){
-                                emailSenderService.sendSimpleEmail(user.getEmail(),"Acceptation de demande",message);
+                                //emailSenderService.sendSimpleEmail(user.getEmail(),"Acceptation de demande",message);
                             }
                             return ResponseEntity.ok(new Reponse(message, 1));
                         }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));

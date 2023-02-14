@@ -21,13 +21,10 @@ public class PrevisionServiceImpl implements PrevisionService{
 
     @Override
     public ResponseEntity<?> ajouterPrevisions(Previsions previsions) {
-        if(previsionsRepository.existsByLibelle(previsions.getLibelle())){
-            return ResponseEntity.ok(new Reponse(previsions.getLibelle() + " existe déjà", 0));
-        }else {
+
             previsions.setEtat(true);
             previsionsRepository.save(previsions);
             return ResponseEntity.ok(new Reponse(previsions.getLibelle() + " a été ajouté avec succès", 1));
-        }
     }
 
     @Override
