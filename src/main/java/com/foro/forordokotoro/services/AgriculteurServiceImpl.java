@@ -6,8 +6,8 @@ import com.foro.forordokotoro.Repository.AgriculteurEnAttenteRepository;
 import com.foro.forordokotoro.Repository.AgriculteursRepository;
 import com.foro.forordokotoro.Repository.NotificationRepository;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
-import com.foro.forordokotoro.payload.Autres.ConfigImages;
-import com.foro.forordokotoro.payload.Autres.Reponse;
+import com.foro.forordokotoro.Utils.Configurations.ConfigImages;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,13 +41,12 @@ public class AgriculteurServiceImpl implements AgriculteurService{
     public ResponseEntity<?> AjouterAgriculteur(Agriculteurs agriculteurs) {
         agriculteursRepository.save(agriculteurs);
         return ResponseEntity.ok(
-                new Reponse("Agriculteur ajouter avec succès", 200)
-        );
+                new Reponse("Agriculteur ajouter avec succès", 200));
     }
 
-    public void demandeAgricuteur(Long id, AgricuteurAttente agriculteur, String url, String nomfile, MultipartFile file) throws IOException {
+    public void demandeAgricuteur(Long id, AgricuteurAttente agriculteur) throws IOException {
 
-        ConfigImages.saveimg(url, nomfile, file);
+        //ConfigImages.saveimg(url, nomfile, file);
 
         Utilisateurs userExistant = utilisateursRepository.findById(id).get();
         agriculteur.setUserid(userExistant);
@@ -59,21 +58,22 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
         notifications.setContenu(message);
         notifications.setUserid(userExistant);
-        notifications.setDateNotification(new Date());
+        notifications.setDatenotification(new Date());
         notifications.setTitre("Demande de profil");
         notifications.setLu(false);
         notificationRepository.save(notifications);
     }
 
     @Override
-    public ResponseEntity<?> DevenirAgriculteur(Long id, AgricuteurAttente agriculteur, String url, String nomfile, MultipartFile file) throws IOException {
+    public ResponseEntity<?> DevenirAgriculteur(Long id, AgricuteurAttente agriculteur) throws IOException {
 
         Utilisateurs userExistant = utilisateursRepository.findById(id).get();
         Notifications notifications = new Notifications();
 
         if(utilisateursRepository.existsById(id)){
             if(agriculteurEnAttenteRepository.findByUserid(userExistant) == null){
-                demandeAgricuteur(id, agriculteur, url, nomfile, file);
+                System.out.println("kkkkkkkkkkkkkkkkkkkkkkkk je suis la");
+                demandeAgricuteur(id, agriculteur);
 
                 String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
 
@@ -87,16 +87,16 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
                 String messae = "Veuilez patienter vous avez déjà une demande en cours de traitement";
 
-                return ResponseEntity.ok(new Reponse(messae, 1));
+                return ResponseEntity.ok(new Reponse(messae, 0));
             }else if(agriculteurEnAttenteRepository.findByUserid(userExistant).getStatusdemande().equals(EstatusDemande.REJETER)){
                 LocalDate datejour = LocalDate.now();
                 LocalDate datedemande = agriculteurEnAttenteRepository.findByUserid(userExistant).getDatedemande();
                 long days_difference = ChronoUnit.DAYS.between(datedemande, datejour);
                 System.out.println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm: "+ days_difference);
                 if (days_difference < 10){
-                    return ResponseEntity.ok(new Reponse("Veuilez attendre 10 jours pour faire une nouvelle demande", 1));
+                    return ResponseEntity.ok(new Reponse("Veuilez attendre 10 jours pour faire une nouvelle demande", 0));
                 }else{
-                    demandeAgricuteur(id, agriculteur, url, nomfile, file);
+                    demandeAgricuteur(id, agriculteur);
 
                     String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
 
@@ -109,10 +109,10 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                     return ResponseEntity.ok(new Reponse(message, 1));
                 }
             }else {
-                return ResponseEntity.ok(new Reponse("Vous êtes déjà agriculteur", 1));
+                return ResponseEntity.ok(new Reponse("Vous êtes déjà agriculteur", 0));
             }
         }else {
-            return ResponseEntity.ok(new Reponse("Cet utilisateur nexiste pas", 1));
+            return ResponseEntity.ok(new Reponse("Cet utilisateur nexiste pas", 0));
         }
 
     }
@@ -137,15 +137,17 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
                             utilisateursRepository.DEVENIRAGRICULTEURDEPROFESSION(user.getId());
                             agriculteursRepository.DEVENIRAGRICULTEUR(user.getId(), agricuteurAttente.getPhotocarteidentite());
-                            utilisateursRepository.DONNERROLEAUSER(user.getId(), 3L);
+                            utilisateursRepository.DONNERROLEAUSER(user.getId(), 4L);
                             String message = "Votre demande a étée accepter, vous êtes desormais agriculteur";
                             notifications.setContenu(message);
                             notifications.setUserid(user);
-                            notifications.setDateNotification(new Date());
+                            notifications.setDatenotification(new Date());
                             notifications.setLu(false);
                             notificationRepository.save(notifications);
                             try {
-                                emailSenderService.sendSimpleEmail(user.getEmail(), "Acceptation de demande", message);
+                                if(user.getEmail() != null){
+                                    //emailSenderService.sendSimpleEmail(user.getEmail(), "Acceptation de demande", message);
+                                }
                             }catch (Exception e){
                                 System.out.println(e);
                             }
@@ -179,7 +181,7 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                         String message = "Nous sommes desolé de vous annoncer que votre demande n'a pas été accepté";
                         notifications.setContenu(message);
                         notifications.setUserid(user);
-                        notifications.setDateNotification(new Date());
+                        notifications.setDatenotification(new Date());
                         notifications.setLu(false);
                         notificationRepository.save(notifications);
                         return ResponseEntity.ok(new Reponse(message, 1));
@@ -214,7 +216,12 @@ public class AgriculteurServiceImpl implements AgriculteurService{
 
     @Override
     public Agriculteurs recupererAgriculteurPArId(Long id) {
-        return agriculteursRepository.findById(id).get();
+        if(agriculteursRepository.existsById(id)){
+            return agriculteursRepository.findById(id).get();
+        }else {
+            return  null;
+        }
+
     }
 
 }

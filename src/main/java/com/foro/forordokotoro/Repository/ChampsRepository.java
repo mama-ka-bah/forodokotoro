@@ -9,6 +9,6 @@ import java.util.List;
 public interface ChampsRepository extends JpaRepository<Champ, Long> {
     Boolean existsByNom(String nom);
     Champ findByNom(String nom);
-    List<Champ> findByProprietaire(Agriculteurs agriculteurs);
+    List<Champ> findByProprietaireOrderByDatecreationDesc(Agriculteurs agriculteurs);
     List<Champ> findByEtat(Boolean etat);
 }

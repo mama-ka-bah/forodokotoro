@@ -1,5 +1,6 @@
 package com.foro.forordokotoro.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.foro.forordokotoro.Models.Enumerations.Eactions;
 import lombok.Data;
 
@@ -20,20 +21,28 @@ public class PhaseCultive {
     private String libelle;
     private LocalDate datedebut;
     private LocalDate datefin;
+
+
+    //le nombre de fois qu'il a plevie dans laphases
     private Long nbrepluies;
 
     @Size(max = 120)
     private String photo;
     private Boolean etat;
 
+    //une petite description de la phase
     @NotBlank
-    @Size(max = 150)
+    //@Column(columnDefinition = "text")
+    @Size(max = 255)
     private String remarques;
 
+    /*
     @Enumerated(EnumType.STRING)
     @Column(length = 120)
     private Eactions action;
+     */
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cultive_id")
     private Cultive cultive;

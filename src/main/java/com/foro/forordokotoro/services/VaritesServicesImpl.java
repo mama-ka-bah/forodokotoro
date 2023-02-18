@@ -3,8 +3,8 @@ package com.foro.forordokotoro.services;
 import com.foro.forordokotoro.Models.ProduitAgricole;
 import com.foro.forordokotoro.Models.Varietes;
 import com.foro.forordokotoro.Repository.VarietesRepository;
-import com.foro.forordokotoro.payload.Autres.ConfigImages;
-import com.foro.forordokotoro.payload.Autres.Reponse;
+import com.foro.forordokotoro.Utils.Configurations.ConfigImages;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,12 @@ public class VaritesServicesImpl implements VarietesServices {
     VarietesRepository varietesRepository;
 
     @Override
-    public ResponseEntity<?> ajouterVarietes(Varietes varietes, String url, String nomfile, MultipartFile file) throws IOException {
+    public ResponseEntity<?> ajouterVarietes(Varietes varietes, String type, String nomfile, MultipartFile file) throws IOException {
         if(varietesRepository.existsByNom(varietes.getNom())){
             return ResponseEntity.ok(new Reponse(varietes.getNom() + " existe déjà", 1));
         }else {
-            ConfigImages.saveimg(url, nomfile, file);
-            varietes.setPhoto(nomfile);
+
+            varietes.setPhoto(ConfigImages.saveimg(type, nomfile, file));
             varietesRepository.save(varietes);
             return ResponseEntity.ok(new Reponse(varietes.getNom() + " a été ajouter avec succès", 1));
         }

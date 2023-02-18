@@ -3,7 +3,7 @@ package com.foro.forordokotoro.Controlleurs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.PrevisionMeteo;
-import com.foro.forordokotoro.payload.request.Meteo;
+import com.foro.forordokotoro.Utils.request.Meteo;
 import com.foro.forordokotoro.services.PrevisionMeteoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

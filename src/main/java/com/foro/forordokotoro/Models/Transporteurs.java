@@ -18,6 +18,8 @@ public class Transporteurs extends Utilisateurs{
 
     private Boolean disponibilite;
 
+    private Long nombrecontact;
+
     @NotBlank
     @Size(max = 25)
     private String photopermis;

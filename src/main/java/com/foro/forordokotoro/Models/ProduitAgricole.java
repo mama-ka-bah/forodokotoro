@@ -25,7 +25,7 @@ public class ProduitAgricole {
     private String photo;
 
     @NotBlank
-    @Size(max = 255)
+    @Column(columnDefinition = "text")
     private  String description;
     private Boolean etat;
     private Boolean statusubvention;

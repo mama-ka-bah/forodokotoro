@@ -2,10 +2,9 @@ package com.foro.forordokotoro.services;
 
 import com.foro.forordokotoro.Models.ProduitAgricole;
 import com.foro.forordokotoro.Repository.ProduitAgricoleRepositrory;
-import com.foro.forordokotoro.payload.Autres.ConfigImages;
-import com.foro.forordokotoro.payload.Autres.Reponse;
+import com.foro.forordokotoro.Utils.Configurations.ConfigImages;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,12 +20,13 @@ public class produitAgricoleServiceImpl implements ProduitAgricoleService{
 
     //methode permettant d'ajouter un produit agricole
     @Override
-    public ResponseEntity<?> ajouterProduitAgricole(ProduitAgricole produitAgricole, String url, String nomfile, MultipartFile file) throws IOException {
+    public ResponseEntity<?> ajouterProduitAgricole(ProduitAgricole produitAgricole, String type, String nomfile, MultipartFile file) throws IOException {
         if(produitAgricoleRepositrory.existsByNom(produitAgricole.getNom())){
             return  ResponseEntity.ok(new Reponse(produitAgricole.getNom() + " existe déjà", 0));
         }else {
-            ConfigImages.saveimg(url, nomfile, file);
-            produitAgricole.setPhoto(nomfile);
+
+            produitAgricole.setPhoto(ConfigImages.saveimg(type, nomfile, file));
+            produitAgricole.setEtat(true);
             produitAgricoleRepositrory.save(produitAgricole);
             return ResponseEntity.ok(new Reponse(produitAgricole.getNom() + "a été ajouter avec succès", 1));
         }

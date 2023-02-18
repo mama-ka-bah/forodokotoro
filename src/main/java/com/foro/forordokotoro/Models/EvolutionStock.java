@@ -13,9 +13,13 @@ public class EvolutionStock {
     private Long id;
 
     private LocalDate date;
-    private Long quantitededuit;
+    private Double quantitededuit;
 
-    private Long quantiteajoute;
+    private Double quantiteajoute;
+
+    private Double quantiterestant;
+
+    private String motif;
 
     @ManyToOne
     @JoinColumn(name = "stocks_id")

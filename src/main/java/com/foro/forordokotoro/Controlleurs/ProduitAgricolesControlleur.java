@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/produitagricoles")
+@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
 public class ProduitAgricolesControlleur {
 
     @Autowired
@@ -25,14 +26,14 @@ public class ProduitAgricolesControlleur {
                                                     @Valid  @RequestParam(value = "produitreçu") String produitreçu) throws IOException {
 
         //chemin de stockage des images
-        String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
+        String type = "produitsAgricoles";
 
         //recupere le nom de l'image
         String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
 
         ProduitAgricole produitAgricole = new JsonMapper().readValue(produitreçu, ProduitAgricole.class);
 
-        return produitAgricoleService.ajouterProduitAgricole(produitAgricole, url, nomfile, file);
+        return produitAgricoleService.ajouterProduitAgricole(produitAgricole, type, nomfile, file);
     }
 
     @PatchMapping("/modifier/{id}")

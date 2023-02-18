@@ -9,14 +9,13 @@ import java.time.LocalDate;
 @Data
 @Entity
 public class PrevisionDunCultive {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String libelle;
     private LocalDate dateprevisionnelle;
     private Long nbrepluieNec;
-    private Long recoltePrevue;
+    private Double recoltePrevue;
 
     @ManyToOne
     @JoinColumn(name = "cultive_id")

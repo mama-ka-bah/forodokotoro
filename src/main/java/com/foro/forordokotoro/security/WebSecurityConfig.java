@@ -131,7 +131,15 @@ public class WebSecurityConfig {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .authorizeRequests()
             .antMatchers("/api/auth/**").permitAll()
-        .antMatchers("/api/bienvenue/**").permitAll()
+            .antMatchers("/transporteurs/**").permitAll()
+            .antMatchers("/publications/**").permitAll()
+            .antMatchers("/agriculteur/**").permitAll()
+            .antMatchers("/stocks/**").permitAll()
+            .antMatchers("/agriculteur/**").permitAll()
+            .antMatchers("/agriculteur/**").permitAll()
+             .antMatchers("/champs/**").permitAll()
+        .antMatchers("/produitagricoles/**").permitAll()
+            .antMatchers("/cultive/**").permitAll()
         .anyRequest().authenticated();
            // .and()
             //.oauth2Login();

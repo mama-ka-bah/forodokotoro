@@ -1,11 +1,13 @@
 package com.foro.forordokotoro.Models;
 
+import com.foro.forordokotoro.Models.Enumerations.EtypeParserelle;
 import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -20,18 +22,26 @@ public class Stocks {
 
     @Size(max = 25)
     private Long prixkilo;
-
     @Size(max = 25)
-    private Long  nombrekilo;
+    private Double  nombrekilo;
 
-    private Long quantiterestant;
+    private Double quantiterestant;
+
+    private Long nombreaime;
+
+    private Long nombrenonaime;
 
     @NotBlank
     @Size(max = 25)
     private String photo;
     private Boolean disponibilite;
 
-    private LocalDate datepublication;
+    private LocalDateTime datepublication;
+
+    @NotBlank
+    @Size(max = 25)
+    private String typestock;
+
     private Boolean etat;
 
     @ManyToOne
@@ -41,4 +51,9 @@ public class Stocks {
     @ManyToOne
     @JoinColumn(name = "proprietaire_id")
     private Agriculteurs proprietaire;
+
+    /*
+    @OneToMany(mappedBy = "stocks")
+    private List<AimeStock> listeaimestock;
+     */
 }

@@ -6,8 +6,8 @@ import com.foro.forordokotoro.Repository.NotificationRepository;
 import com.foro.forordokotoro.Repository.TransporteurEnAttenteRepository;
 import com.foro.forordokotoro.Repository.TransporteurRepository;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
-import com.foro.forordokotoro.payload.Autres.ConfigImages;
-import com.foro.forordokotoro.payload.Autres.Reponse;
+import com.foro.forordokotoro.Utils.Configurations.ConfigImages;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,10 +40,9 @@ public class TransporteursServiceImpl implements TransporteursService{
 
     public void demandeTransporteur(Long id, TransporteurAttente transporteurAttente, String url, String nomfile, MultipartFile file) throws IOException {
 
-        ConfigImages.saveimg(url, nomfile, file);
-
         Utilisateurs userExistant = utilisateursRepository.findById(id).get();
         transporteurAttente.setUserid(userExistant);
+        transporteurAttente.setPhotopermis(ConfigImages.saveimg(url, nomfile, file));
         transporteurEnAttenteRepository.save(transporteurAttente);
         Notifications notifications = new Notifications();
 
@@ -52,7 +51,7 @@ public class TransporteursServiceImpl implements TransporteursService{
 
         notifications.setContenu(message);
         notifications.setUserid(userExistant);
-        notifications.setDateNotification(new Date());
+        notifications.setDatenotification(new Date());
         notifications.setTitre("Demande de profil");
         notifications.setLu(false);
         notificationRepository.save(notifications);
@@ -62,7 +61,7 @@ public class TransporteursServiceImpl implements TransporteursService{
 
 
     @Override
-    public ResponseEntity<?> devenirTransporteur(Long id, TransporteurAttente transporteurs, String url, String nomfile, MultipartFile file) throws IOException {
+    public ResponseEntity<?> devenirTransporteur(Long id, TransporteurAttente transporteurs, String type, String nomfile, MultipartFile file) throws IOException {
 
         if(utilisateursRepository.existsById(id)){
             Utilisateurs userExistant = utilisateursRepository.findById(id).get();
@@ -70,7 +69,7 @@ public class TransporteursServiceImpl implements TransporteursService{
 
             System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa " +userExistant);
             if(transporteurEnAttenteRepository.findByUserid(userExistant) == null){
-                demandeTransporteur(id, transporteurs, url, nomfile, file);
+                demandeTransporteur(id, transporteurs, type, nomfile, file);
 
                 String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
 
@@ -83,15 +82,15 @@ public class TransporteursServiceImpl implements TransporteursService{
 
                 String messae = "Veuilez patienter vous avez déjà une demande en cours de traitement";
 
-                return ResponseEntity.ok(new Reponse(messae, 1));
+                return ResponseEntity.ok(new Reponse(messae, 0));
             }else if(transporteurEnAttenteRepository.findByUserid(userExistant).getStatusdemande().equals(EstatusDemande.REJETER)){
                 LocalDate datejour = LocalDate.now();
                 LocalDate datedemande = transporteurEnAttenteRepository.findByUserid(userExistant).getDatedemande();
                 long days_difference = ChronoUnit.DAYS.between(datedemande, datejour);
                 if (days_difference < 10){
-                    return ResponseEntity.ok(new Reponse("Veuilez attendre 10 jours pour faire une nouvelle demande", 1));
+                    return ResponseEntity.ok(new Reponse("Veuilez attendre 10 jours pour faire une nouvelle demande", 0));
                 }else{
-                    demandeTransporteur(id, transporteurs, url, nomfile, file);
+                    demandeTransporteur(id, transporteurs, type, nomfile, file);
                     String message = "Votre demande est en cours de traitement, nous vous reviendrons dans un delai de 24h";
 
                     if (userExistant.getEmail() != null){
@@ -100,11 +99,11 @@ public class TransporteursServiceImpl implements TransporteursService{
                     return ResponseEntity.ok(new Reponse(message, 1));
                 }
             }else {
-                return ResponseEntity.ok(new Reponse("Vous êtes déjà Transporteur", 1));
+                return ResponseEntity.ok(new Reponse("Vous êtes déjà Transporteur", 0));
             }
 
         }else {
-            return ResponseEntity.ok(new Reponse("Cet utiisateur n'existe pas", 1));
+            return ResponseEntity.ok(new Reponse("Cet utiisateur n'existe pas", 0));
 
         }
     }
@@ -129,14 +128,14 @@ public class TransporteursServiceImpl implements TransporteursService{
                             utilisateursRepository.DEVENIRTRANSPORTEURDEPROFESSION(user.getId());
                             transporteurRepository.DEVENIRTRANSPORTEUR(user.getId(), transporteurAttente.getDisponibilite(), transporteurAttente.getPhotopermis(), transporteurAttente.getNumeroplaque());
                             String message = "Votre demande a étée accepter, vous êtes desormais transporteur";
-                            utilisateursRepository.DONNERROLEAUSER(user.getId(), 4L);
+                            utilisateursRepository.DONNERROLEAUSER(user.getId(), 5L);
                             notifications.setContenu(message);
                             notifications.setUserid(user);
-                            notifications.setDateNotification(new Date());
+                            notifications.setDatenotification(new Date());
                             notifications.setLu(false);
                             notificationRepository.save(notifications);
                             if(user.getEmail() != null){
-                                emailSenderService.sendSimpleEmail(user.getEmail(),"Acceptation de demande",message);
+                                //emailSenderService.sendSimpleEmail(user.getEmail(),"Acceptation de demande",message);
                             }
                             return ResponseEntity.ok(new Reponse(message, 1));
                         }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
@@ -168,7 +167,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                             notifications.setContenu(message);
                             notifications.setUserid(user);
                             notifications.setTitre("Rejet de demande");
-                            notifications.setDateNotification(new Date());
+                            notifications.setDatenotification(new Date());
                             notifications.setLu(false);
                             notificationRepository.save(notifications);
                             if(user.getEmail() != null){
@@ -204,6 +203,8 @@ public class TransporteursServiceImpl implements TransporteursService{
                         t.setPhotopermis(transporteurs.getPhotopermis());
                     if(transporteurs.getDisponibilite() != null)
                         t.setDisponibilite(transporteurs.getDisponibilite());
+                    if(transporteurs.getNombrecontact() != null)
+                        t.setNombrecontact(transporteurs.getNombrecontact());
                     if(transporteurs.getEtat() != null)
                     t.setEtat(transporteurs.getEtat());
                     transporteurRepository.save(t);

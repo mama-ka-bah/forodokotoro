@@ -1,4 +1,4 @@
-package com.foro.forordokotoro.payload.request;
+package com.foro.forordokotoro.Utils.request;
 
 import javax.validation.constraints.NotBlank;
 

@@ -4,14 +4,16 @@ import com.foro.forordokotoro.Models.EvolutionStock;
 import com.foro.forordokotoro.Models.Stocks;
 import com.foro.forordokotoro.Repository.EvolutionStockRepository;
 import com.foro.forordokotoro.Repository.StockRepository;
-import com.foro.forordokotoro.payload.Autres.ConfigImages;
-import com.foro.forordokotoro.payload.Autres.Reponse;
+import com.foro.forordokotoro.Utils.Configurations.ConfigImages;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,13 +26,16 @@ public class StockServiceImpl implements StocksService{
     EvolutionStockRepository evolutionStockRepository;
 
     @Override
-    public ResponseEntity<?> ajouterStock(Stocks stocks, String url, String nomfile, MultipartFile file) throws IOException {
+    public ResponseEntity<?> ajouterStock(Stocks stocks, String type, String nomfile, MultipartFile file) throws IOException {
         if(stockRepository.existsByLibelle(stocks.getLibelle())){
             return ResponseEntity.ok(new Reponse(stocks.getLibelle() + " existe déjà", 1));
         }else {
-            ConfigImages.saveimg(url, nomfile, file);
-            stocks.setPhoto(nomfile);
+
+            stocks.setPhoto(ConfigImages.saveimg(type, nomfile, file));
             stocks.setQuantiterestant(stocks.getNombrekilo());
+            stocks.setDatepublication(LocalDateTime.now().now());
+            stocks.setEtat(true);
+            stocks.setDisponibilite(true);
             stockRepository.save(stocks);
             return ResponseEntity.ok(new Reponse(stocks.getLibelle() + " a été ajouté avec succès", 1));
 
@@ -51,6 +56,10 @@ public class StockServiceImpl implements StocksService{
                         s.setQuantiterestant(stocks.getQuantiterestant());
                     if(stocks.getLibelle() != null)
                         s.setLibelle(stocks.getLibelle());
+                    if(stocks.getNombreaime() != null)
+                        s.setNombreaime(stocks.getNombreaime());
+                    if(stocks.getNombrenonaime() != null)
+                        s.setNombrenonaime(stocks.getNombrenonaime());
                     if(stocks.getEtat() != null)
                         s.setEtat(stocks.getEtat());
                     if(stocks.getNombrekilo() != null)
@@ -77,9 +86,12 @@ public class StockServiceImpl implements StocksService{
     @Override
     public ResponseEntity<?> mettreajourLestock(EvolutionStock evolutionStock) {
         evolutionStockRepository.save(evolutionStock);
+        return ResponseEntity.ok(new Reponse("Votre stock a été mise à jour avec succès", 1));
+
+/*
         List<EvolutionStock> listEvolutionStocks = recupererEvolutionStock();
-        Long totalStockDeduit = 0L;
-        Long totalStockAjoute = 0l;
+        Double totalStockDeduit = 0.0;
+        Double totalStockAjoute = 0.0;
         Stocks stocks = new Stocks();
 
 
@@ -88,10 +100,18 @@ public class StockServiceImpl implements StocksService{
             totalStockAjoute += es.getQuantiteajoute();
         }
 
-        stocks.setQuantiterestant(evolutionStock.getStocks().getNombrekilo() + totalStockAjoute - totalStockDeduit);
-        modifierStock(evolutionStock.getStocks().getId(), stocks);
+        Double quantiteRestant = evolutionStock.getStocks().getNombrekilo() + totalStockAjoute - totalStockDeduit;
 
-        return ResponseEntity.ok(new Reponse("Votre stock a été mise à jour avec succès", 1));
+        if(quantiteRestant < 0){
+            return ResponseEntity.ok(new Reponse("impossible", 0));
+        }else {
+            stocks.setQuantiterestant(quantiteRestant);
+            modifierStock(evolutionStock.getStocks().getId(), stocks);
+
+            return ResponseEntity.ok(new Reponse("Votre stock a été mise à jour avec succès", 1));
+        }
+
+ */
     }
 
     @Override

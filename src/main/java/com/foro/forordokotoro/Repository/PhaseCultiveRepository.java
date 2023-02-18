@@ -12,5 +12,11 @@ public interface PhaseCultiveRepository extends JpaRepository<PhaseCultive, Long
     PhaseCultive findByCultive(Cultive cultive);
     Boolean existsByLibelle(String libelle);
 
+    Boolean existsByLibelleAndCultive(String libelle, Cultive cultive);
+
+    List<PhaseCultive> findByCultiveAndEtatOrderByDatefinDesc(Cultive cultive, Boolean etat);
+
+    List<PhaseCultive> findByEtatAndCultive(Boolean etat, Cultive cultive);
+
 
 }

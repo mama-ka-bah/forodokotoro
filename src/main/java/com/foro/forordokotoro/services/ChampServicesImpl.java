@@ -4,8 +4,8 @@ import com.foro.forordokotoro.Models.Champ;
 import com.foro.forordokotoro.Models.Parserelle;
 import com.foro.forordokotoro.Repository.ChampsRepository;
 import com.foro.forordokotoro.Repository.ParserelleRepository;
-import com.foro.forordokotoro.payload.Autres.ConfigImages;
-import com.foro.forordokotoro.payload.Autres.Reponse;
+import com.foro.forordokotoro.Utils.Configurations.ConfigImages;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +31,9 @@ public class ChampServicesImpl implements ChampServices{
         if(champsRepository.existsByNom(champ.getNom())){
             return ResponseEntity.ok(new Reponse(champ.getNom() + " existe déjà", 0));
         }else {
-            ConfigImages.saveimg(url, nomfile, file);
-            champ.setPhoto(nomfile);
+
+            champ.setPhoto(ConfigImages.saveimg(url, nomfile, file));
+            champ.setNombreParserelle(0L);
             champ.setEtat(true);
             champsRepository.save(champ);
             return ResponseEntity.ok(new Reponse(champ.getNom() + " a été engistré avec succès", 1));
@@ -85,13 +86,16 @@ public class ChampServicesImpl implements ChampServices{
 
     @Override
     public Champ recupererChampParId(Long id) {
-        return champsRepository.findById(id).get();
+        Champ champ =  champsRepository.findById(id).get();
+        return champ;
     }
 
     @Override
-    public ArrayList<Double> verifierDisponibiliteDimension(Long champid) {
-        Double longueurTotalParserelles = null;
-        Double largeurTotalParserelles = null;
+    public ArrayList<Double> verifierDisponibiliteDimension(Long champid, Parserelle parserelle) {
+        Double longueurTotalParserelles = 0.0;
+        Double largeurTotalParserelles = 0.0;
+
+        //va contenir la largeur et la longeur disponible
         ArrayList<Double> dimensions = new ArrayList<>();
 
         //recupere le champ conserné
@@ -99,14 +103,25 @@ public class ChampServicesImpl implements ChampServices{
 
         //recupere la liste des parserelles du champ
         List<Parserelle> parserelleList = parserelleRepository.findByChamp(champConserner);
+//System.out.println("le nombre de parserelle: " + parserelleList.size() );
+        if(!parserelleList.isEmpty()){
+            //recuperation de la longueur total et de la largeur total de toutes les pareserelles du champ conserné
+            for(Parserelle p : parserelleList){
+                longueurTotalParserelles += p.getLongueur();
+                largeurTotalParserelles += p.getLargeur();
+            }
+            System.out.println("Longueur totale des parserelle: " + longueurTotalParserelles + "Longueur du champ: " +  champConserner.getLongueur());
+            System.out.println("Largeur totale des parserelle: " + largeurTotalParserelles + "Largeur du champ: " +  champConserner.getLargeur());
+            dimensions.add(0, champConserner.getLongueur() - longueurTotalParserelles - parserelle.getLongueur());
+            dimensions.add(1, champConserner.getLargeur() - largeurTotalParserelles - parserelle.getLargeur());
 
-        //recuperation de la longueur total et de la largeur total de toutes les pareserelles du champ conserné
-        for(Parserelle p : parserelleList){
-            longueurTotalParserelles += longueurTotalParserelles;
-            largeurTotalParserelles += largeurTotalParserelles;
+            return dimensions;
+        }else {
+            dimensions.add(0, champConserner.getLongueur() - parserelle.getLongueur());
+            dimensions.add(1, champConserner.getLargeur() - parserelle.getLargeur());
+
+            return  dimensions;
         }
-        dimensions.add(0, champConserner.getLongueur() - longueurTotalParserelles);
-        dimensions.add(1, champConserner.getLargeur() - largeurTotalParserelles);
-        return dimensions;
+
     }
 }

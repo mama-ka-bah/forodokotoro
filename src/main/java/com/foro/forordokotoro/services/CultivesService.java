@@ -1,6 +1,7 @@
 package com.foro.forordokotoro.services;
 
 import com.foro.forordokotoro.Models.Cultive;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
@@ -16,4 +17,12 @@ public interface CultivesService {
     Cultive recupererCultiveParReference(String reference);
 
     Cultive recupererParId(Long id);
+
+    Reponse verificationAvantMettreFinUnCultive(Long idCultive, Cultive cultive);
+
+    ResponseEntity<?> mettreFincultive(Long idCultive, Cultive cultive);
+
+    Reponse verifierValiditeDesDatesDeCultive(LocalDate datedebut, LocalDate datefin, Cultive cultive);
+
+    //List<RetourInfoCultive> transfomerListCultiveEnListRetourInfoCultive(List<Cultive> lesCultiveAtransformer);
 }

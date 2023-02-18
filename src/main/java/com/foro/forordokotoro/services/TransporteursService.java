@@ -1,17 +1,14 @@
 package com.foro.forordokotoro.services;
 
-import com.foro.forordokotoro.Controlleurs.TransporteursControlleur;
-import com.foro.forordokotoro.Models.Agriculteurs;
 import com.foro.forordokotoro.Models.TransporteurAttente;
 import com.foro.forordokotoro.Models.Transporteurs;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface TransporteursService {
-    ResponseEntity<?> devenirTransporteur(Long id, TransporteurAttente transporteurs, String url, String nomfile, MultipartFile file) throws IOException;
+    ResponseEntity<?> devenirTransporteur(Long id, TransporteurAttente transporteurs, String type, String nomfile, MultipartFile file) throws IOException;
 
     //List<Transporteurs> recupererTransporteurNonAccepter();
 

@@ -2,6 +2,7 @@ package com.foro.forordokotoro.Controlleurs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.foro.forordokotoro.Models.Previsions;
 import com.foro.forordokotoro.Models.ProduitAgricole;
 import com.foro.forordokotoro.Models.Varietes;
 import com.foro.forordokotoro.services.ProduitAgricoleService;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/varietes")
+@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
 public class VarietesControlleur {
 
     @Autowired
@@ -30,15 +32,16 @@ public class VarietesControlleur {
     public ResponseEntity<?> ajouterVarietes(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
                                              @Valid  @RequestParam(value = "varieteReçue") String varieteReçue, @PathVariable Long idproduit) throws IOException {
         //chemin de stockage des images
-        String url = "C:/Users/KEITA Mahamadou/Desktop/keita/project/images";
+        String type = "produitsAgricoles";
 
         //recupere le nom de l'image
         String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
 
         Varietes varietes = new JsonMapper().readValue(varieteReçue, Varietes.class);
         varietes.setProduitagricole(produitAgricoleService.recupererProduitAgricoleParId(idproduit));
+        varietes.setEtat(true);
 
-        return varietesServices.ajouterVarietes(varietes,url,nomfile, file);
+        return varietesServices.ajouterVarietes(varietes,type,nomfile, file);
     }
 
     @GetMapping("/recuperervarietesactives")
@@ -46,9 +49,9 @@ public class VarietesControlleur {
         return varietesServices.recupererVarietesActives();
     }
 
-    @GetMapping("/recuperervarietesparproduit/{idvariete}")
-    public List<Varietes> recupererVarietesParProduit(@PathVariable Long idvariete){
-        return varietesServices.recupererVarietesParProduitAgricole(produitAgricoleService.recupererProduitAgricoleParId(idvariete));
+    @GetMapping("/recuperervarietesparproduit/{idProduit}")
+    public List<Varietes> recupererVarietesParProduit(@PathVariable Long idProduit){
+        return varietesServices.recupererVarietesParProduitAgricole(produitAgricoleService.recupererProduitAgricoleParId(idProduit));
     }
 
     @GetMapping("/modifier/{idvariete}")
@@ -61,4 +64,15 @@ public class VarietesControlleur {
     public Varietes recupererDetailVariete(@PathVariable Long id){
         return  varietesServices.recupererVarieteParId(id);
     }
+
+
+    @GetMapping("/recupererprevisionsdunevariete/{idVariete}")
+    public List<Previsions> recupererPrevisionsDuneVariete(@PathVariable Long idVariete){
+
+        Varietes varietes =  varietesServices.recupererVarieteParId(idVariete);
+
+        return  varietes.getPrevisions();
+    }
+
+
 }

@@ -31,8 +31,10 @@ public class Varietes {
 
     private Long resultatparkilo;
 
+    private String lien;
+
     @NotBlank
-    @Size(max = 255)
+    @Column(columnDefinition = "text")
     private  String description;
     private Boolean etat;
 
