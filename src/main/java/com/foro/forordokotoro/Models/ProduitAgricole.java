@@ -1,5 +1,6 @@
 package com.foro.forordokotoro.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -29,4 +30,9 @@ public class ProduitAgricole {
     private  String description;
     private Boolean etat;
     private Boolean statusubvention;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "createur_id")
+    private Utilisateurs createur;
 }

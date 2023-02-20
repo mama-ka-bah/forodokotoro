@@ -16,6 +16,8 @@ import java.util.Optional;
 public interface UtilisateursRepository extends JpaRepository<Utilisateurs, Long> {
   Optional<Utilisateurs> findByUsername(String username);
 
+  List<Utilisateurs> findByEtat(String username);
+
   Boolean existsByUsername(String username);
 
   boolean existsById(Long id);
@@ -25,6 +27,8 @@ public interface UtilisateursRepository extends JpaRepository<Utilisateurs, Long
   Utilisateurs findByEmail(String email);
 
   List<Utilisateurs> findByEtat(Boolean etat);
+
+//  List<Utilisateurs> findAllById (List<Long> longList);
 
 
   @Modifying

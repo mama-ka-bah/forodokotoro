@@ -56,7 +56,7 @@ public class TransporteursServiceImpl implements TransporteursService{
         notifications.setLu(false);
         notificationRepository.save(notifications);
 
-        emailSenderService.sendSimpleEmail(userExistant.getEmail(), notifications.getTitre(), notifications.getContenu());
+        //emailSenderService.sendSimpleEmail(userExistant.getEmail(), notifications.getTitre(), notifications.getContenu());
     }
 
 
@@ -171,7 +171,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                             notifications.setLu(false);
                             notificationRepository.save(notifications);
                             if(user.getEmail() != null){
-                                emailSenderService.sendSimpleEmail(user.getEmail(), notifications.getTitre(), notifications.getContenu());
+                               // emailSenderService.sendSimpleEmail(user.getEmail(), notifications.getTitre(), notifications.getContenu());
                             }
                             return ResponseEntity.ok(new Reponse(message, 1));
 

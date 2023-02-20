@@ -48,6 +48,7 @@ public class ForodokotoroApplication implements CommandLineRunner {
 			roleRepository.save(new Role(ERole.ROLE_SUPERADMIN));
 			roleRepository.save(new Role(ERole.ROLE_AGRIGULTEUR));
 			roleRepository.save(new Role(ERole.ROLE_TRANSPORTEUR));
+			roleRepository.save(new Role(ERole.ROLE_PROFESSIONNEL));
 		}
 
 		if (utilisateursRepository.findAll().size() == 0){

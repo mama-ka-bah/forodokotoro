@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.Previsions;
 import com.foro.forordokotoro.Models.ProduitAgricole;
+import com.foro.forordokotoro.Models.Utilisateurs;
 import com.foro.forordokotoro.Models.Varietes;
 import com.foro.forordokotoro.services.ProduitAgricoleService;
 import com.foro.forordokotoro.services.VarietesServices;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/varietes")
-@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
+@CrossOrigin("*")
 public class VarietesControlleur {
 
     @Autowired
@@ -28,9 +29,9 @@ public class VarietesControlleur {
     @Autowired
     ProduitAgricoleService produitAgricoleService;
 
-    @PostMapping("/ajouter/{idproduit}")
+    @PostMapping("/ajouter/{idproduit}/{user}")
     public ResponseEntity<?> ajouterVarietes(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
-                                             @Valid  @RequestParam(value = "varieteReçue") String varieteReçue, @PathVariable Long idproduit) throws IOException {
+                                             @Valid  @RequestParam(value = "varieteReçue") String varieteReçue, @PathVariable Long idproduit, @PathVariable Utilisateurs user) throws IOException {
         //chemin de stockage des images
         String type = "produitsAgricoles";
 
@@ -40,6 +41,7 @@ public class VarietesControlleur {
         Varietes varietes = new JsonMapper().readValue(varieteReçue, Varietes.class);
         varietes.setProduitagricole(produitAgricoleService.recupererProduitAgricoleParId(idproduit));
         varietes.setEtat(true);
+        varietes.setCreateur(user);
 
         return varietesServices.ajouterVarietes(varietes,type,nomfile, file);
     }

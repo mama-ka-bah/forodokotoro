@@ -180,7 +180,7 @@ System.out.print("je suis transporteur");
     }
 
     System.out.println(signUpRequest.getNomcomplet());
-
+    String monpass = signUpRequest.getPassword();
     // Create new user's account
     Utilisateurs utilisateurs = new Utilisateurs(signUpRequest.getUsername(),
                signUpRequest.getEmail(),
@@ -205,7 +205,16 @@ System.out.print("je suis transporteur");
           Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN);
           roles.add(adminRole);
 
+          String messageAdmin = "Bonjour "+ utilisateurs.getNomcomplet() +" nous sommes heureux de vous annoncer les cooordonnées de votre compte administrateur sur Forodôkôtôrô :\n password: + "  +monpass+" \n avec le numero de téléphone: " + utilisateurs.getUsername();
+          //senderService.sendSimpleEmail(utilisateurs.getEmail(), "Creation de votre compte professionnel sur Forodôkôtôrô", messageAdmin);
           break;
+
+          case "professionnel"://si le role est à égale à professionnel
+            Role professionnelRole = roleRepository.findByName(ERole.ROLE_PROFESSIONNEL);
+            roles.add(professionnelRole);
+            String messageProf = "Bonjour "+ utilisateurs.getNomcomplet() +" nous sommes heureux de vous annoncer les cooordonnées de votre compte professionnel sur Forodôkôtôrô ou en tant qu'un professionnel de l'agricultuture:\n password: + "  +monpass+" \n avec le numero de téléphone: " + utilisateurs.getUsername();
+            //senderService.sendSimpleEmail(utilisateurs.getEmail(), "Creation de votre compte professionnel sur Forodôkôtôrô", messageProf);
+            break;
         default://dans le cas écheant
 
           //on recupere le role de l'utilisateur
@@ -284,4 +293,8 @@ System.out.print("je suis transporteur");
     }
   }
 
+  @GetMapping("/recuperertousutilisateur")
+  public ResponseEntity<?> recuperertousUtilisateur(){
+    return ResponseEntity.ok(utilisateursRepository.findByEtat(true));
+  }
 }

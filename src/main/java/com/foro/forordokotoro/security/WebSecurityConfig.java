@@ -138,7 +138,10 @@ public class WebSecurityConfig {
             .antMatchers("/agriculteur/**").permitAll()
             .antMatchers("/agriculteur/**").permitAll()
              .antMatchers("/champs/**").permitAll()
+            .antMatchers("/varietes/**").permitAll()
         .antMatchers("/produitagricoles/**").permitAll()
+            .antMatchers("/transporteurs/**").permitAll()
+            .antMatchers("/previsions/**").permitAll()
             .antMatchers("/cultive/**").permitAll()
         .anyRequest().authenticated();
            // .and()

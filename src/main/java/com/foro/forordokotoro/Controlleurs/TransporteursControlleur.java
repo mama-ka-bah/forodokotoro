@@ -1,11 +1,16 @@
 package com.foro.forordokotoro.Controlleurs;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.foro.forordokotoro.Models.AgricuteurAttente;
 import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
 import com.foro.forordokotoro.Models.TransporteurAttente;
 import com.foro.forordokotoro.Models.Transporteurs;
+import com.foro.forordokotoro.Models.Utilisateurs;
+import com.foro.forordokotoro.Repository.TransporteurEnAttenteRepository;
 import com.foro.forordokotoro.Repository.TransporteurRepository;
+import com.foro.forordokotoro.Repository.UtilisateursRepository;
 import com.foro.forordokotoro.Utils.request.DemandeTransporteur;
+import com.foro.forordokotoro.Utils.response.RetourUserEnttente;
 import com.foro.forordokotoro.services.TransporteursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +21,25 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/transporteurs")
-@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
+@CrossOrigin("*")
 public class TransporteursControlleur {
-
     @Autowired
     TransporteursService transporteursService;
 
     @Autowired
     TransporteurRepository transporteurRepository;
+
+    @Autowired
+    UtilisateursRepository utilisateursRepository;
+
+    @Autowired
+    TransporteurEnAttenteRepository transporteurAttenteRepository;
 
     @PostMapping("/devenirtransporteur/{id}")
     public ResponseEntity<?> devenirTransporteur(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
@@ -86,5 +97,56 @@ public class TransporteursControlleur {
     public Transporteurs recupererTousLesTransporteur(@PathVariable Long id){
         return  transporteursService.recupererTransporteurParId(id);
     }
+
+
+    @GetMapping("/recupererlestransporteurenattente")
+    public ResponseEntity<?> recupererTousLesAgriculteurEnattente(){
+        List<TransporteurAttente> transporteurAttenteList = transporteurAttenteRepository.findAll();
+        List<Long> idList = new ArrayList<>();
+        List<RetourUserEnttente> retourList = new ArrayList<>();
+        for(TransporteurAttente te: transporteurAttenteList){
+            idList.add(te.getUserid().getId());
+        }
+        List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
+
+        return ResponseEntity.ok(utilisateursList);
+    }
+
+
+    @GetMapping("/recupererlestransporteurenattenteencours")
+    public ResponseEntity<?> recupererLesAgriculteurEnattente(){
+        List<TransporteurAttente> transporteurAttenteList = transporteurAttenteRepository.findByStatusdemandeOrderByDatedemandeAsc(EstatusDemande.ENCOURS);
+        List<Long> idList = new ArrayList<>();
+        List<RetourUserEnttente> retourList = new ArrayList<>();
+        for(TransporteurAttente te: transporteurAttenteList){
+            idList.add(te.getUserid().getId());
+        }
+        List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
+        System.out.println(utilisateursRepository.findAllById(idList));
+        return ResponseEntity.ok(utilisateursList);
+
+    }
+
+    @GetMapping("/recupererlestransporteurenattenterejeter")
+    public ResponseEntity<?> recupererLesAgriculteurEnattenteRejeter(){
+        List<TransporteurAttente> transporteurAttenteList = transporteurAttenteRepository.findByStatusdemandeOrderByDatedemandeAsc(EstatusDemande.REJETER);
+        List<Long> idList = new ArrayList<>();
+        List<RetourUserEnttente> retourList = new ArrayList<>();
+        for(TransporteurAttente te: transporteurAttenteList){
+            idList.add(te.getUserid().getId());
+        }
+        List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
+
+        return ResponseEntity.ok(utilisateursList);
+    }
+
+/*
+    @GetMapping("/recupererlestransporteurenattenteAccepter")
+    public ResponseEntity<?> recupererLesAgriculteurEnattenteAccepter(){
+        return ResponseEntity.ok(utilisateursRepository.findAll());
+    }
+
+ */
+
 
 }

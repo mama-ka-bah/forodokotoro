@@ -3,6 +3,7 @@ package com.foro.forordokotoro.Controlleurs;
 import com.foro.forordokotoro.Models.Cultive;
 import com.foro.forordokotoro.Models.PrevisionDunCultive;
 import com.foro.forordokotoro.Models.Previsions;
+import com.foro.forordokotoro.Models.Utilisateurs;
 import com.foro.forordokotoro.Repository.CultiveRepository;
 import com.foro.forordokotoro.Repository.PrevisionDuncultiveRepository;
 import com.foro.forordokotoro.Repository.PrevisionsRepository;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("previsions")
-@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
+@CrossOrigin("*")
 public class PrevisionsControlleur {
     @Autowired
     PrevisionService previsionService;
@@ -33,8 +34,9 @@ public class PrevisionsControlleur {
     @Autowired
     PrevisionsRepository previsionsRepository;
 
-    @PostMapping("/ajouter")
-    public ResponseEntity<?> ajouterPrevisions(@RequestBody Previsions previsions){
+    @PostMapping("/ajouter/{user}")
+    public ResponseEntity<?> ajouterPrevisions(@RequestBody Previsions previsions, @PathVariable Utilisateurs user){
+        previsions.setCreateur(user);
         return previsionService.ajouterPrevisions(previsions);
     }
     @PatchMapping("/modifier/{idprevision}")

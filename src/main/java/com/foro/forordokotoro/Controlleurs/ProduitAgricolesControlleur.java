@@ -2,6 +2,7 @@ package com.foro.forordokotoro.Controlleurs;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.ProduitAgricole;
+import com.foro.forordokotoro.Models.Utilisateurs;
 import com.foro.forordokotoro.services.ProduitAgricoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +16,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/produitagricoles")
-@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
+@CrossOrigin("*")
 public class ProduitAgricolesControlleur {
 
     @Autowired
     ProduitAgricoleService produitAgricoleService;
 
-    @PostMapping("/ajouter")
+    @PostMapping("/ajouter/{user}")
     public ResponseEntity<?> ajouterProduitAgricole(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
-                                                    @Valid  @RequestParam(value = "produitreçu") String produitreçu) throws IOException {
+                                                    @Valid  @RequestParam(value = "produitreçu") String produitreçu, @PathVariable Utilisateurs user) throws IOException {
 
         //chemin de stockage des images
         String type = "produitsAgricoles";
@@ -32,7 +33,7 @@ public class ProduitAgricolesControlleur {
         String nomfile = StringUtils.cleanPath(file.getOriginalFilename());
 
         ProduitAgricole produitAgricole = new JsonMapper().readValue(produitreçu, ProduitAgricole.class);
-
+        produitAgricole.setCreateur(user);
         return produitAgricoleService.ajouterProduitAgricole(produitAgricole, type, nomfile, file);
     }
 
