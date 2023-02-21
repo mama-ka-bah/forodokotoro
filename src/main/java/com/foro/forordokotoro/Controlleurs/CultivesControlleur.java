@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("cultive")
-@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
+@CrossOrigin("*")
 public class CultivesControlleur {
 
     @Autowired
@@ -122,6 +122,11 @@ public class CultivesControlleur {
         }
 
         return cultivesService.mettreFincultive(idCultive, cultive);
+    }
+
+    @GetMapping("/recupererlescultive")
+    public ResponseEntity<?> recupererLesCultive(){
+        return  ResponseEntity.ok(cultiveRepository.findAll());
     }
 
 

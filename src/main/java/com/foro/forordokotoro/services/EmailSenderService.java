@@ -17,14 +17,17 @@ public class EmailSenderService {
                                 String body
     ) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("kmahamadou858@gmail.com");
+        message.setFrom("forodokotoro@gmail.com");
         message.setTo(toEmail);
         message.setText(body);
         message.setSubject(subject);
 
-        mailSender.send(message);
-        System.out.println("Mail envoyer avec succès...");
-
+        try{
+            mailSender.send(message);
+            System.out.println("Mail envoyer avec succès...");
+        }catch (Exception e){
+            System.out.println(e);
+        }
 
     }
 

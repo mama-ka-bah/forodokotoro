@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/notifications")
-@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
+@CrossOrigin("*")
 public class NotificationControlleur {
 
     @Autowired
@@ -86,6 +86,16 @@ public class NotificationControlleur {
         }catch (Exception e){}
 
         return notificationRepository.findByUseridOrderByDatenotificationDesc(utilisateurs);
+    }
+
+    @GetMapping("/recuperertouslesnotification")
+    public ResponseEntity<?> recupererLesNotification(){
+        return ResponseEntity.ok(notificationRepository.FINDALLNOTIFICATIONS());
+    }
+
+    @GetMapping("/recupererlesquatredernierenotification")
+    public ResponseEntity<?> recupererLesQuatreDerniereNotification(){
+        return ResponseEntity.ok(notificationRepository.FINDQUATRERECENTESNOTIFICATIONS());
     }
 
 

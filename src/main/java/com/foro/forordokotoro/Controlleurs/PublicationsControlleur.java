@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/publications")
-@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
+@CrossOrigin("*")
 public class PublicationsControlleur {
 
     @Autowired

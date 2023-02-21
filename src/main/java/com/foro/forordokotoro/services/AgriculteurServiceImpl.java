@@ -146,12 +146,12 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                             notificationRepository.save(notifications);
                             try {
                                 if(user.getEmail() != null){
-                                    //emailSenderService.sendSimpleEmail(user.getEmail(), "Acceptation de demande", message);
+                                    emailSenderService.sendSimpleEmail(user.getEmail(), "Acceptation de demande", message);
                                 }
                             }catch (Exception e){
                                 System.out.println(e);
                             }
-                            return ResponseEntity.ok(new Reponse(message, 1));
+                            return ResponseEntity.ok(new Reponse("Demande accepter", 1));
                         }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
             }else {
@@ -184,7 +184,8 @@ public class AgriculteurServiceImpl implements AgriculteurService{
                         notifications.setDatenotification(new Date());
                         notifications.setLu(false);
                         notificationRepository.save(notifications);
-                        return ResponseEntity.ok(new Reponse(message, 1));
+                        emailSenderService.sendSimpleEmail(user.getEmail(), "Rejet de demande", message);
+                        return ResponseEntity.ok(new Reponse("Demande rejetée", 1));
 
                     }).orElseThrow(() -> new RuntimeException("Agriculteur en attente non trouvé ! "));
         }else {

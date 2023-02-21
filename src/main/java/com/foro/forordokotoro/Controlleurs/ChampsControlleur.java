@@ -3,8 +3,10 @@ package com.foro.forordokotoro.Controlleurs;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.foro.forordokotoro.Models.Agriculteurs;
 import com.foro.forordokotoro.Models.Champ;
+import com.foro.forordokotoro.Models.Parserelle;
 import com.foro.forordokotoro.Models.Utilisateurs;
 import com.foro.forordokotoro.Repository.ChampsRepository;
+import com.foro.forordokotoro.Repository.ParserelleRepository;
 import com.foro.forordokotoro.services.AgriculteurService;
 import com.foro.forordokotoro.services.ChampServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/champs")
-@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
+@CrossOrigin("*")
 public class ChampsControlleur {
     @Autowired
     ChampServices champServices;
@@ -32,6 +34,8 @@ public class ChampsControlleur {
 
     @Autowired
     ChampsRepository champsRepository;
+    @Autowired
+    private ParserelleRepository parserelleRepository;
 
     @PostMapping("/ajouter/{idproprietaire}")
     public ResponseEntity<?> ajouterProduit(@Valid @RequestParam(value = "file") MultipartFile file,
@@ -70,6 +74,11 @@ public class ChampsControlleur {
     public List<Champ> recupererChampParProprietaire(@PathVariable Long id){
         Agriculteurs agriculteurs = agriculteurService.recupererAgriculteurPArId(id);
         return  champsRepository.findByProprietaireOrderByDatecreationDesc(agriculteurs);
+    }
+
+    @GetMapping("/recupererlesparsserelle")
+    public ResponseEntity<?> recupererLesParsserelle(){
+        return  ResponseEntity.ok(parserelleRepository.findAll());
     }
 
 }

@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/stocks")
-@CrossOrigin(origins = "http://localhost:8100", maxAge = 3600, allowCredentials="true")
+@CrossOrigin("*")
 public class StockControlleur {
 
     @Autowired
@@ -154,4 +154,15 @@ public class StockControlleur {
             return aimeStockService.ajouter(aimeStock,utilisateur, stocks);
         }
     }
+
+    @GetMapping("/recupererstockvendu")
+    public ResponseEntity<?> recupererTotalStockVendu(){
+        return ResponseEntity.ok(evolutionStockRepository.SUMSTOCKVENDU());
+    }
+
+    @GetMapping("/recupererstockrestant")
+    public ResponseEntity<?> recupererTotalStockRestant(){
+        return ResponseEntity.ok(evolutionStockRepository.SUMSTOCKRESTANT());
+    }
+
 }

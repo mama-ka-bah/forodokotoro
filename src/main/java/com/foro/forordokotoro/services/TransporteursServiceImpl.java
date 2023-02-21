@@ -135,9 +135,9 @@ public class TransporteursServiceImpl implements TransporteursService{
                             notifications.setLu(false);
                             notificationRepository.save(notifications);
                             if(user.getEmail() != null){
-                                //emailSenderService.sendSimpleEmail(user.getEmail(),"Acceptation de demande",message);
+                                emailSenderService.sendSimpleEmail(user.getEmail(),"Acceptation de demande",message);
                             }
-                            return ResponseEntity.ok(new Reponse(message, 1));
+                            return ResponseEntity.ok(new Reponse("Demande Accepter", 1));
                         }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
             }else {
@@ -171,9 +171,9 @@ public class TransporteursServiceImpl implements TransporteursService{
                             notifications.setLu(false);
                             notificationRepository.save(notifications);
                             if(user.getEmail() != null){
-                               // emailSenderService.sendSimpleEmail(user.getEmail(), notifications.getTitre(), notifications.getContenu());
+                               emailSenderService.sendSimpleEmail(user.getEmail(), notifications.getTitre(), notifications.getContenu());
                             }
-                            return ResponseEntity.ok(new Reponse(message, 1));
+                            return ResponseEntity.ok(new Reponse("Demande rejeter", 1));
 
                         }).orElseThrow(() -> new RuntimeException("Transporteur en attente non trouvé ! "));
             }else {
