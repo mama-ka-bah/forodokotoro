@@ -81,11 +81,11 @@ public class CultiveServiceImpl implements CultivesService{
             if(reponse.getStatus() == 0){
                 return ResponseEntity.ok(reponse);
             } else if (cultive.getParserelle().getStatus() == EstatusParserelle.OCCUPE) {
-                return ResponseEntity.ok(new Reponse("Cette parserelle est occupée", 0));
+                return ResponseEntity.ok(new Reponse("Cette parcelle était occupée à cette date", 0));
             }else {
 
             //si la date de de debut du semis est aujourd'hui ou avant aujoujourd'hui
-             if((cultive.getDatedebutsemis().isBefore(datejour) || cultive.getDatedebutsemis().equals(datejour)) && cultive.getDatefinsemis().isBefore(datejour) || cultive.getDatefinsemis().equals(cultive.getDatedebutsemis())){
+             //if(cultive.getDatefinsemis().equals(cultive.getDatedebutsemis())){
                 cultive.setStatus(EstatusCultive.ENCOURS);
 
                  //Utilise pour recuperer les previsions lié à la variete semé qui seront ensuite modifier pour adapter à la culture actuelle
@@ -155,10 +155,10 @@ public class CultiveServiceImpl implements CultivesService{
 
                  System.out.println("Le nombre de previson à enregistré" + toutesprevisionsDunCultive.size());
 
-                 return ResponseEntity.ok(new Reponse("Votre cultive a été créé avec le reference: "+cultive.getReference(), 1));
-            }else {
-                 return ResponseEntity.ok(new Reponse("Veuillez semer puis renseigner les informations", 0));
-             }
+                 return ResponseEntity.ok(new Reponse("Votre culture a été créé avec le reference: "+cultive.getReference(), 1));
+            //}else {
+              //   return ResponseEntity.ok(new Reponse("Veuillez semer puis renseigner les informations", 0));
+            // }
         }
     }
 
@@ -177,12 +177,12 @@ public class CultiveServiceImpl implements CultivesService{
                long ecart = ChronoUnit.DAYS.between(datejour, pc.getDateprevisionnelle());
                System.out.println("ecart "+ ecart);
                if( ecart <= 5 && ecart >= -5){
-                   String message = "Votre cultive avec le reference "+ pc.getCultive().getReference()  +" du champ " + pc.getCultive().getParserelle() + " tend vers" + pc.getLibelle();
+                   String message = "Votre culture avec le reference "+ pc.getCultive().getReference()  +" du champ " + pc.getCultive().getParserelle() + " tend vers" + pc.getLibelle();
 
                    Notifications notifications =new Notifications();
                    notifications.setLu(false);
                    notifications.setDatenotification(new Date());
-                   notifications.setContenu("message votre cultive ayant les references suivant a une activiteé qui doit etre effectué dans deux jours veuillez la realiser");
+                   notifications.setContenu("message votre culture ayant les references suivant a une activiteé qui doit etre effectué dans deux jours veuillez la realiser");
                    notifications.setTitre("Simulation");
                    notifications.setUserid(pc.getCultive().getParserelle().getChamp().getProprietaire());
                    notificationRepository.save(notifications);
@@ -256,7 +256,7 @@ public class CultiveServiceImpl implements CultivesService{
 
         Cultive lecultive  = cultiveRepository.findById(idCultive).get();
 
-        if(lecultive.getDatefinCultive() == null){
+        if(lecultive.getDatefinCultive() == null || lecultive.getStatus().equals(EstatusCultive.ENCOURS)){
             if(lesPhasesDuCunltive.size() > 0){
                 for(PhaseCultive phc : lesPhasesDuCunltive){
                     if(phc.getDatefin().isAfter(cultive.getDatefinCultive())){
@@ -266,9 +266,9 @@ public class CultiveServiceImpl implements CultivesService{
                 }
             }
 
-            return  new Reponse("Le cultive " + lecultive.getReference() +" est desormais terminé" , 1);
+            return  new Reponse("La culture " + lecultive.getReference() +" est desormais terminé" , 1);
         }else {
-            return  new Reponse("Ce cultive est déjà terminé" , 0);
+            return  new Reponse("Cette culture est déjà terminé" , 0);
         }
 
     }
@@ -314,20 +314,18 @@ public class CultiveServiceImpl implements CultivesService{
                 //on verifie uniquement des dates de semis
                 if(c.getDatefinCultive() != null){
                     if(datedebut.equals(c.getDatedebutsemis()) || datedebut.equals(c.getDatedebutsemis()) || datefin.equals(c.getDatedebutsemis()) || datefin.equals(c.getDatedebutsemis()) || datefin.equals(c.getDatefinCultive()) || datedebut.equals(c.getDatefinCultive())){
-                        return new Reponse("Ce Parserelle était occupé dans cet intervalle", 0);
+                        return new Reponse("Cette parcelle était occupé dans cet intervalle", 0);
                     }
                     //dans le cas ou le cultive n'est pas termine on se concentre uniquement sur les dates de semis
                     else if(datedebut.isAfter(c.getDatedebutsemis()) && datedebut.isBefore(c.getDatefinCultive()) || datefin.isAfter(c.getDatedebutsemis()) && datefin.isBefore(c.getDatefinCultive())){  //|| datedebut.equals(c.getDatedebutsemis()) ||  datedebut.equals(c.getDatedebutsemis())
-                        return new Reponse("Ce Parserelle était occupé dans cet intervalle", 0);
+                        return new Reponse("Cette parcelle était occupé dans cet intervalle", 0);
                     }
                     else if (datedebut.isAfter(c.getDatedebutsemis()) && datedebut.isBefore(c.getDatefinsemis()) || datefin.isAfter(c.getDatedebutsemis()) && datefin.isBefore(c.getDatefinsemis()) ) { //|| datedebut.equals(c.getDatedebutsemis()) ||  datedebut.equals(c.getDatefinsemis())
-                        return new Reponse("Cet Parserelle était occupée dans cet intervalle", 0);
+                        return new Reponse("Cette parcelle était occupée dans cet intervalle", 0);
                     }
                     }
             }
         }
-
-
 
         return new Reponse("ok", 1);
     }

@@ -90,7 +90,7 @@ public class TransporteursControlleur {
 
     @GetMapping("/RecupererTousTransporteur")
     public List<Transporteurs> recupererTransporteurDetail(){
-        return  transporteurRepository.findByEtat(true);
+        return  transporteurRepository.findByDisponibilite(true);
     }
 
     @GetMapping("/detailTransprteur/{id}")

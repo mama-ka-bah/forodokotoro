@@ -152,6 +152,4 @@ public class AgriculteurControlleur {
         return ResponseEntity.ok(agriculteursRepository.findAll());
     }
 
-
-
 }

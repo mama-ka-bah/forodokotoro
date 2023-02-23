@@ -24,19 +24,14 @@ import java.util.List;
 @RequestMapping("cultive")
 @CrossOrigin("*")
 public class CultivesControlleur {
-
     @Autowired
     CultivesService cultivesService;
-
     @Autowired
     ChampServices champServices;
-
     @Autowired
     VarietesServices varietesServices;
-
     @Autowired
     ParserelleRepository parserelleRepository;
-
     @Autowired
     CultiveRepository cultiveRepository;
 
@@ -45,11 +40,12 @@ public class CultivesControlleur {
         cultive.setParserelle(parserelleRepository.findById(parserelleid).get());
         cultive.setVarietes(varietesServices.recupererVarieteParId(varieteid));
         if(cultive.getDatedebutsemis().isAfter(cultive.getDatefinsemis())){
-            return ResponseEntity.ok(new Reponse("La date de debut ne peut pas etre superieur à la date de fin", 1));
-        }else {
+            return ResponseEntity.ok(new Reponse("La date de debut ne peut pas etre superieur à la date de fin", 0));
+        } else if (cultive.getDatedebutsemis().isAfter(LocalDate.now()) || cultive.getDatefinsemis().isAfter(LocalDate.now())) {
+            return ResponseEntity.ok(new Reponse("Les dates ne peuvent pas être superieur à la date du jour", 0));
+        } else {
             return cultivesService.ajouterCultive(cultive);
         }
-
     }
 
     @PatchMapping("/modifier/{idcultive}")
@@ -62,11 +58,9 @@ public class CultivesControlleur {
         Cultive  cultive = new Cultive();
         cultive.setStatus(EstatusCultive.ENCOURS);
         cultive.setDatefinCultive(null);
-
-            if(cultiveRepository.findById(idCultive).get().getParserelle().getStatus() == EstatusParserelle.OCCUPE){
-                return ResponseEntity.ok(new Reponse("Cette parserelle est occupée veuillez d'abord liberer", 0));
-            }
-
+        if(cultiveRepository.findById(idCultive).get().getParserelle().getStatus() == EstatusParserelle.OCCUPE){
+            return ResponseEntity.ok(new Reponse("Cette parcelle est occupée veuillez d'abord liberer", 0));
+        }
         return cultivesService.modifierCultive(cultive, idCultive);
     }
 
@@ -120,7 +114,6 @@ public class CultivesControlleur {
         } else if (cultive1.getDatedebutsemis().isAfter(datefinCultive) || cultive1.getDatefinsemis().isAfter(datefinCultive)) {
             return ResponseEntity.ok(new Reponse("La date de fin ne peut pas etre dans l'intervalle de semis", 0));
         }
-
         return cultivesService.mettreFincultive(idCultive, cultive);
     }
 
@@ -128,6 +121,4 @@ public class CultivesControlleur {
     public ResponseEntity<?> recupererLesCultive(){
         return  ResponseEntity.ok(cultiveRepository.findAll());
     }
-
-
 }
