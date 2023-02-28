@@ -118,13 +118,14 @@ public class AuthController {
         .collect(Collectors.toList());
 
     log.info("conexion controlleur");
+    System.err.println("roles: " + roles);
 
     Utilisateurs user =  utilisateursRepository.findByUsername(utilisateursDetails.getUsername()).get();
 
-    if(roles.contains(ERole.ROLE_TRANSPORTEUR)){
+    if(roles.contains("ROLE_TRANSPORTEUR")){
 
-      Transporteurs transporteurs = transporteurRepository.findByUsername(utilisateursDetails.getUsername());
-System.out.print("je suis transporteur");
+      Transporteurs transporteurs = transporteurRepository.findById(utilisateursDetails.getId()).get();
+System.err.println("je suis transporteur "+ transporteurs);
       //on retourne une reponse, contenant l'id username, e-mail et le role du collaborateur
       return ResponseEntity.ok(new JwtResponse(jwt,
               utilisateursDetails.getId(),
@@ -137,12 +138,13 @@ System.out.print("je suis transporteur");
               transporteurs.getDisponibilite(),
               transporteurs.getNumeroplaque(),
               user.getEtat(),
-              user.getSesouvenir()
-
+              user.getSesouvenir(),
+              transporteurs.getNombrecontact(),
+              transporteurs.getReservation()
       ));
 
     } else {
-      System.out.print("je suis autre");
+      System.err.println("je suis autre");
 
       //on retourne une reponse, contenant l'id username, e-mail et le role du collaborateur
       return ResponseEntity.ok(new JwtResponse(jwt,

@@ -2,10 +2,7 @@ package com.foro.forordokotoro.services;
 
 import com.foro.forordokotoro.Models.*;
 import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
-import com.foro.forordokotoro.Repository.NotificationRepository;
-import com.foro.forordokotoro.Repository.TransporteurEnAttenteRepository;
-import com.foro.forordokotoro.Repository.TransporteurRepository;
-import com.foro.forordokotoro.Repository.UtilisateursRepository;
+import com.foro.forordokotoro.Repository.*;
 import com.foro.forordokotoro.Utils.Configurations.ConfigImages;
 import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +34,9 @@ public class TransporteursServiceImpl implements TransporteursService{
     @Autowired
     EmailSenderService emailSenderService;
 
+    @Autowired
+    ReservationRepository reservationRepository;
+
 
     public void demandeTransporteur(Long id, TransporteurAttente transporteurAttente, String url, String nomfile, MultipartFile file) throws IOException {
 
@@ -65,9 +65,7 @@ public class TransporteursServiceImpl implements TransporteursService{
 
         if(utilisateursRepository.existsById(id)){
             Utilisateurs userExistant = utilisateursRepository.findById(id).get();
-            Notifications notifications = new Notifications();
 
-            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa " +userExistant);
             if(transporteurEnAttenteRepository.findByUserid(userExistant) == null){
                 demandeTransporteur(id, transporteurs, type, nomfile, file);
 
@@ -101,7 +99,6 @@ public class TransporteursServiceImpl implements TransporteursService{
             }else {
                 return ResponseEntity.ok(new Reponse("Vous êtes déjà Transporteur", 0));
             }
-
         }else {
             return ResponseEntity.ok(new Reponse("Cet utiisateur n'existe pas", 0));
 
@@ -126,7 +123,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                             transporteurEnAttenteRepository.save(te);
 
                             utilisateursRepository.DEVENIRTRANSPORTEURDEPROFESSION(user.getId());
-                            transporteurRepository.DEVENIRTRANSPORTEUR(user.getId(), transporteurAttente.getDisponibilite(), transporteurAttente.getPhotopermis(), transporteurAttente.getNumeroplaque());
+                            transporteurRepository.DEVENIRTRANSPORTEUR(user.getId(), transporteurAttente.getDisponibilite(), transporteurAttente.getPhotopermis(), transporteurAttente.getNumeroplaque(), 0L);
                             String message = "Votre demande a étée accepter, vous êtes desormais transporteur";
                             utilisateursRepository.DONNERROLEAUSER(user.getId(), 5L);
                             notifications.setContenu(message);
@@ -203,8 +200,12 @@ public class TransporteursServiceImpl implements TransporteursService{
                         t.setPhotopermis(transporteurs.getPhotopermis());
                     if(transporteurs.getDisponibilite() != null)
                         t.setDisponibilite(transporteurs.getDisponibilite());
+                    if(transporteurs.getIdreserveur() != null)
+                        t.setIdreserveur(transporteurs.getIdreserveur());
                     if(transporteurs.getNombrecontact() != null)
-                        t.setNombrecontact(transporteurs.getNombrecontact());
+                        t.setNombrecontact(t.getNombrecontact());
+                    if(transporteurs.getReservation() != null)
+                        t.setReservation(t.getReservation());
                     if(transporteurs.getEtat() != null)
                     t.setEtat(transporteurs.getEtat());
                     transporteurRepository.save(t);
@@ -219,5 +220,27 @@ public class TransporteursServiceImpl implements TransporteursService{
         return transporteurRepository.findById(id).get();
     }
 
+    @Override
+    public ResponseEntity<?> contacter(Transporteurs transporteurs, Utilisateurs utilisateurs) {
+        Notifications notifications = new Notifications();
+        String message = "Vous avez été contacter par " + utilisateurs.getNomcomplet() + " à la date du " + LocalDate.now();
+        notifications.setTitre("Contact");
+        notifications.setContenu(message);
+        notifications.setDatenotification(new Date());
+        notifications.setUserid(transporteurs);
+        notifications.setLu(false);
+        notificationRepository.save(notifications);
+        transporteurs.setNombrecontact(transporteurs.getNombrecontact() +1);
+        transporteurs.setReservation(true);
+        transporteurs.setIdreserveur(utilisateurs.getId());
+        modifierTransporteur(transporteurs.getId(), transporteurs);
+        emailSenderService.sendSimpleEmail(transporteurs.getEmail(), "Contact", message);
+        return ResponseEntity.ok(new Reponse(transporteurs.getNomcomplet() + " a été reservé avec succès", 1));
+    }
+
+    @Override
+    public ResponseEntity<?> accepterReservation(Long id , Transporteurs transporteurs) {
+        return modifierTransporteur(id, transporteurs);
+    }
 
 }

@@ -1,11 +1,9 @@
 package com.foro.forordokotoro.Controlleurs;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.foro.forordokotoro.Models.AgricuteurAttente;
+import com.foro.forordokotoro.Models.*;
 import com.foro.forordokotoro.Models.Enumerations.EstatusDemande;
-import com.foro.forordokotoro.Models.TransporteurAttente;
-import com.foro.forordokotoro.Models.Transporteurs;
-import com.foro.forordokotoro.Models.Utilisateurs;
+import com.foro.forordokotoro.Repository.ReservationRepository;
 import com.foro.forordokotoro.Repository.TransporteurEnAttenteRepository;
 import com.foro.forordokotoro.Repository.TransporteurRepository;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
@@ -31,7 +29,6 @@ import java.util.List;
 public class TransporteursControlleur {
     @Autowired
     TransporteursService transporteursService;
-
     @Autowired
     TransporteurRepository transporteurRepository;
 
@@ -40,6 +37,9 @@ public class TransporteursControlleur {
 
     @Autowired
     TransporteurEnAttenteRepository transporteurAttenteRepository;
+
+    @Autowired
+    ReservationRepository reservationRepository;
 
     @PostMapping("/devenirtransporteur/{id}")
     public ResponseEntity<?> devenirTransporteur(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
@@ -107,9 +107,13 @@ public class TransporteursControlleur {
         for(TransporteurAttente te: transporteurAttenteList){
             idList.add(te.getUserid().getId());
         }
-        List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
+//        List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
+//
+//        return ResponseEntity.ok(utilisateursList);
+        List<Transporteurs> transporteursList = transporteurRepository.findAllById(idList);
 
-        return ResponseEntity.ok(utilisateursList);
+        System.out.println(utilisateursRepository.findAllById(idList));
+        return ResponseEntity.ok(transporteursList);
     }
 
 
@@ -122,7 +126,9 @@ public class TransporteursControlleur {
             idList.add(te.getUserid().getId());
         }
         List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
-        System.out.println(utilisateursRepository.findAllById(idList));
+
+        List<Transporteurs> transporteursList = transporteurRepository.findAllById(idList);
+
         return ResponseEntity.ok(utilisateursList);
 
     }
@@ -138,15 +144,22 @@ public class TransporteursControlleur {
         List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
 
         return ResponseEntity.ok(utilisateursList);
+//        List<Transporteurs> transporteursList = transporteurRepository.findAllById(idList);
+
+//        System.out.println(utilisateursRepository.findAllById(idList));
+//        return ResponseEntity.ok(transporteursList);
     }
 
-/*
-    @GetMapping("/recupererlestransporteurenattenteAccepter")
-    public ResponseEntity<?> recupererLesAgriculteurEnattenteAccepter(){
-        return ResponseEntity.ok(utilisateursRepository.findAll());
+    @PostMapping("/contactertransporteur/{transporteur}/{utilisateur}")
+    public ResponseEntity<?> contactertransporteur(@PathVariable Transporteurs transporteur, @PathVariable Utilisateurs utilisateur){
+        return ResponseEntity.ok(transporteursService.contacter(transporteur, utilisateur));
     }
 
- */
-
+    @PostMapping("/acceptereservation/{transporteurId}")
+    public ResponseEntity<?> acceptereRervation(@PathVariable Long transporteurId){
+        Transporteurs transporteurs = transporteurRepository.findById(transporteurId).get();
+        transporteurs.setDisponibilite(false);
+        return ResponseEntity.ok(transporteursService.accepterReservation(transporteurId, transporteurs));
+    }
 
 }

@@ -70,8 +70,6 @@ public class CultiveServiceImpl implements CultivesService{
 
         * * */
 
-
-
         String reference = cultive.getParserelle().getNom().trim() + cultive.getDatedebutsemis().getMonthValue() + cultive.getDatedebutsemis().getDayOfMonth() + cultive.getDatefinsemis().getMonthValue() + cultive.getDatefinsemis().getDayOfMonth() + cultive.getDatefinsemis().getYear() + cultive.getParserelle().getId();
         cultive.setReference(reference);
 
@@ -177,16 +175,15 @@ public class CultiveServiceImpl implements CultivesService{
                long ecart = ChronoUnit.DAYS.between(datejour, pc.getDateprevisionnelle());
                System.out.println("ecart "+ ecart);
                if( ecart <= 5 && ecart >= -5){
-                   String message = "Votre culture avec le reference "+ pc.getCultive().getReference()  +" du champ " + pc.getCultive().getParserelle() + " tend vers" + pc.getLibelle();
+                   String message = "Votre culture avec le reference \""+ pc.getCultive().getReference()  +"\" de la parcelle \"" + pc.getCultive().getParserelle().getNom() + "\" du champ \"" + pc.getCultive().getParserelle().getChamp().getNom() + "\" tend vers" + pc.getLibelle();
 
                    Notifications notifications =new Notifications();
                    notifications.setLu(false);
                    notifications.setDatenotification(new Date());
-                   notifications.setContenu("message votre culture ayant les references suivant a une activiteé qui doit etre effectué dans deux jours veuillez la realiser");
+                   notifications.setContenu("Votre culture ayant les references suivant a une activiteé qui doit etre effectué dans deux jours veuillez la realiser");
                    notifications.setTitre("Simulation");
                    notifications.setUserid(pc.getCultive().getParserelle().getChamp().getProprietaire());
                    notificationRepository.save(notifications);
-                   notificationRepository.save(new Notifications());
                    emailSenderService.sendSimpleEmail(pc.getCultive().getParserelle().getChamp().getProprietaire().getEmail(), "Prevision", message);
                }
            }
@@ -221,6 +218,19 @@ public class CultiveServiceImpl implements CultivesService{
                     return ResponseEntity.ok(new Reponse("Mise à jour reçue", 1));
     }).orElseThrow(() -> new RuntimeException("Champ non trouvé ! "));
     }
+
+    @Override
+    public ResponseEntity<?> annulerfinCultive(Cultive cultive, Long id) {
+        return cultiveRepository.findById(id)
+                .map(c-> {
+                        c.setDatefinCultive(cultive.getDatefinCultive());
+                        c.setStatus(cultive.getStatus());
+                    c.setRecolterealise(0.0);
+                    cultiveRepository.save(c);
+                    return ResponseEntity.ok(new Reponse("Mise à jour reçue", 1));
+                }).orElseThrow(() -> new RuntimeException("Champ non trouvé ! "));
+    }
+
 
     @Override
     public List<Cultive> recupererCultiveDunchamp(Long parserelleid) {

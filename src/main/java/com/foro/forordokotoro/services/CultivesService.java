@@ -10,6 +10,7 @@ import java.util.List;
 public interface CultivesService {
     ResponseEntity<?> ajouterCultive(Cultive cultive);
     ResponseEntity<?> modifierCultive(Cultive cultive, Long id);
+    ResponseEntity<?> annulerfinCultive(Cultive cultive, Long id);
     List<Cultive> recupererCultiveDunchamp(Long idChamp);
     List<Cultive> recupererTousLesCultiveActive();
     Cultive recupererCultiveDunChampEnfonctionDateDebut(LocalDate datedebut, Long champid);

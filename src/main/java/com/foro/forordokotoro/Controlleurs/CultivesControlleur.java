@@ -61,7 +61,7 @@ public class CultivesControlleur {
         if(cultiveRepository.findById(idCultive).get().getParserelle().getStatus() == EstatusParserelle.OCCUPE){
             return ResponseEntity.ok(new Reponse("Cette parcelle est occupée veuillez d'abord liberer", 0));
         }
-        return cultivesService.modifierCultive(cultive, idCultive);
+        return cultivesService.annulerfinCultive(cultive, idCultive);
     }
 
     @GetMapping("/cultivedunchamp/{idchamp}")
