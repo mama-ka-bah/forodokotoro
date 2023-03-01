@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class TransporteursServiceImpl implements TransporteursService{
@@ -224,7 +225,7 @@ public class TransporteursServiceImpl implements TransporteursService{
     public ResponseEntity<?> contacter(Transporteurs transporteurs, Utilisateurs utilisateurs) {
         Notifications notifications = new Notifications();
         String message = "Vous avez été contacter par " + utilisateurs.getNomcomplet() + " à la date du " + LocalDate.now();
-        notifications.setTitre("Contact");
+        notifications.setTitre("Reservation");
         notifications.setContenu(message);
         notifications.setDatenotification(new Date());
         notifications.setUserid(transporteurs);
@@ -234,13 +235,85 @@ public class TransporteursServiceImpl implements TransporteursService{
         transporteurs.setReservation(true);
         transporteurs.setIdreserveur(utilisateurs.getId());
         modifierTransporteur(transporteurs.getId(), transporteurs);
-        emailSenderService.sendSimpleEmail(transporteurs.getEmail(), "Contact", message);
+
+        reservationRepository.save(new Reservation(utilisateurs, new Date(), EstatusDemande.ENCOURS, transporteurs));
+
+        emailSenderService.sendSimpleEmail(transporteurs.getEmail(), "Reservation", message);
         return ResponseEntity.ok(new Reponse(transporteurs.getNomcomplet() + " a été reservé avec succès", 1));
     }
 
+
     @Override
-    public ResponseEntity<?> accepterReservation(Long id , Transporteurs transporteurs) {
-        return modifierTransporteur(id, transporteurs);
+    public Reponse modifierReservation(Long id, Reservation reservation) {
+        return reservationRepository.findById(id)
+                .map(r-> {
+                    if(reservation.getStatus() != null)
+                        r.setStatus(reservation.getStatus());
+
+                    reservationRepository.save(r);
+
+                    return new Reponse("Modification reçu", 1);
+
+                }).orElseThrow(() -> new RuntimeException("Reservation en attente non trouvé ! "));
     }
+
+    @Override
+    public ResponseEntity<?> accepterRerservation(Reservation reservation) {
+
+        List<Reservation> reservationsEncours = reservationRepository.findByStatusAndTransporteur(EstatusDemande.ENCOURS, reservation.getTransporteur());
+
+        for(Reservation r: reservationsEncours){
+            Reservation rTmp = new Reservation();
+            rTmp.setStatus(EstatusDemande.ENATTENTE);
+            modifierReservation(r.getId(), rTmp);
+        }
+
+        Transporteurs transporteurs = new Transporteurs();
+        transporteurs.setDisponibilite(false);
+
+        modifierTransporteur(reservation.getTransporteur().getId(), transporteurs);
+
+        reservation.setStatus(EstatusDemande.ACCEPTER);
+        if(modifierReservation(reservation.getId(), reservation).getStatus() == 1){
+            return ResponseEntity.ok(new Reponse("Reservation acceptée", 1));
+        }else {
+            return ResponseEntity.ok(new Reponse("Echec", 0));
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<?> rejeterRerservation(Reservation reservation) {
+        reservation.setStatus(EstatusDemande.REJETER);
+
+        if(modifierReservation(reservation.getId(), reservation).getStatus() == 1){
+            return ResponseEntity.ok(new Reponse("Reservation rejetée avec succès", 1));
+        }else {
+            return ResponseEntity.ok(new Reponse("Echec", 0));
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<?> mettrefinAUneRerservation(Transporteurs transporteurs, Reservation reservation) {
+
+        List<Reservation> reservationsEncours = reservationRepository.findByStatusAndTransporteur(EstatusDemande.ENATTENTE, reservation.getTransporteur());
+
+        for(Reservation r: reservationsEncours){
+            Reservation rTmp = new Reservation();
+            rTmp.setStatus(EstatusDemande.ENCOURS);
+            modifierReservation(r.getId(), rTmp);
+        }
+
+        reservation.setStatus(EstatusDemande.TERMINER);
+        transporteurs.setDisponibilite(true);
+        modifierTransporteur(transporteurs.getId(), transporteurs);
+        if(modifierReservation(reservation.getId(), reservation).getStatus() == 1){
+            return ResponseEntity.ok(new Reponse("Reservation terminée", 1));
+        } else {
+            return ResponseEntity.ok(new Reponse("Echec", 0));
+        }
+    }
+
 
 }

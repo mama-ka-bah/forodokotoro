@@ -1,9 +1,7 @@
 package com.foro.forordokotoro.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -11,11 +9,14 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
-@Data
+
 @Entity
 @DiscriminatorValue("T")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class Transporteurs extends Utilisateurs{
 
     private Boolean disponibilite;
@@ -33,9 +34,9 @@ public class Transporteurs extends Utilisateurs{
     @Size(max = 25)
     private String numeroplaque;
 
-    @OneToMany(mappedBy = "reserveur")
+    @JsonIgnore
+    @OneToMany(mappedBy = "transporteur")
     private List<Reservation> listreserveur;
-
 
     public Transporteurs(String username, String email, String password, String adresse, String nomcomplet, String photo, Boolean disponibilite, String photopermis, String numeroplaque) {
         super(username, email, password, adresse, nomcomplet, photo);

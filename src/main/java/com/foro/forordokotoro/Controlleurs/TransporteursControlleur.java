@@ -150,16 +150,53 @@ public class TransporteursControlleur {
 //        return ResponseEntity.ok(transporteursList);
     }
 
-    @PostMapping("/contactertransporteur/{transporteur}/{utilisateur}")
+    @GetMapping("/contactertransporteur/{transporteur}/{utilisateur}")
     public ResponseEntity<?> contactertransporteur(@PathVariable Transporteurs transporteur, @PathVariable Utilisateurs utilisateur){
-        return ResponseEntity.ok(transporteursService.contacter(transporteur, utilisateur));
+        return transporteursService.contacter(transporteur, utilisateur);
     }
 
-    @PostMapping("/acceptereservation/{transporteurId}")
-    public ResponseEntity<?> acceptereRervation(@PathVariable Long transporteurId){
-        Transporteurs transporteurs = transporteurRepository.findById(transporteurId).get();
-        transporteurs.setDisponibilite(false);
-        return ResponseEntity.ok(transporteursService.accepterReservation(transporteurId, transporteurs));
+    @PostMapping("/acceptereservation/{reservation}")
+    public ResponseEntity<?> acceptereRervation(@PathVariable Reservation reservation){
+        return transporteursService.accepterRerservation(reservation);
+    }
+
+    @PostMapping("/rejetereservation/{reservation}")
+    public ResponseEntity<?> rejetereRervation(@PathVariable Reservation reservation){
+        return transporteursService.rejeterRerservation(reservation);
+    }
+
+    @PostMapping("/mettrefinreservation/{reservation}/{transporteur}")
+    public ResponseEntity<?> mettreFinReservation(@PathVariable Reservation reservation, @PathVariable Transporteurs transporteur){
+        return transporteursService.mettrefinAUneRerservation(transporteur, reservation);
+    }
+    @GetMapping("/recupererlesreservationencoursduntransporteur/{transporteur}")
+    public ResponseEntity<?> recupererLesReservationEncoursDunTransporteur(@PathVariable Transporteurs transporteur){
+        return ResponseEntity.ok(transporteur.getListreserveur());
+    }
+
+    @GetMapping("/reservationacceptetransporteur/{transporteur}")
+    public ResponseEntity<?> reservationacceptetransporteur(@PathVariable Transporteurs transporteur){
+        return ResponseEntity.ok(reservationRepository.findByStatus(EstatusDemande.ACCEPTER));
+    }
+
+    @GetMapping("/reservationenattentetransporteur/{transporteur}")
+    public ResponseEntity<?> reservationenattentetransporteur(@PathVariable Transporteurs transporteur){
+        return ResponseEntity.ok(reservationRepository.findByStatus(EstatusDemande.ENATTENTE));
+    }
+
+    @GetMapping("/reservationenrejetertransporteur/{transporteur}")
+    public ResponseEntity<?> reservationenrejetertransporteur(@PathVariable Transporteurs transporteur){
+        return ResponseEntity.ok(reservationRepository.findByStatus(EstatusDemande.REJETER));
+    }
+
+    @GetMapping("/reservationenreencoursansporteur/{transporteur}")
+    public ResponseEntity<?> reservationenreencoursansporteur(@PathVariable Transporteurs transporteur){
+        return ResponseEntity.ok(reservationRepository.findByStatus(EstatusDemande.ENCOURS));
+    }
+
+    @GetMapping("/reservationenterminertransporteur/{transporteur}")
+    public ResponseEntity<?> reservationenterminertransporteur(@PathVariable Transporteurs transporteur){
+        return ResponseEntity.ok(reservationRepository.findByStatus(EstatusDemande.TERMINER));
     }
 
 }

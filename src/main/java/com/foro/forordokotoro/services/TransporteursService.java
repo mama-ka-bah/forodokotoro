@@ -1,8 +1,10 @@
 package com.foro.forordokotoro.services;
 
+import com.foro.forordokotoro.Models.Reservation;
 import com.foro.forordokotoro.Models.TransporteurAttente;
 import com.foro.forordokotoro.Models.Transporteurs;
 import com.foro.forordokotoro.Models.Utilisateurs;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,5 +27,13 @@ public interface TransporteursService {
 
     ResponseEntity<?> contacter(Transporteurs transporteurs, Utilisateurs utilisateurs);
 
-    ResponseEntity<?> accepterReservation(Long id, Transporteurs transporteurs);
+//    ResponseEntity<?> accepterReservation(Long id, Transporteurs transporteurs);
+
+    Reponse modifierReservation(Long id, Reservation reservation);
+
+    ResponseEntity<?> accepterRerservation(Reservation reservation);
+
+    ResponseEntity<?> rejeterRerservation(Reservation reservation);
+
+    ResponseEntity<?> mettrefinAUneRerservation(Transporteurs transporteurs, Reservation reservation);
 }
