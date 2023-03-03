@@ -139,8 +139,7 @@ System.err.println("je suis transporteur "+ transporteurs);
               transporteurs.getNumeroplaque(),
               user.getEtat(),
               user.getSesouvenir(),
-              transporteurs.getNombrecontact(),
-              transporteurs.getReservation()
+              transporteurs.getNombrecontact()
       ));
 
     } else {

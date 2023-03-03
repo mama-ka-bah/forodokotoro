@@ -1,6 +1,7 @@
 package com.foro.forordokotoro.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

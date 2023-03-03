@@ -57,7 +57,7 @@ public class TransporteursServiceImpl implements TransporteursService{
         notifications.setLu(false);
         notificationRepository.save(notifications);
 
-        //emailSenderService.sendSimpleEmail(userExistant.getEmail(), notifications.getTitre(), notifications.getContenu());
+        emailSenderService.sendSimpleEmail(userExistant.getEmail(), notifications.getTitre(), notifications.getContenu());
     }
 
 
@@ -201,12 +201,6 @@ public class TransporteursServiceImpl implements TransporteursService{
                         t.setPhotopermis(transporteurs.getPhotopermis());
                     if(transporteurs.getDisponibilite() != null)
                         t.setDisponibilite(transporteurs.getDisponibilite());
-                    if(transporteurs.getIdreserveur() != null)
-                        t.setIdreserveur(transporteurs.getIdreserveur());
-                    if(transporteurs.getNombrecontact() != null)
-                        t.setNombrecontact(t.getNombrecontact());
-                    if(transporteurs.getReservation() != null)
-                        t.setReservation(t.getReservation());
                     if(transporteurs.getEtat() != null)
                     t.setEtat(transporteurs.getEtat());
                     transporteurRepository.save(t);
@@ -232,8 +226,7 @@ public class TransporteursServiceImpl implements TransporteursService{
         notifications.setLu(false);
         notificationRepository.save(notifications);
         transporteurs.setNombrecontact(transporteurs.getNombrecontact() +1);
-        transporteurs.setReservation(true);
-        transporteurs.setIdreserveur(utilisateurs.getId());
+
         modifierTransporteur(transporteurs.getId(), transporteurs);
 
         reservationRepository.save(new Reservation(utilisateurs, new Date(), EstatusDemande.ENCOURS, transporteurs));

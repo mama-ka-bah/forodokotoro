@@ -8,7 +8,9 @@ import com.foro.forordokotoro.Repository.TransporteurEnAttenteRepository;
 import com.foro.forordokotoro.Repository.TransporteurRepository;
 import com.foro.forordokotoro.Repository.UtilisateursRepository;
 import com.foro.forordokotoro.Utils.request.DemandeTransporteur;
+import com.foro.forordokotoro.Utils.response.Reponse;
 import com.foro.forordokotoro.Utils.response.RetourUserEnttente;
+import com.foro.forordokotoro.Utils.response.TransEnAttenteRetour;
 import com.foro.forordokotoro.services.TransporteursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,9 @@ public class TransporteursControlleur {
 
     @Autowired
     ReservationRepository reservationRepository;
+
+    @Autowired
+    TransporteurEnAttenteRepository transporteurEnAttenteRepository;
 
     @PostMapping("/devenirtransporteur/{id}")
     public ResponseEntity<?> devenirTransporteur(@Valid @RequestParam(value = "file", required = true) MultipartFile file,
@@ -110,9 +115,30 @@ public class TransporteursControlleur {
 //        List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
 //
 //        return ResponseEntity.ok(utilisateursList);
-        List<Transporteurs> transporteursList = transporteurRepository.findAllById(idList);
+//        List<Transporteurs> transporteursList = transporteurRepository.findAllById(idList);
+//        System.out.println(utilisateursRepository.findAllById(idList));
 
-        System.out.println(utilisateursRepository.findAllById(idList));
+        List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
+        List<TransEnAttenteRetour> transporteursList = new ArrayList<>();
+
+        for (Utilisateurs u: utilisateursList){
+            TransporteurAttente tmp = new TransporteurAttente();
+
+            tmp = transporteurEnAttenteRepository.findByUserid(u);
+
+            Transporteurs utmp = new Transporteurs();
+
+            TransEnAttenteRetour retour = new TransEnAttenteRetour();
+
+            retour.setPhoto(u.getPhoto());
+            retour.setNomcomplet(u.getNomcomplet());
+            retour.setAdresse(u.getAdresse());
+            retour.setUsername(u.getUsername());
+            retour.setPhotopermis(tmp.getPhotopermis());
+            retour.setStatus(tmp.getStatusdemande());
+
+            transporteursList.add(retour);
+        }
         return ResponseEntity.ok(transporteursList);
     }
 
@@ -122,15 +148,34 @@ public class TransporteursControlleur {
         List<TransporteurAttente> transporteurAttenteList = transporteurAttenteRepository.findByStatusdemandeOrderByDatedemandeAsc(EstatusDemande.ENCOURS);
         List<Long> idList = new ArrayList<>();
         List<RetourUserEnttente> retourList = new ArrayList<>();
+
         for(TransporteurAttente te: transporteurAttenteList){
             idList.add(te.getUserid().getId());
         }
+
         List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
+        List<TransEnAttenteRetour> transporteursList = new ArrayList<>();
 
-        List<Transporteurs> transporteursList = transporteurRepository.findAllById(idList);
+        for (Utilisateurs u: utilisateursList){
+            TransporteurAttente tmp = new TransporteurAttente();
 
-        return ResponseEntity.ok(utilisateursList);
+            tmp = transporteurEnAttenteRepository.findByUserid(u);
 
+            Transporteurs utmp = new Transporteurs();
+
+            TransEnAttenteRetour retour = new TransEnAttenteRetour();
+
+            retour.setPhoto(u.getPhoto());
+            retour.setNomcomplet(u.getNomcomplet());
+            retour.setAdresse(u.getAdresse());
+            retour.setUsername(u.getUsername());
+            retour.setPhotopermis(tmp.getPhotopermis());
+            retour.setStatus(tmp.getStatusdemande());
+
+            transporteursList.add(retour);
+        }
+
+        return ResponseEntity.ok(transporteursList);
     }
 
     @GetMapping("/recupererlestransporteurenattenterejeter")
@@ -141,13 +186,34 @@ public class TransporteursControlleur {
         for(TransporteurAttente te: transporteurAttenteList){
             idList.add(te.getUserid().getId());
         }
-        List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
-
-        return ResponseEntity.ok(utilisateursList);
+//        List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
 //        List<Transporteurs> transporteursList = transporteurRepository.findAllById(idList);
-
+//
 //        System.out.println(utilisateursRepository.findAllById(idList));
-//        return ResponseEntity.ok(transporteursList);
+
+        List<Utilisateurs> utilisateursList = utilisateursRepository.findAllById(idList);
+        List<TransEnAttenteRetour> transporteursList = new ArrayList<>();
+
+        for (Utilisateurs u: utilisateursList){
+            TransporteurAttente tmp = new TransporteurAttente();
+
+            tmp = transporteurEnAttenteRepository.findByUserid(u);
+
+            Transporteurs utmp = new Transporteurs();
+
+            TransEnAttenteRetour retour = new TransEnAttenteRetour();
+
+            retour.setPhoto(u.getPhoto());
+            retour.setNomcomplet(u.getNomcomplet());
+            retour.setAdresse(u.getAdresse());
+            retour.setUsername(u.getUsername());
+            retour.setPhotopermis(tmp.getPhotopermis());
+            retour.setStatus(tmp.getStatusdemande());
+
+            transporteursList.add(retour);
+        }
+
+        return ResponseEntity.ok(transporteursList);
     }
 
     @GetMapping("/contactertransporteur/{transporteur}/{utilisateur}")
@@ -169,6 +235,7 @@ public class TransporteursControlleur {
     public ResponseEntity<?> mettreFinReservation(@PathVariable Reservation reservation, @PathVariable Transporteurs transporteur){
         return transporteursService.mettrefinAUneRerservation(transporteur, reservation);
     }
+
     @GetMapping("/recupererlesreservationencoursduntransporteur/{transporteur}")
     public ResponseEntity<?> recupererLesReservationEncoursDunTransporteur(@PathVariable Transporteurs transporteur){
         return ResponseEntity.ok(transporteur.getListreserveur());
@@ -176,27 +243,51 @@ public class TransporteursControlleur {
 
     @GetMapping("/reservationacceptetransporteur/{transporteur}")
     public ResponseEntity<?> reservationacceptetransporteur(@PathVariable Transporteurs transporteur){
-        return ResponseEntity.ok(reservationRepository.findByStatus(EstatusDemande.ACCEPTER));
+        return ResponseEntity.ok(reservationRepository.findByStatusAndTransporteur(EstatusDemande.ACCEPTER, transporteur));
     }
 
     @GetMapping("/reservationenattentetransporteur/{transporteur}")
     public ResponseEntity<?> reservationenattentetransporteur(@PathVariable Transporteurs transporteur){
-        return ResponseEntity.ok(reservationRepository.findByStatus(EstatusDemande.ENATTENTE));
+        return ResponseEntity.ok(reservationRepository.findByStatusAndTransporteur(EstatusDemande.ENATTENTE , transporteur));
     }
 
     @GetMapping("/reservationenrejetertransporteur/{transporteur}")
     public ResponseEntity<?> reservationenrejetertransporteur(@PathVariable Transporteurs transporteur){
-        return ResponseEntity.ok(reservationRepository.findByStatus(EstatusDemande.REJETER));
+        return ResponseEntity.ok(reservationRepository.findByStatusAndTransporteur(EstatusDemande.REJETER, transporteur));
     }
 
     @GetMapping("/reservationenreencoursansporteur/{transporteur}")
     public ResponseEntity<?> reservationenreencoursansporteur(@PathVariable Transporteurs transporteur){
-        return ResponseEntity.ok(reservationRepository.findByStatus(EstatusDemande.ENCOURS));
+        return ResponseEntity.ok(reservationRepository.findByStatusAndTransporteur(EstatusDemande.ENCOURS, transporteur));
     }
 
     @GetMapping("/reservationenterminertransporteur/{transporteur}")
     public ResponseEntity<?> reservationenterminertransporteur(@PathVariable Transporteurs transporteur){
-        return ResponseEntity.ok(reservationRepository.findByStatus(EstatusDemande.TERMINER));
+        return ResponseEntity.ok(reservationRepository.findByStatusAndTransporteur(EstatusDemande.TERMINER, transporteur));
     }
 
+    @GetMapping("/recupererlalisteDereservations/{transporteur}")
+    public ResponseEntity<?> recupererLaListeDeReservations(@PathVariable Transporteurs transporteur){
+        return ResponseEntity.ok(reservationRepository.findByTransporteur(transporteur));
+    }
+
+    @DeleteMapping("/annulerReservation/{transporteur}")
+    public ResponseEntity<?> annulerReservation(@PathVariable Transporteurs  transporteur){
+
+        Long rid = 0L;
+        System.err.println(rid);
+        List<Reservation> reservationList = transporteur.getListreserveur();
+        for (Reservation r: reservationList){
+            if(r.getStatus() == EstatusDemande.ENCOURS || r.getStatus() == EstatusDemande.ENATTENTE){
+                rid = r.getId();
+            }
+        }
+
+        try{
+            reservationRepository.deleteById(rid);
+            return ResponseEntity.ok(new Reponse("Reservation annulée", 1));
+        }catch (Exception e){
+            return ResponseEntity.ok(new Reponse("Echec", 0));
+        }
+    }
 }

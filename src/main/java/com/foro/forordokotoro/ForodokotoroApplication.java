@@ -71,8 +71,6 @@ public class ForodokotoroApplication implements CommandLineRunner {
 					encoder.encode("keit@pass"), "Badinko/kita", "Mahamadou KEITA", true, false, false);
 			superadmin.setRoles(roles1);
 
-
-
 			//l'admin
 			Utilisateurs admin = new Utilisateurs("74629747",
 					"ksamake18@gmail.com",
@@ -84,7 +82,7 @@ public class ForodokotoroApplication implements CommandLineRunner {
 			utilisateursRepository.save(admin);
 				try {
 					String messageSuperAdmin = "Bonjour KEITA Mahamadou nous sommes heureux de vous annoncer les cooordonnées de votre compte super admin sur Forodôkôtôrô:\n password: keit@pass \n avec le numero de téléphone: 82644606";
-					String messageAdmin = "Bonjour SAMAKE Kadidiatou nous sommes heureux de vous annoncer les cooordonnées de votre compte admin sur Forodôkôtôrô ou en tant qu'une professionnelle de l'agricultuture:\n password: kadi@pass \n avec le numero de téléphone: 74629747";
+					String messageAdmin = "Bonjour SAMAKE Kadidiatou nous sommes heureux de vous annoncer les cooordonnées de votre compte admin sur Forodôkôtôrô :\n password: kadi@pass \n avec le numero de téléphone: 74629747";
 					senderService.sendSimpleEmail("mamakabah1999@gmail.com", "Creation de votre compte Super admin sur Forodôkôtôrô", messageSuperAdmin);
 					senderService.sendSimpleEmail("ksamake18@gmail.com", "Creation de votre compte admin sur Forodôkôtôrô", messageAdmin);
 

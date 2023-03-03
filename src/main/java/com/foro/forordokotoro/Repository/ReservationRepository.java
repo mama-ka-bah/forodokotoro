@@ -11,4 +11,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByStatusAndTransporteur(EstatusDemande status, Transporteurs transporteurs);
 
     List<Reservation> findByStatus(EstatusDemande status);
+
+    List<Reservation> findByTransporteur(Transporteurs transporteurs);
+
 }

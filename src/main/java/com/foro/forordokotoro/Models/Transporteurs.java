@@ -20,10 +20,7 @@ import java.util.List;
 public class Transporteurs extends Utilisateurs{
 
     private Boolean disponibilite;
-
-    private Boolean reservation;
-    private Long idreserveur;
-
+    
     private Long nombrecontact;
 
     @NotBlank
@@ -44,7 +41,5 @@ public class Transporteurs extends Utilisateurs{
         this.photopermis = photopermis;
         this.numeroplaque = numeroplaque;
     }
-
-
 
 }

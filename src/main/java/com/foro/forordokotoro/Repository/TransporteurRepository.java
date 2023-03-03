@@ -26,4 +26,11 @@ public interface TransporteurRepository extends JpaRepository<Transporteurs, Lon
     List<Transporteurs> findByEtat(Boolean etat);
 
     List<Transporteurs> findByDisponibilite(Boolean disponibilite);
+
+    List<Transporteurs> findByIdIn(List<Long> idList);
+
+    @Transactional
+    @Query(value = "SELECT * FROM transporteurs where id = :id", nativeQuery = true)
+    Transporteurs RECUPERERTRANSPORTEUR(@Param("id") Long id);
+
 }

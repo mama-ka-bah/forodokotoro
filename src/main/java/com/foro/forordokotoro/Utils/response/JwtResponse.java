@@ -22,7 +22,6 @@ public class JwtResponse {
   private Boolean etat;
   private Boolean sesouvenir;
   private Long nombrecontact;
-  private Boolean reservation;
 
   public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles, String adresse,
                      String photo, String nomcomplet, Boolean etat, Boolean sesouvenir) {
@@ -39,7 +38,7 @@ public class JwtResponse {
   }
 
   public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles, String adresse,
-                     String photo, String nomcomplet, Boolean disponibilite, String numeroplaque, Boolean etat, Boolean sesouvenir, Long nombrecontact , Boolean reservation) {
+                     String photo, String nomcomplet, Boolean disponibilite, String numeroplaque, Boolean etat, Boolean sesouvenir, Long nombrecontact) {
     this.token = accessToken;
     this.id = id;
     this.username = username;
@@ -53,7 +52,6 @@ public class JwtResponse {
     this.etat = etat;
     this.sesouvenir = sesouvenir;
     this.nombrecontact = nombrecontact;
-    this.reservation = reservation;
 
   }
 

@@ -1,5 +1,6 @@
 package com.foro.forordokotoro.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.foro.forordokotoro.Models.Enumerations.EtypeParserelle;
 import lombok.Data;
 
@@ -50,10 +51,6 @@ public class Stocks {
 
     @ManyToOne
     @JoinColumn(name = "proprietaire_id")
-    private Agriculteurs proprietaire;
+    private Utilisateurs proprietaire;
 
-    /*
-    @OneToMany(mappedBy = "stocks")
-    private List<AimeStock> listeaimestock;
-     */
 }
