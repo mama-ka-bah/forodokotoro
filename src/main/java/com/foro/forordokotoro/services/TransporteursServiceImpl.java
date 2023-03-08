@@ -190,7 +190,7 @@ public class TransporteursServiceImpl implements TransporteursService{
                     if(transporteurs.getPassword() != null)
                     t.setPassword(transporteurs.getPassword());
                     if(transporteurs.getEmail() != null)
-                    t.setAdresse(transporteurs.getEmail());
+                    t.setAdresse(transporteurs.getAdresse());
                     if(transporteurs.getNomcomplet() != null)
                     t.setNomcomplet(transporteurs.getNomcomplet());
                     if(transporteurs.getUsername() != null)
@@ -231,7 +231,7 @@ public class TransporteursServiceImpl implements TransporteursService{
 
         reservationRepository.save(new Reservation(utilisateurs, new Date(), EstatusDemande.ENCOURS, transporteurs));
 
-        emailSenderService.sendSimpleEmail(transporteurs.getEmail(), "Reservation", message);
+        //emailSenderService.sendSimpleEmail(transporteurs.getEmail(), "Reservation", message);
         return ResponseEntity.ok(new Reponse(transporteurs.getNomcomplet() + " a été reservé avec succès", 1));
     }
 
